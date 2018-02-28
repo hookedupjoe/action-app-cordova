@@ -133,7 +133,7 @@ License: MIT
     ThisPage.currentSessionTable = null;
     
     ThisPage.runTest = function(){
-        var tmpOut = "Testing";
+        
         ThisPage._om.getObject('[get]:app/app-data','session-data.json').then(function(theDoc){
             //ThisPage.writeToOut(JSON.stringify(theDoc));
             var tmpData = ThisPage.transformDocs(theDoc.rows);
@@ -202,27 +202,138 @@ License: MIT
     }
     ThisPage.runTest2 = function(){
         showOutLoading();
-        return;
-        ThisPage._om.getObject('dash-test-db', 'testdoc2').then(function (theDoc) {
-            console.log('got ',theDoc);
-            if( theDoc._error ){
-                var tmpMsg = theDoc._error;
-                if(typeof(tmpMsg) == 'object'){
-                    tmpMsg = tmpMsg.message || tmpMsg.errorText || 'unknown error';
-                }
-                ThisApp.appMessage(tmpMsg, "e")
-            } else {
-                //ThisApp.appMessage("Got doc - " + typeof(theDoc));
-                ThisApp.appMessage("Got document - JSON is - " + JSON.stringify(theDoc));
-            }
-        });
+        ThisPage._om.getObject('[get]:app/app-data','session-data.json').then(function(theDoc){
+            //ThisPage.writeToOut(JSON.stringify(theDoc));
+            var tmpData = ThisPage.transformDocs(theDoc.rows);
+
+            var tmpTableEl = ThisPage.dt.addTable('dts:home-output');
+                var tmpNewTable = tmpTableEl.DataTable({
+                    data: tmpData.data,
+                    responsive: {
+                        'details': {
+                            'type': 'column',
+                            'target': 0
+                            }    
+                    },
+                    order: [[1, 'asc']],
+                    buttons: [
+                        'excel',
+                        'csv',
+                        'pdf',
+                        'print'
+                    ],
+                    dom: 'Bfrtip',
+                    columnDefs: [ {
+                        'data': null,
+                        'defaultContent': '',
+                        'className': 'control',
+                        'orderable': false,
+                        'width': 5,
+                        'targets': 0
+                      }],
+                    "columns": [
+                        { "title:": "", "data": null },
+                        { "title": "ID", "data": "id" },
+                        { "title": "Title", "data": "title" },
+                        { "title": "Type", "data": "type" },
+                        { "title": "Level", "data": "level" },
+                        { "title": "Session", "data": "session" }
+                    ]
+                });
+
+                $(tmpTableEl.find('.checkbox')).checkbox();
+    
+                tmpNewTable
+                    .on('select', function (e, dt, type, indexes) {
+                        ThisPage.dt.onCheckboxSelect(e, dt, type, indexes, tmpNewTable, tmpTableEl)
+                        ThisPage.sessionsSelected(tmpNewTable, indexes);
+                    })
+                    .on('deselect', function (e, dt, type, indexes) {
+                        ThisPage.dt.onCheckboxDeselect(e, dt, type, indexes, tmpNewTable, tmpTableEl)
+                        ThisPage.sessionsDeselected(tmpNewTable, indexes);
+                    });
+    
+                ThisPage.currentSessionTable = tmpNewTable;
+    
+    
+                ThisApp.appMessage("Loaded Data","i",{show:true});
+    
+
+
+         })
     }
     ThisPage.runTest3 = function(){
-        ThisPage._om.getObjects('[get]:app/app-data', ['default.json','demo.json']).then(function (theDocs) {
-            console.log('got from get ',theDocs);
-            ThisApp.appMessage("Got document, see logs","i", {show:true});
-            ThisApp.appMessage(" doc is - " + JSON.stringify(theDocs));
-        });
+        showOutLoading();
+        ThisPage._om.getObject('[get]:app/app-data','session-data.json').then(function(theDoc){
+            //ThisPage.writeToOut(JSON.stringify(theDoc));
+            var tmpData = ThisPage.transformDocs(theDoc.rows);
+
+            var tmpTableEl = ThisPage.dt.addTable('dts:home-output');
+                var tmpNewTable = tmpTableEl.DataTable({
+                    data: tmpData.data,
+                    "drawCallback": function ( settings ) {
+                        var api = this.api();
+                        var rows = api.rows( {page:'current'} ).nodes();
+                        var last=null;
+             
+                        api.column(1, {page:'current'} ).data().each( function ( group, i ) {
+                            if ( last !== group ) {
+                                $(rows).eq( i ).before(
+                                    '<tr class="group"><td colspan="5">'+group+'</td></tr>'
+                                );
+             
+                                last = group;
+                            }
+                        } );
+                    },
+                    order: [[1, 'asc']],
+                    buttons: [
+                        'excel',
+                        'csv',
+                        'pdf',
+                        'print'
+                    ],
+                    dom: 'Bfrtip',
+                    columnDefs: [
+                        {'orderable': false, "targets":[2,3,4,5]},{ "visible": false, "targets": 1 },
+                    {
+                        'data': null,
+                        'defaultContent': '',
+                        'className': 'control',
+                        'orderable': false,
+                        'width': 5,
+                        'targets': 0
+                      }],
+                    "columns": [
+                        { "title:": "", "data": null },
+                        { "title": "Level", "data": "level" },
+                        { "title": "ID", "data": "id" },
+                        { "title": "Title", "data": "title" },
+                        { "title": "Type", "data": "type" },
+                        { "title": "Session", "data": "session" }
+                    ]
+                });
+
+                $(tmpTableEl.find('.checkbox')).checkbox();
+    
+                tmpNewTable
+                    .on('select', function (e, dt, type, indexes) {
+                        ThisPage.dt.onCheckboxSelect(e, dt, type, indexes, tmpNewTable, tmpTableEl)
+                        ThisPage.sessionsSelected(tmpNewTable, indexes);
+                    })
+                    .on('deselect', function (e, dt, type, indexes) {
+                        ThisPage.dt.onCheckboxDeselect(e, dt, type, indexes, tmpNewTable, tmpTableEl)
+                        ThisPage.sessionsDeselected(tmpNewTable, indexes);
+                    });
+    
+                ThisPage.currentSessionTable = tmpNewTable;
+    
+    
+                ThisApp.appMessage("Loaded Data","i",{show:true});
+    
+
+
+         })
     }
     ThisPage.runTest4 = function(){
        //ThisPage.wsZoomControl.setState('sliderValue', 75);
