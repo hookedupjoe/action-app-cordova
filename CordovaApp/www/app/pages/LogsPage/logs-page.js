@@ -15,7 +15,8 @@ License: MIT
         pageNamespace: 'logs',
         navOptions:{
             topLink:true,
-            sideLink:true
+            sideLink:true,
+            icon: 'file alternate outline'
         },
         appModule:AppModule
     };

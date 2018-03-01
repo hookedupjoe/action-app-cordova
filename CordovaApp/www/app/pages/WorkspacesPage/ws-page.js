@@ -15,7 +15,8 @@ License: MIT
         pageNamespace: 'ws',
         navOptions:{
             topLink:true,
-            sideLink:true
+            sideLink:true,
+            icon: 'desktop'
         },
         //linkDisplayOption:'sidebar',
         appModule:AppModule

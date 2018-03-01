@@ -90,7 +90,7 @@
             var appModule = ActionAppCore.module('app');
            
             var tmpPluginComponents = ['SvgControls'];
-            var tmpAppCompsToInit = ['DashboardPage', 'WorkspacesPage', 'LogsPage','DebugPage']; 
+            var tmpAppCompsToInit = ['HomePage', 'WorkspacesPage', 'LogsPage','DebugPage']; 
             var tmpAppComponents = [ ];
   
             ThisApp.useModuleComponents('plugin', tmpPluginComponents)
@@ -125,7 +125,8 @@
             });
   
             ThisApp.init();
-  
+            ThisApp._svg = ThisApp.getComponent("plugin:SvgControls");
+
             ThisApp.initTemplates(tmpTplSpecs);
             ThisApp.getByAttr$({ appuse: "app-loader" }).remove();
   

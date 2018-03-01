@@ -236,7 +236,12 @@ var ActionAppCore = {};
             me.navConfig[tmpName] = theNavObject;
             var tmpOpts = theNavObject.options || {};
             theNavObject.isSideLink = ( tmpOpts.sideLink );
-            theNavObject.isTopLink = ( tmpOpts.topLink );
+            theNavObject.isTopLink = ( tmpOpts.topLink );            
+            theNavObject.iconHTML = tmpOpts.iconHTML || '';
+            if( tmpOpts.icon ){
+                theNavObject.iconHTML = '<i class="' + tmpOpts.icon + ' icon"></i>'
+            }
+            
             //theNavObject.isNavLink = ( theNavObject.display == 'primary' );
             me.config.navlinks.push(theNavObject)
             return true;
@@ -1364,7 +1369,7 @@ var ActionAppCore = {};
         }
 
         var tmpNavHTML = '{{#each navlinks}} {{#if isTopLink}}<a appuse="tablinks" group="app:pages" item="{{name}}" appaction="showPage" class="item blue">{{title}}</a>{{/if}} {{/each}}';
-        var tmpSideLinksHTML = '{{#each navlinks}} {{#if isSideLink}}<a appuse="tablinks" group="app:pages" item="{{name}}" appaction="showPage" class="item">{{title}}</a>{{/if}} {{/each}}';
+        var tmpSideLinksHTML = '{{#each navlinks}} {{#if isSideLink}}<a appuse="tablinks" group="app:pages" item="{{name}}" appaction="showPage" class="item">{{{iconHTML}}}{{title}}</a>{{/if}} {{/each}}';
         ThisApp.addTemplate('tpl-side-menu-item',tmpSideLinksHTML)
         ThisApp.addTemplate('tpl-nav-menu-item',tmpNavHTML)
         $('[appuse="side-menu"]').html(ThisApp.renderTemplate('tpl-side-menu-item',me.config));
