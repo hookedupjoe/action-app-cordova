@@ -123,6 +123,7 @@
             ThisApp.init();
   
             ThisApp.initTemplates(tmpTplSpecs);
+            ThisApp.getByAttr$({ appuse: "app-loader" }).remove();
   
             ThisApp.aboutThisApp = function(){
               ThisApp.showCommonDialog({ header: "About this application", content: {data:'', template:'app:about-this-app'} });
