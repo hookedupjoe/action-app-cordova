@@ -293,6 +293,9 @@ License: MIT
                         'pdf',
                         'print'
                     ],
+                    exportOptions: {
+                        grouped_array_index: [1],
+                    },
                     dom: 'Bfrtip',
                     columnDefs: [
                         {'orderable': false, "targets":[2,3,4,5]},{ "visible": false, "targets": 1 },

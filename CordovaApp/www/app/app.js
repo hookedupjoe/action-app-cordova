@@ -3,33 +3,37 @@
     ThisApp = null;
     var tmpHasLaunched = false;
   
+    if( typeof(window.cordova) == 'undefined'){
+      window.isWeb = true;
+      setup();
+    }
     //-- ToDo: Client detection ***  
-    window.setTimeout( function(){
-      if( !tmpHasLaunched) {
-        tmpHasLaunched = true;
-        (app.onDeviceReady.bind(app))();
-      }
-    },500)
+    // window.setTimeout( function(){
+    //   if( !tmpHasLaunched) {
+    //     tmpHasLaunched = true;
+    //     (app.onDeviceReady.bind(app))();
+    //   }
+    // },500)
     //---- ACTUAL CODE ==    
     ActionAppCore = ActionAppCore || window.ActionAppCore;
-  
+    
     var app = {
       initialize: function() {
         document.addEventListener('deviceready', this.onDeviceReady.bind(this), false);
       },
       onBackButton: function(){
-        //alert('onBackButton');
-        if( ThisApp.sidebarGetDisplay() ){
-          ThisApp.hideSidebar();
-        }
+        ThisApp.hideSidebar();        
+        // if( ThisApp.sidebarGetDisplay() ){
+         
+        // }
         return false;
       },
       onVolUpButton: function(){
-        alert('onVolUpButton');
+        //alert('onVolUpButton');
         return false;
       },
       onVolDownButton: function(){
-        alert('onVolDownButton');
+        //alert('onVolDownButton');
         return false;
       },
       onMenuButton: function(){
@@ -42,8 +46,8 @@
         this.receivedEvent('deviceready');
         
         document.addEventListener('backbutton', this.onBackButton.bind(this), false);
-        document.addEventListener('volumedownbutton', this.onVolDownButton.bind(this), false);
-        document.addEventListener('volumeupbutton', this.onVolUpButton.bind(this), false);            
+        // document.addEventListener('volumedownbutton', this.onVolDownButton.bind(this), false);
+        // document.addEventListener('volumeupbutton', this.onVolUpButton.bind(this), false);            
         if( typeof(navigator) != 'undefined' && typeof(navigator.app) != 'undefined' && typeof(navigator.app.overrideButton) === 'function'){
           navigator.app.overrideButton("menubutton", true);  // <-- Add this line
         }
@@ -85,8 +89,8 @@
             */
             var appModule = ActionAppCore.module('app');
            
-            var tmpPluginComponents = ['DataTables','SvgControls'];
-            var tmpAppCompsToInit = ['DashboardPage', 'DataTablesPage', 'WorkspacesPage', 'LogsPage','DebugPage']; //
+            var tmpPluginComponents = ['SvgControls'];
+            var tmpAppCompsToInit = ['DashboardPage', 'WorkspacesPage', 'LogsPage','DebugPage']; 
             var tmpAppComponents = [ ];
   
             ThisApp.useModuleComponents('plugin', tmpPluginComponents)
