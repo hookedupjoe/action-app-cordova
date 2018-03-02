@@ -79,10 +79,19 @@ License: MIT
         ThisPage._svg = theApp.getComponent("plugin:SvgControls");
         ThisPage._om = theApp.om;
 
+        ThisPage.refreshMainGrid = function(){
+            $('main').each(function(theEl){
+                var tmpEl = $(this);
+                var tmpPF = tmpEl.closest('.ui-layout-pane');
+                tmpEl.height($(tmpPF).height()-10);
+                var tmpPgs = tmpEl.find('section');
+                tmpPgs.height($(tmpPF).height()-12);
+            })
+        }
 
         ThisPage.initOnFirstLoad().then(
             function(){
-
+                ThisPage.refreshMainGrid();
                 var me = ThisPage;
                 //--- Add any custom init stuff
                 $('[appuse="home:home-sidebar"] .ui.sidebar')

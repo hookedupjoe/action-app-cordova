@@ -2,7 +2,7 @@
 @media (min-width: 620px) {
     main {
       column-count: 2;
-      column-gap: 5px;
+      column-gap: 0px;
     }
     
     section {
@@ -15,11 +15,21 @@
        column-count: 3;
     }
   }
-  
+  main {
+    height:500px;
+  }
   section {
-    border: 2px dashed darkcyan;
-    background-color: white;
-    margin-bottom: 5px;
+    height:95%;
+    margin-bottom: 0px;
     overflow: hidden;
   }
   
+  .pages section {
+    border: 1px solid lightgray;
+   }
+  .pages section .page-frame {
+    border: 2px dashed darkcyan;
+    padding:8px;
+    margin:8px;
+    background-color: white;
+  }
