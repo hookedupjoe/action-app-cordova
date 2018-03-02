@@ -1463,6 +1463,13 @@ License: MIT
             //--- Use standard border layout template if none provided
             this.layoutOptions.facetPrefix = this.layoutOptions.facetPrefix || this.pageName;
             //this.pageTemplate = this.pageTemplate || 'tpl-border-layout';
+            this.layoutConfig.center__onresize = (
+                function(){
+                    if( typeof(this._onResizeLayout) == 'function'){
+                        this._onResizeLayout();
+                    }
+                }
+            ).bind(this);
 
             //--- Extend with new layout related facet functions
             this.addToRegion = function (theRegion, theContent, theOptionalTemplateName, thePrepend) {

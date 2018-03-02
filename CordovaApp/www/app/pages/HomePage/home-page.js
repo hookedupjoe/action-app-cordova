@@ -61,6 +61,7 @@ License: MIT
     ThisPage._onPreInit = function(theApp){
         ThisPage.om = theApp.om;
         console.log("Home Page: _onPreInit ");
+        
     }
     ThisPage._onInit = function() {
         console.log("Home Page: _onInit");
@@ -175,7 +176,14 @@ License: MIT
         //Do Refresh of stuff
     }
     //--- End lifecycle hooks
-    
+
+    //--- Layout related lifecycle hooks
+    ThisPage._onResizeLayout = function(){
+        ThisPage.refreshMainGrid();
+    }
+    //--- End Layout related lifecycle hooks
+
+
     ThisPage.runTest = function(){
         var tmpObj = {"running":"a test", "more":12, "arr":["one","two"], "child": {"name":"Jane"}};
         ThisPage._om.putObject('dash-test-db', 'testdoc2', tmpObj).then(function (theDoc) {
