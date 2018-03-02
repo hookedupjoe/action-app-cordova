@@ -79,14 +79,25 @@ License: MIT
         
         ThisPage._svg = theApp.getComponent("plugin:SvgControls");
         ThisPage._om = theApp.om;
-
+        ThisPage.inBuffer = 40;
+        ThisPage.outBuffer = 12;
         ThisPage.refreshMainGrid = function(){
             $('main').each(function(theEl){
                 var tmpEl = $(this);
                 var tmpPF = tmpEl.closest('.ui-layout-pane');
-                tmpEl.height($(tmpPF).height()-10);
+                tmpEl.height($(tmpPF).height()-ThisPage.outBuffer+2);
                 var tmpPgs = tmpEl.find('section');
-                tmpPgs.height($(tmpPF).height()-12);
+                tmpPgs.height($(tmpPF).height()-ThisPage.outBuffer);
+                tmpPgs = tmpEl.find('.page-frame');
+                tmpPgs.each(function(){
+                    var tmpSubEl = $(this);
+                    tmpSubEl.height($(tmpPF).height()-ThisPage.outBuffer-ThisPage.inBuffer);
+                    //--- SVGs needed width - root cause?
+                    var tmpSubW = tmpSubEl.closest('section').width();
+                    $(this).width(tmpSubW-ThisPage.inBuffer);
+                })
+                // tmpPgs.height($(tmpPF).height()-ThisPage.outBuffer-ThisPage.inBuffer);
+                // tmpPgs.width($(tmpPF).width()-ThisPage.outBuffer-(ThisPage.inBuffer*8));
             })
         }
 
@@ -101,6 +112,14 @@ License: MIT
                 })
                 .sidebar('attach events', '[appuse="home:home-sidebar"] .menu .item')
                 ;
+
+                var tmpFunAreaEl = me.getByAttr$({ facet: "home:funarea" });
+                me.funAreaWS = me._svg.getNewWorkpace();
+                me.funAreaWS.init({ svg: tmpFunAreaEl[0], viewBox: {x: 0, y: 0, w: 150, h: 150} });
+
+                me.funAreaWS.addControl('fun-button-1', 'btn-round-glossy', {scale: .2,states:{switchColor:'#00ffff',switchStatus:true} }).then(function(theControl){
+                    me.funAreaButton1 = theControl;
+                });
 
                 var tmpZoomBarEl = me.getByAttr$({ facet: "home:zoom-control" });
                 me.wsZoomControlWS = me._svg.getNewWorkpace();
