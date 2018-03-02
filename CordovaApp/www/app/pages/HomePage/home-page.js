@@ -76,25 +76,62 @@ License: MIT
     */
     ThisPage._onFirstActivate = function(theApp){
         console.log("Home Page: _onFirstActivate");
-        
+
+        //--- We are doing our own thing here, hide the overflow on the center panel
+        ThisApp.getFacet$("home:center").css('overflow','hidden');
+
         ThisPage._svg = theApp.getComponent("plugin:SvgControls");
         ThisPage._om = theApp.om;
         ThisPage.inBuffer = 40;
         ThisPage.outBuffer = 12;
+        ThisPage.minHeight = 50;
+
         ThisPage.refreshMainGrid = function(){
-            $('main').each(function(theEl){
+
+            $('[appuse="mobile-cards"]').each(function(theEl){
                 var tmpEl = $(this);
                 var tmpPF = tmpEl.closest('.ui-layout-pane');
+                var tmpPMain = tmpEl.closest('[appuse="mobile-cards"]');
+                console.log("tmpPMain cards",tmpPMain);
                 tmpEl.height($(tmpPF).height()-ThisPage.outBuffer+2);
+                tmpPMain.height(tmpEl.height());
                 var tmpPgs = tmpEl.find('section');
                 tmpPgs.height($(tmpPF).height()-ThisPage.outBuffer);
+                var tmpTotalW = $(window).width();
+                
+                //--- This works automatically in most cases, but found in testing, not always
+                // ... so we are doing it here also / manually
+                var tmpColCount = 1;
+                if( tmpTotalW >= 960){
+                    tmpColCount = 3
+                } else if( tmpTotalW >= 620){
+                    tmpColCount = 2
+                }
+                var tmpColW = tmpTotalW/tmpColCount;
+
+                var tmpExtraBuffer = 1; //pixel?
+                if( tmpColCount == 1){
+                    tmpExtraBuffer += 5;
+                }
+                tmpPgs.width(tmpColW-(ThisPage.outBuffer/tmpColCount)-tmpExtraBuffer);
+                
                 tmpPgs = tmpEl.find('.page-frame');
                 tmpPgs.each(function(){
                     var tmpSubEl = $(this);
-                    tmpSubEl.height($(tmpPF).height()-ThisPage.outBuffer-ThisPage.inBuffer);
+                    var tmpIsScrolling = false;
+                    var tmpSubHeight = $(tmpPF).height()-ThisPage.outBuffer-ThisPage.inBuffer;
+                    if( tmpSubHeight < ThisPage.minHeight){
+                        tmpSubHeight = ThisPage.minHeight;
+                        tmpIsScrolling = true;
+                    }
+                    tmpSubEl.height(tmpSubHeight);
                     //--- SVGs needed width - root cause?
-                    var tmpSubW = tmpSubEl.closest('section').width();
-                    $(this).width(tmpSubW-ThisPage.inBuffer);
+                    var tmpParentSection = $(tmpSubEl.closest('section'))
+                    var tmpSubW = tmpParentSection.width();
+                    var tmpScrollType = tmpIsScrolling ? 'auto' : 'hidden';
+                    tmpParentSection.css('overflow-y',tmpScrollType);
+                    
+                    $(this).width(tmpColW-ThisPage.inBuffer-(tmpExtraBuffer*2));
                 })
                 // tmpPgs.height($(tmpPF).height()-ThisPage.outBuffer-ThisPage.inBuffer);
                 // tmpPgs.width($(tmpPF).width()-ThisPage.outBuffer-(ThisPage.inBuffer*8));
