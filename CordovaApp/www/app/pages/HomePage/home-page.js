@@ -78,25 +78,32 @@ License: MIT
         console.log("Home Page: _onFirstActivate");
 
         //--- We are doing our own thing here, hide the overflow on the center panel
-        ThisApp.getFacet$("home:center").css('overflow','hidden');
+        //ThisApp.getFacet$("home:center").css('overflow','hidden');
 
         ThisPage._svg = theApp.getComponent("plugin:SvgControls");
         ThisPage._om = theApp.om;
         ThisPage.inBuffer = 40;
         ThisPage.outBuffer = 12;
         ThisPage.minHeight = 50;
+        //ThisPage.maxHeight = 200;
 
+        //--- Demo special grid
         ThisPage.refreshMainGrid = function(){
 
             $('[appuse="mobile-cards"]').each(function(theEl){
                 var tmpEl = $(this);
-                var tmpPF = tmpEl.closest('.ui-layout-pane');
-                var tmpPMain = tmpEl.closest('[appuse="mobile-cards"]');
-                console.log("tmpPMain cards",tmpPMain);
-                tmpEl.height($(tmpPF).height()-ThisPage.outBuffer+2);
-                tmpPMain.height(tmpEl.height());
+                var tmpPF = $(tmpEl.closest('.ui-layout-pane'));
+                var tmpPFH = tmpPF.height();
+                var tmpPFW = tmpPF.width();
+
+                //var tmpPMain = tmpEl.closest('[appuse="mobile-cards"]');
+                //console.log("tmpPMain cards",tmpPMain);
+                tmpEl.height(tmpPFH-ThisPage.outBuffer+2);
+                //tmpPMain.height(tmpEl.height());
                 var tmpPgs = tmpEl.find('section');
-                tmpPgs.height($(tmpPF).height()-ThisPage.outBuffer);
+                var tmpH = tmpPFH-ThisPage.outBuffer;
+                //tmpH = Math.min(tmpH,ThisPage.maxHeight);
+                tmpPgs.height(tmpH);
                 var tmpTotalW = $(window).width();
                 
                 //--- This works automatically in most cases, but found in testing, not always
@@ -119,17 +126,27 @@ License: MIT
                 tmpPgs.each(function(){
                     var tmpSubEl = $(this);
                     var tmpIsScrolling = false;
-                    var tmpSubHeight = $(tmpPF).height()-ThisPage.outBuffer-ThisPage.inBuffer;
+                    var tmpSubHeight = tmpPFH-ThisPage.outBuffer-ThisPage.inBuffer;
                     if( tmpSubHeight < ThisPage.minHeight){
                         tmpSubHeight = ThisPage.minHeight;
                         tmpIsScrolling = true;
                     }
-                    tmpSubEl.height(tmpSubHeight);
+                    
+                    
+                    var tmpWide = (tmpPFH < tmpPFW);
+                    var tmpRows = 2;
+                    if( tmpWide ){
+                        tmpRows = 1;
+                    }
+
+                    tmpSubEl.height(tmpSubHeight/tmpRows);
+
                     //--- SVGs needed width - root cause?
                     var tmpParentSection = $(tmpSubEl.closest('section'))
                     var tmpSubW = tmpParentSection.width();
                     var tmpScrollType = tmpIsScrolling ? 'auto' : 'hidden';
                     tmpParentSection.css('overflow-y',tmpScrollType);
+                    tmpParentSection.height(tmpSubEl.height() + ThisPage.inBuffer);
                     
                     $(this).width(tmpColW-ThisPage.inBuffer-(tmpExtraBuffer*2));
                 })
