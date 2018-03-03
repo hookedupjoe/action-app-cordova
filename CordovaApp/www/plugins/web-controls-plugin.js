@@ -237,20 +237,24 @@ Web controls Plugin:
         }
         var tmpBaseURL = me.baseURL;
 
-        var tmpWebCtlFrag = document.createDocumentFragment();
-        var tmpWebCtlBase = d3.select(tmpWebCtlFrag).append("webctl");
-        var tmpWebCtlNode = tmpWebCtlBase.node();
+        // var tmpWebCtlFrag = document.createDocumentFragment();
+        // var tmpWebCtlBase = d3.select(tmpWebCtlFrag).append("webctl");
+        // var tmpWebCtlNode = tmpWebCtlBase.node();
 
         var tmpOID = theOptions.oid || (tmpThisControl.cid + "-" + me.createdCount++);
-        tmpWebCtlNode.id = tmpOID;
-        tmpThisControl.oid = tmpOID;
 
         if (tmpThisControl.mom) {
             //--- ToDo: Cleanup of events when removed?
-            var tmpAddedEl = tmpThisControl.mom.appendChild(tmpWebCtlNode);
-            console.log("tmpWebCtlNode",tmpWebCtlNode);
+            var tmpNewEl = document.createElement('webctl');
+            tmpThisControl.mom.appendChild(tmpNewEl);
+            var tmpAddedEl = tmpNewEl; //$(tmpThisControl.mom).find('webctl').get(0);
+            tmpAddedEl.setAttribute('id', tmpOID);
+            tmpAddedEl.setAttribute('oid',tmpOID);
             tmpThisControl._el = tmpAddedEl;
             tmpThisControl.el = $(tmpThisControl._el);
+
+//*******************            
+            //--- ToDo: Move this, do not want events by default *****
             if (typeof (tmpOptions.onClick) == 'function') {
                 $(tmpThisControl._el).on("click", tmpOptions.onClick);
             }

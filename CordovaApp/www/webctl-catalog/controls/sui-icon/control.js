@@ -26,6 +26,9 @@
         if( this.states.color ){
             tmpHTML+= ' ' + this.states.color;
         }
+        if( this.states.bordered ){
+            tmpHTML+= ' bordered';
+        }
         tmpHTML = '<i class="' + tmpHTML + '"></i>';
         this.el.html(tmpHTML);
     }
@@ -58,8 +61,8 @@
     }
 
     me.onContextMenu = function (e) {
-        alert('context');
-        return false;
+        
+        return true;
     }
 
     function init(theParentContainer, theOptions) {
@@ -79,8 +82,8 @@
         this.sliderIncr = tmpOptions.sliderIncr || 5;
         
         this.oid = theOptions.oid || '';
-        this.mom = theParentContainer;
-        this.mom$ = $(this.mom);
+        this.container = theParentContainer;
+        this.container$ = $(this.container);
         //--- Call default parent functionality to initialize a control
         var tmpThisControl = this;
         var tmpPromise = this.initControl(theParentContainer, tmpOptions).then(
@@ -94,7 +97,6 @@
                     $.extend(tmpThisControl.states, tmpOptions.states);
                 }
                 tmpThisControl.refreshUI();
-                
                 
                 // for( var aSN in tmpOptions ){
                 //     tmpThisControl.setState(aSN, tmpOptions[aSN])

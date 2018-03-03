@@ -169,17 +169,30 @@ License: MIT
                 })
                 .sidebar('attach events', '[appuse="home:home-sidebar"] .menu .item')
                 ;
-
                 
                 var tmpTestAreaEl = me.getByAttr$({ facet: "home:testarea" });
                 me.testAreaWS = me._webctl.getNewWorkpace();
                 me.testAreaWS.init({ mom: tmpTestAreaEl[0]});
-                me.testAreaWS.addControl('icon-control-1', 'sui-icon', {states:{size:'huge',icon:'user',color:'blue'} }).then(function(theControl){
-                    me.testAreaIcon1 = theControl;
+                
+
+                //ToDo: me.testAreaWS.getControls(['sui-icon']);                 
+                //to preload them all so we can add and know the order is good
+                me.testAreaWS.addControl('icon-control-1', 'sui-icon', {states:{bordered:true, size:'huge',icon:'user',color:'blue'} }).then(function(theControl){
+                    //me.testAreaIcon1 = theControl;
+                    // --- Have to load all the controls in use in advance
+                    // --   or control load order, this is NOT the way, this is a test
+                    // --  Also note, you couild load the first, then the rest do load in order, no async involved                    
+                    me.testAreaWS.addControl('icon-control-2', 'sui-icon', {states:{bordered:true, size:'huge',icon:'group',color:'green'} }).then(function(theControl){
+                        
+                    });
+                    me.testAreaWS.addControl('icon-control-3', 'sui-icon', {states:{bordered:true, size:'huge',icon:'group',color:'purple'} }).then(function(theControl){
+                        
+                    });
+                    me.testAreaWS.addControl('icon-control-4', 'sui-icon', {states:{bordered:true, size:'huge',icon:'group',color:'orange'} }).then(function(theControl){
+                        
+                    });
                 });
-                me.testAreaWS.addControl('icon-control-2', 'sui-icon', {states:{size:'huge',icon:'group',color:'green'} }).then(function(theControl){
-                    me.testAreaIcon2 = theControl;
-                });
+                
 
                 var tmpWorkAreaEl = me.getByAttr$({ facet: "home:workarea" });
                 me.workAreaWS = me._svg.getNewWorkpace();
