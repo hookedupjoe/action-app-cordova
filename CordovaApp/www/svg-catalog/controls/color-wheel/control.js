@@ -182,9 +182,6 @@
                 tmpThisControl.frame = theControl.svgNode.select("#frame");
                 tmpThisControl.colorBack = theControl.svgNode.select("#result");
                 tmpThisControl.wheel = theControl.svgNode.select("#wheel");
-                //xxx
-                //tmpThisControl.$colorStop = $(tmpThisControl.colorStop.node());
-                console.log("tmpThisControl.colorBack",tmpThisControl.colorBack);
                 
                 dfd.resolve(tmpThisControl);
             }

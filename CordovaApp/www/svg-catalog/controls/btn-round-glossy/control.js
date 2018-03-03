@@ -190,7 +190,7 @@
                 tmpThisControl.frame = theControl.svgNode.select("#frame");
                 tmpThisControl.colorBack = theControl.svgNode.select("#btn-round-glossy-colorback");
                 //tmpThisControl.$colorStop = $(tmpThisControl.colorStop.node());
-                console.log("tmpThisControl.colorBack",tmpThisControl.getAsObject());
+                //console.log("tmpThisControl.colorBack",tmpThisControl.getAsObject());
                 
                 dfd.resolve(tmpThisControl);
             }
