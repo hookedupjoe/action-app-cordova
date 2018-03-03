@@ -167,12 +167,41 @@ License: MIT
                 .sidebar('attach events', '[appuse="home:home-sidebar"] .menu .item')
                 ;
 
+                var tmpWorkAreaEl = me.getByAttr$({ facet: "home:workarea" });
+                me.workAreaWS = me._svg.getNewWorkpace();
+                me.workAreaWS.init({ svg: tmpWorkAreaEl[0], viewBox: {x: 0, y: 0, w: 150, h: 150} });
+
+                me.workAreaWS.addControl('work-button-1', 'btn-round-glossy', {translateX: 5, translateY: 5, scale: .1,states:{switchColor:'#ffff00',switchStatus:true} }).then(function(theControl){
+                    me.workAreaButton1 = theControl;
+                });
+
+                me.workAreaWS.addControl('work-button-2', 'btn-round-glossy', {translateX: 5, translateY: 50, scale: .1,states:{switchColor:'#ff0000',switchStatus:true} }).then(function(theControl){
+                    me.workAreaButton2 = theControl;
+                });
+
+                me.workAreaWS.addControl('work-button-3', 'icon-database', {translateX: 50, translateY: 5, scale: .4,states:{iconToShow:'cloud'} }).then(function(theControl){
+                    me.workAreaButton3 = theControl;
+                });
+
+                me.workAreaWS.addControl('work-button-4', 'icon-database', {translateX: 50, translateY: 55, scale: .4,states:{iconToShow:'cloud'} }).then(function(theControl){
+                    me.workAreaButton4 = theControl;
+                });
+
                 var tmpFunAreaEl = me.getByAttr$({ facet: "home:funarea" });
                 me.funAreaWS = me._svg.getNewWorkpace();
                 me.funAreaWS.init({ svg: tmpFunAreaEl[0], viewBox: {x: 0, y: 0, w: 150, h: 150} });
 
-                me.funAreaWS.addControl('fun-button-1', 'btn-round-glossy', {scale: .2,states:{switchColor:'#00ffff',switchStatus:true} }).then(function(theControl){
+                me.funAreaWS.addControl('fun-button-1', 'btn-round-glossy', {translateX: 5, translateY: 5, scale: .1,states:{switchColor:'#00ffff',switchStatus:true} }).then(function(theControl){
                     me.funAreaButton1 = theControl;
+                });
+                me.funAreaWS.addControl('fun-button-2', 'btn-round-glossy', {translateX: 5, translateY: 65,scale: .2,states:{switchColor:'#ff00ff',switchStatus:true} }).then(function(theControl){
+                    me.funAreaButton2 = theControl;
+                });
+                me.funAreaWS.addControl('fun-button-3', 'on-off-g-r', {translateX: 65, translateY: 5, scale: .7,states:{switchStatus:true} }).then(function(theControl){
+                    me.funAreaButton3 = theControl;
+                });
+                me.funAreaWS.addControl('fun-button-4', 'on-off-g-r', {translateX: 75, translateY: 85, scale: 1,states:{switchStatus:true} }).then(function(theControl){
+                    me.funAreaButton4 = theControl;
                 });
 
                 var tmpZoomBarEl = me.getByAttr$({ facet: "home:zoom-control" });
