@@ -61,8 +61,79 @@
     }
 
     me.onContextMenu = function (e) {
-        
-        return true;
+        var tmpEl = e.target;
+
+        var tmpParentEl = $(tmpEl).closest('[oid]');
+        var tmpOID = tmpParentEl.attr('oid');
+        //alert('bind ' + tmpOID)
+        //alert($('[oid="' + tmpOID + '"]').length) 
+        var tmpThisControl = this;
+        $.contextMenu({
+            selector:'[oid="' + tmpOID + '"]',
+            items: {
+                
+                toggle: {
+                    
+                    icon: function(opt, $itemElement, itemKey, item){
+                        // Set the content to the menu trigger selector and add an bootstrap icon to the item.
+                        var tmpIH = '<i class="icon large list"></i> ';
+                        $itemElement.html('<button class="ui icon button blue basic context">' + tmpIH + 'Change Color</button>');
+                        // Add the context-menu-icon-updated class to the item
+                        return '';
+                    },                   
+                    name: "toggle",
+                    
+                    callback: (function (key, opt) {
+                        //this.setSwitchStatus(!this.switchStatus);
+                        var tmpNew = '';
+                        if( this.states.color == 'green'){
+                            tmpNew = 'blue'
+                        } else {
+                            tmpNew = 'green'
+                        }
+                        this.setState('color',tmpNew);
+                        this.refreshUI();
+                    }).bind(this)
+                },
+                turnon: {
+                    
+                    icon: function(opt, $itemElement, itemKey, item){
+                        // Set the content to the menu trigger selector and add an bootstrap icon to the item.
+                        var tmpIH = '<i class="icon big ' + tmpThisControl.states.icon + '"></i> ';
+                        $itemElement.html('<button class="ui icon button green basic context">' + tmpIH + 'Big</button>');
+                        // Add the context-menu-icon-updated class to the item
+                        return '';
+                    },                   
+                    name: "turnon",
+                    
+                    callback: (function (key, opt) {
+                        this.setState('size','big');
+                        this.refreshUI();
+                    }).bind(this)
+                },
+                turnoff: {
+                   
+                    icon: function(opt, $itemElement, itemKey, item){
+                        // Set the content to the menu trigger selector and add an bootstrap icon to the item.
+                        var tmpIH = '<i class="icon huge ' + tmpThisControl.states.icon + '"></i> ';
+                        $itemElement.html('<button class="ui icon button green basic context">' + tmpIH + 'Huge</button>');
+                        // Add the context-menu-icon-updated class to the item
+                        return '';
+                    },                   
+                    name: "turnoff",
+                    
+                    callback: (function (key, opt) {
+                        //this.setSwitchColor('#aaaaaa');
+                        this.setState('size','huge');
+                        this.refreshUI();
+                        // var tmpItem = opt.$trigger[0];
+                        // var tmpElOID = $(tmpItem).attr('oid');
+                        // console.log("Clicked on " + key + " for oid: " + tmpElOID, tmpItem);
+                    }).bind(this)
+                }
+            }
+        });
+
     }
 
     function init(theParentContainer, theOptions) {
@@ -71,15 +142,13 @@
 
         tmpOptions.controlName = thisControlName;
         tmpOptions.controlTitle = thisControlTitle;
+
+        //--- Here we can optionally hook into the click and context menus
         tmpOptions.onClick = this.onClick.bind(this);
         tmpOptions.onContextMenu = this.onContextMenu.bind(this);
 
         this.options = theOptions || {};
-        
-        this.sliderValue = tmpOptions.sliderValue || 0;        
-        this.sliderStart = tmpOptions.sliderStart || 0;
-        this.sliderEnd = tmpOptions.sliderEnd || 100;
-        this.sliderIncr = tmpOptions.sliderIncr || 5;
+     
         
         this.oid = theOptions.oid || '';
         this.container = theParentContainer;

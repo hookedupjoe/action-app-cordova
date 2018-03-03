@@ -245,7 +245,7 @@ Web controls Plugin:
 
         if (tmpThisControl.mom) {
             //--- ToDo: Cleanup of events when removed?
-            var tmpNewEl = document.createElement('webctl');
+            var tmpNewEl = document.createElement("webctl");
             tmpThisControl.mom.appendChild(tmpNewEl);
             var tmpAddedEl = tmpNewEl; //$(tmpThisControl.mom).find('webctl').get(0);
             tmpAddedEl.setAttribute('id', tmpOID);
