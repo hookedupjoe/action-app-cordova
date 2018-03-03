@@ -277,116 +277,101 @@ SVG controls Plugin:
         var tmpFacetName = $(theParentSVG).attr("facet");
         tmpThisControl.svg = d3.select('[facet="' + tmpFacetName + '"]');
 
-
         if (typeof (tmpOptions.colorOffset) == 'number') {
             tmpThisControl.colorOffset = tmpOptions.colorOffset;
         }
         var tmpBaseURL = me.baseURL;
 
-        d3.xml(tmpBaseURL + "base-container.svg", function (error, documentFragment) {
+        var tmpSvgFrag = document.createDocumentFragment();
+        var tmpSvgBase = d3.select(tmpSvgFrag).append("svg");
+        tmpSvgBase.attr("xmlns","http://www.w3.org/2000/svg")
+            .append("g")
+            .attr("id","baseLayer")
+            .append("g")
+            .attr("id", "layer1");
+
+        var tmpSvgNode = tmpSvgBase.node();
+
+        var tmpOID = theOptions.oid || (tmpThisControl.cid + "-" + me.createdCount++);
+        tmpSvgNode.id = tmpOID;
+        tmpThisControl.oid = tmpOID;
+        tmpThisControl.controlSvg = d3.select(tmpSvgNode);
+        tmpThisControl.controlWrap = tmpThisControl.controlSvg.select("#baseLayer");
+        tmpThisControl.control = tmpThisControl.controlSvg.select("#layer1");
+        tmpThisControl.controlNode = tmpThisControl.control.node();
+
+
+        if (tmpThisControl.svg) {
+            //--- ToDo: Cleanup of events when removed?
+            var tmpAddedEl = tmpThisControl.svg.node().appendChild(tmpSvgNode);
+            tmpThisControl.svgTopEl = tmpAddedEl;
+            if (typeof (tmpOptions.onClick) == 'function') {
+                $(tmpThisControl.svgTopEl).on("click", tmpOptions.onClick);
+            }
+            //--- always also catch the click event
+            $(tmpThisControl.svgTopEl).on("click", tmpThisControl.objectClicked.bind(tmpThisControl));
+            if (typeof (tmpOptions.onContextMenu) == 'function') {
+                $(tmpThisControl.svgTopEl).contextmenu(tmpOptions.onContextMenu);
+            }
+        }
+
+        //--- load all the parts we need one at a time 
+        //ToDo: Change this to async and load in order when all received
+        d3.xml(tmpBaseURL + tmpThisControl.controlName + ".svg", function (error, documentFragment) {
             if (error) {
                 console.error(error);
                 return;
             }
-
-            //var tmpSvgFrag = document.createDocumentFragment() 
-            var tmpSvgNode = document.createElement("svg");
-            var tmpBaseLayer = document.createElement("g");
-            var tmpLayerOne = document.createElement("g");
-            tmpSvgNode.id = "svg-base-container";
-            tmpBaseLayer.id = "baselayer";
-            tmpLayerOne.id = "layer1";
-            
-            tmpBaseLayer.appendChild(tmpLayerOne);
-            tmpSvgNode.appendChild(tmpBaseLayer);
-            //tmpSvgFrag.appendChild(tmpSvgNode);
-            //tmpSvgNode.innerHTML = '<svg id="svg-base-container"><g id="baseLayer"> <g id="layer1" ></g></g></svg>';
             var tmpSvgNode = documentFragment.getElementsByTagName("svg")[0];
-            //console.log("tmpSvgNode",tmpSVG);
-            //console.log("tmpSvgNode",tmpSVG);
-            
+            // tmpThisControl.svgEl = tmpSvgNode;
 
-
-            var tmpOID = theOptions.oid || (tmpThisControl.cid + "-" + me.createdCount++);
-            tmpSvgNode.id = tmpOID;
-            tmpThisControl.oid = tmpOID;
-            tmpThisControl.controlSvg = d3.select(tmpSvgNode);
-            tmpThisControl.controlWrap = tmpThisControl.controlSvg.select("#baseLayer");
+            //--- was null, had to redo this -- examine further on why???
             tmpThisControl.control = tmpThisControl.controlSvg.select("#layer1");
             tmpThisControl.controlNode = tmpThisControl.control.node();
+            //--- had to move this
+            tmpThisControl.control.attr("cid", me.cid);
+            tmpThisControl.control.attr("oid", tmpOID);
+            //tmpThisControl.events = $({});
 
+            // tmpSvgNode.id = tmpThisControl.controlName + "_" + (me.loadedCount + 1);
+            ////console.log("tmpThisControl2",tmpThisControl);
+            tmpThisControl.controlNode.appendChild(tmpSvgNode);
+            tmpThisControl.svgNode = d3.select(tmpSvgNode);
 
-            if (tmpThisControl.svg) {
-                //--- ToDo: Cleanup of events when removed?
-                var tmpAddedEl = tmpThisControl.svg.node().appendChild(tmpSvgNode);
-                tmpThisControl.svgTopEl = tmpAddedEl;
-                if (typeof (tmpOptions.onClick) == 'function') {
-                    $(tmpThisControl.svgTopEl).on("click", tmpOptions.onClick);
-                }
-                //--- always also catch the click event
-                $(tmpThisControl.svgTopEl).on("click", tmpThisControl.objectClicked.bind(tmpThisControl));
-                if (typeof (tmpOptions.onContextMenu) == 'function') {
-                    $(tmpThisControl.svgTopEl).contextmenu(tmpOptions.onContextMenu);
-                }
+            var tmpDefsNode = tmpSvgNode.getElementsByTagName("defs")[0];
+            //--- Need to load the defs into a global space
+            if (!tmpThisControl.loadedControls.hasOwnProperty(tmpThisControl.controlName)) {
+                me._svg.addDefs(tmpDefsNode);
+                me.loadedControls[tmpThisControl.controlName] = true;
+            } else {
+                tmpSvgNode.removeChild(tmpDefsNode);
             }
+            //me.loadedCount++;
 
-            //--- load all the parts we need one at a time 
-            //ToDo: Change this to async and load in order when all received
-            d3.xml(tmpBaseURL + tmpThisControl.controlName + ".svg", function (error, documentFragment) {
-                if (error) {
-                    console.error(error);
-                    return;
-                }
-                var tmpSvgNode = documentFragment.getElementsByTagName("svg")[0];
-                // tmpThisControl.svgEl = tmpSvgNode;
+            tmpThisControl.frame = tmpThisControl.svgNode.select("#frame");
 
-                //--- was null, had to redo this -- examine further on why???
-                tmpThisControl.control = tmpThisControl.controlSvg.select("#layer1");
-                tmpThisControl.controlNode = tmpThisControl.control.node();
-                //--- had to move this
-                tmpThisControl.control.attr("cid", me.cid);
-                tmpThisControl.control.attr("oid", tmpOID);
-                //tmpThisControl.events = $({});
-
-                // tmpSvgNode.id = tmpThisControl.controlName + "_" + (me.loadedCount + 1);
-                ////console.log("tmpThisControl2",tmpThisControl);
-                tmpThisControl.controlNode.appendChild(tmpSvgNode);
-                tmpThisControl.svgNode = d3.select(tmpSvgNode);
-
-                var tmpDefsNode = tmpSvgNode.getElementsByTagName("defs")[0];
-                //--- Need to load the defs into a global space
-                if (!tmpThisControl.loadedControls.hasOwnProperty(tmpThisControl.controlName)) {
-                    me._svg.addDefs(tmpDefsNode);
-                    me.loadedControls[tmpThisControl.controlName] = true;
-                } else {
-                    tmpSvgNode.removeChild(tmpDefsNode);
-                }
-                //me.loadedCount++;
-
-                tmpThisControl.frame = tmpThisControl.svgNode.select("#frame");
-
-                tmpThisControl.translateX = tmpOptions.translateX || 0;
-                tmpThisControl.translateY = tmpOptions.translateY || 0;
-                tmpThisControl.scale = tmpOptions.scale || 1;
-                tmpThisControl.states = {};
+            tmpThisControl.translateX = tmpOptions.translateX || 0;
+            tmpThisControl.translateY = tmpOptions.translateY || 0;
+            tmpThisControl.scale = tmpOptions.scale || 1;
+            tmpThisControl.states = {};
 
 
-                //--- To Do, get message / details when fully loaded and do it then
-                setTimeout(function () {
-                    tmpThisControl.loadStates(tmpOptions.states || {});
-                }, 10);
+            //--- To Do, get message / details when fully loaded and do it then
+            setTimeout(function () {
+                tmpThisControl.loadStates(tmpOptions.states || {});
+            }, 10);
 
 
-                tmpThisControl.refreshLocation();
+            tmpThisControl.refreshLocation();
 
 
 
 
-                dfd.resolve(tmpThisControl);
+            dfd.resolve(tmpThisControl);
 
 
-            });
-        })
+        });
+        
         return dfd.promise();
 
     }
