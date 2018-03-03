@@ -289,7 +289,22 @@ SVG controls Plugin:
                 return;
             }
 
+            //var tmpSvgFrag = document.createDocumentFragment() 
+            var tmpSvgNode = document.createElement("svg");
+            var tmpBaseLayer = document.createElement("g");
+            var tmpLayerOne = document.createElement("g");
+            tmpSvgNode.id = "svg-base-container";
+            tmpBaseLayer.id = "baselayer";
+            tmpLayerOne.id = "layer1";
+            
+            tmpBaseLayer.appendChild(tmpLayerOne);
+            tmpSvgNode.appendChild(tmpBaseLayer);
+            //tmpSvgFrag.appendChild(tmpSvgNode);
+            //tmpSvgNode.innerHTML = '<svg id="svg-base-container"><g id="baseLayer"> <g id="layer1" ></g></g></svg>';
             var tmpSvgNode = documentFragment.getElementsByTagName("svg")[0];
+            //console.log("tmpSvgNode",tmpSVG);
+            //console.log("tmpSvgNode",tmpSVG);
+            
 
 
             var tmpOID = theOptions.oid || (tmpThisControl.cid + "-" + me.createdCount++);
@@ -302,6 +317,7 @@ SVG controls Plugin:
 
 
             if (tmpThisControl.svg) {
+                //--- ToDo: Cleanup of events when removed?
                 var tmpAddedEl = tmpThisControl.svg.node().appendChild(tmpSvgNode);
                 tmpThisControl.svgTopEl = tmpAddedEl;
                 if (typeof (tmpOptions.onClick) == 'function') {
@@ -309,7 +325,6 @@ SVG controls Plugin:
                 }
                 //--- always also catch the click event
                 $(tmpThisControl.svgTopEl).on("click", tmpThisControl.objectClicked.bind(tmpThisControl));
-
                 if (typeof (tmpOptions.onContextMenu) == 'function') {
                     $(tmpThisControl.svgTopEl).contextmenu(tmpOptions.onContextMenu);
                 }
