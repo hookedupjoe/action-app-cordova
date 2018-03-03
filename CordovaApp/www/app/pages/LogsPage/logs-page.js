@@ -60,10 +60,10 @@ License: MIT
     */
     ThisPage._onPreInit = function(theApp){
         ThisPage.om = theApp.om;
-        console.log("Log Page: _onPreInit ");
+        //console.log("Log Page: _onPreInit ");
     }
     ThisPage._onInit = function() {
-        console.log("Log Page: _onInit");
+        //console.log("Log Page: _onInit");
     }
 
     //=== On Page Activation ===
@@ -74,7 +74,7 @@ License: MIT
     *     that are needed even if the page was not activated yet
     */
     ThisPage._onFirstActivate = function(){
-        console.log("Log Page: _onFirstActivate");
+        //console.log("Log Page: _onFirstActivate");
         ThisPage.initOnFirstLoad().then(
             function(){
                 ThisPage._onActivate();
@@ -83,7 +83,7 @@ License: MIT
     }
     
     ThisPage._onActivate = function(){
-        console.log("Log Page: _onActivate");
+        //console.log("Log Page: _onActivate");
         ThisPage.refreshMessageCenter();
     }
     //--- End lifecycle hooks

@@ -60,11 +60,11 @@ License: MIT
     */
     ThisPage._onPreInit = function(theApp){
         ThisPage.om = theApp.om;
-        console.log("Home Page: _onPreInit ");
+        //console.log("Home Page: _onPreInit ");
         
     }
     ThisPage._onInit = function() {
-        console.log("Home Page: _onInit");
+        //console.log("Home Page: _onInit");
     }
 
     //=== On Page Activation ===
@@ -75,12 +75,15 @@ License: MIT
     *     that are needed even if the page was not activated yet
     */
     ThisPage._onFirstActivate = function(theApp){
-        console.log("Home Page: _onFirstActivate");
+        //console.log("Home Page: _onFirstActivate");
 
         //--- We are doing our own thing here, hide the overflow on the center panel
         //ThisApp.getFacet$("home:center").css('overflow','hidden');
 
         ThisPage._svg = theApp.getComponent("plugin:SvgControls");
+        ThisPage._webctl = theApp.getComponent("plugin:WebControls");
+        console.log("ThisPage._webctl",ThisPage._webctl)
+        
         ThisPage._om = theApp.om;
         ThisPage.inBuffer = 40;
         ThisPage.outBuffer = 12;
@@ -166,6 +169,15 @@ License: MIT
                 })
                 .sidebar('attach events', '[appuse="home:home-sidebar"] .menu .item')
                 ;
+
+                
+                var tmpTestAreaEl = me.getByAttr$({ facet: "home:testarea" });
+                me.testAreaWS = me._webctl.getNewWorkpace();
+                me.testAreaWS.init({ mom: tmpTestAreaEl[0], viewBox: {x: 0, y: 0, w: 150, h: 150} });
+                me.testAreaWS.addControl('icon-control-1', 'sui-icon', {states:{switchStatus:true} }).then(function(theControl){
+                    me.testAreaIcon1 = theControl;
+                    console.log("me.testAreaIcon1",me.testAreaIcon1);
+                });
 
                 var tmpWorkAreaEl = me.getByAttr$({ facet: "home:workarea" });
                 me.workAreaWS = me._svg.getNewWorkpace();
@@ -274,7 +286,7 @@ License: MIT
     }
     
     ThisPage._onActivate = function(){
-        console.log("Home Page: _onActivate");
+        //console.log("Home Page: _onActivate");
         //Do Refresh of stuff
     }
     //--- End lifecycle hooks
