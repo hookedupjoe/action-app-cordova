@@ -16,22 +16,21 @@
     
     me.refreshUI = refreshUI;
     function refreshUI(){
-       console.log('refreshed control');
+        var tmpHTML = 'icon ';
+        if( this.states.size ){
+            tmpHTML+= ' ' + this.states.size;
+        }
+        if( this.states.icon ){
+            tmpHTML+= ' ' + this.states.icon;
+        }
+        if( this.states.color ){
+            tmpHTML+= ' ' + this.states.color;
+        }
+        tmpHTML = '<i class="' + tmpHTML + '"></i>';
+        this.el.html(tmpHTML);
     }
 
-    me.setSliderValue = setSliderValue;
-    function setSliderValue(theValue) {
-        this.sliderValue = theValue;
-        this.refreshUI();
-        this.states.sliderValue = theValue;
-        //console.log("setSliderValue",theValue);
-    }
 
-    me.getSliderValue = getSliderValue;
-    function getSliderValue() {
-        return this.sliderValue;
-    }
-    
     me.init = init;
 
     me.setState = setState;
@@ -39,29 +38,33 @@
         if (!theState) {
             return false;
         }
-        if (theState == 'sliderValue') {
-            this.setSliderValue(theValue);
-        } else {
-            //console.info("Adding state with no action: " + theState);
-            this.states[theState] = theValue;
-        }
+        // if (theState == 'something') {
+        //     this.dosomethingwith(theValue);
+        // }
+        //--- Always saves in states
+        this.states[theState] = theValue;
         return true;
     }
     me.onClick = function (e) {
         if (e && e.detail && e.ctrlKey !== true && e.altKey !== true) {
-            this.publish('clicked',[this, this.getSliderValue()]);
+            //this.publish('clicked',[this, this.getSliderValue()]);
+            if( this.states.size == 'large'){
+                this.states.size = 'huge';
+            } else {
+                this.states.size = 'large';
+            }
+            this.refreshUI();
         }
     }
 
     me.onContextMenu = function (e) {
-        return true;
+        alert('context');
+        return false;
     }
 
     function init(theParentContainer, theOptions) {
         var dfd = jQuery.Deferred();
         var tmpOptions = theOptions || {};
-
-
 
         tmpOptions.controlName = thisControlName;
         tmpOptions.controlTitle = thisControlTitle;
@@ -85,10 +88,17 @@
                 //theControl.el is the base jQuery element
                 //theControl._el is the base raw element, same as .el.get();
                 //tmpThisControl.demoSomethings = theControl.el.find("div");
-                theControl.el.html("I AM A CONTROL");
-                for( var aSN in tmpOptions ){
-                    tmpThisControl.setState(aSN, tmpOptions[aSN])
+                
+                //--- Set all states and then call refreshUI for best performance
+                if( tmpOptions.states ){
+                    $.extend(tmpThisControl.states, tmpOptions.states);
                 }
+                tmpThisControl.refreshUI();
+                
+                
+                // for( var aSN in tmpOptions ){
+                //     tmpThisControl.setState(aSN, tmpOptions[aSN])
+                // }
 
                 dfd.resolve(tmpThisControl);
             }

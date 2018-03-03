@@ -173,10 +173,12 @@ License: MIT
                 
                 var tmpTestAreaEl = me.getByAttr$({ facet: "home:testarea" });
                 me.testAreaWS = me._webctl.getNewWorkpace();
-                me.testAreaWS.init({ mom: tmpTestAreaEl[0], viewBox: {x: 0, y: 0, w: 150, h: 150} });
-                me.testAreaWS.addControl('icon-control-1', 'sui-icon', {states:{switchStatus:true} }).then(function(theControl){
+                me.testAreaWS.init({ mom: tmpTestAreaEl[0]});
+                me.testAreaWS.addControl('icon-control-1', 'sui-icon', {states:{size:'huge',icon:'user',color:'blue'} }).then(function(theControl){
                     me.testAreaIcon1 = theControl;
-                    console.log("me.testAreaIcon1",me.testAreaIcon1);
+                });
+                me.testAreaWS.addControl('icon-control-2', 'sui-icon', {states:{size:'huge',icon:'group',color:'green'} }).then(function(theControl){
+                    me.testAreaIcon2 = theControl;
                 });
 
                 var tmpWorkAreaEl = me.getByAttr$({ facet: "home:workarea" });

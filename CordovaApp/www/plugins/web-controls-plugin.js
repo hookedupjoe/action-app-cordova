@@ -248,6 +248,7 @@ Web controls Plugin:
         if (tmpThisControl.mom) {
             //--- ToDo: Cleanup of events when removed?
             var tmpAddedEl = tmpThisControl.mom.appendChild(tmpWebCtlNode);
+            console.log("tmpWebCtlNode",tmpWebCtlNode);
             tmpThisControl._el = tmpAddedEl;
             tmpThisControl.el = $(tmpThisControl._el);
             if (typeof (tmpOptions.onClick) == 'function') {
