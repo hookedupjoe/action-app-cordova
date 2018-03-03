@@ -15,8 +15,9 @@ License: MIT
         pageTitle: "Debug Logs", 
         pageNamespace: 'debug',
         navOptions:{
+            icon: 'bug',
             topLink:false,
-            sideLink:false
+            sideLink:true
         },
         appModule:AppModule
     };

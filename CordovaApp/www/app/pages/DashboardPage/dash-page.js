@@ -13,7 +13,8 @@ License: MIT
         pageTitle: "Dashboard", 
         pageNamespace: 'dash',
         navOptions:{
-            topLink:true,
+            icon: 'user',
+            topLink:false,
             sideLink:true
         },
         //linkDisplayOption:'both',
@@ -106,67 +107,67 @@ License: MIT
                 .sidebar('attach events', '[appuse="dash:home-sidebar"] .menu .item')
                 ;
 
-                // var tmpZoomBarEl = me.getByAttr$({ facet: "dash:zoom-control" });
-                // me.wsZoomControlWS = me._svg.getNewWorkpace();
-                // me.wsZoomControlWS.init({ svg: tmpZoomBarEl[0], viewBox: {x: 0, y: 0, w: 200, h: 20} });
-                // me.wsZoomControlWS.addControl('zoom-slider', 'horiz-slider', { sliderStart:0, sliderEnd: 100, sliderIncr: 10, sliderValue: 50, scale: .5 }).then(function(theControl){
-                //     me.wsZoomControl = theControl;
-                //     me.wsZoomControl.subscribe("valueChanged", me.zoomValueChanged.bind(me));
-                // });
+                var tmpZoomBarEl = me.getByAttr$({ facet: "dash:zoom-control" });
+                me.wsZoomControlWS = me._svg.getNewWorkpace();
+                me.wsZoomControlWS.init({ svg: tmpZoomBarEl[0], viewBox: {x: 0, y: 0, w: 200, h: 20} });
+                me.wsZoomControlWS.addControl('zoom-slider', 'horiz-slider', { sliderStart:0, sliderEnd: 100, sliderIncr: 10, sliderValue: 50, scale: .5 }).then(function(theControl){
+                    me.wsZoomControl = theControl;
+                    me.wsZoomControl.subscribe("valueChanged", me.zoomValueChanged.bind(me));
+                });
 
-                // var tmpHomeWsEl = me.getByAttr$({ facet: "dash:home-ws" });
-                // me.wsHome = me._svg.getNewWorkpace();
-                // me.wsHome.init({ svg: tmpHomeWsEl[0], viewBox: {x: 0, y: 0, w: 400, h: 400} });
+                var tmpHomeWsEl = me.getByAttr$({ facet: "dash:home-ws" });
+                me.wsHome = me._svg.getNewWorkpace();
+                me.wsHome.init({ svg: tmpHomeWsEl[0], viewBox: {x: 0, y: 0, w: 400, h: 400} });
 
-                // me.wsHome.addControl('icon-database1', 'icon-database', {scale: 1 }).then(function(theControl){
-                //     me.wsDatabaseIcon = theControl;
-                // });
-                // me.wsHome.addControl('on-off-g-r1', 'on-off-g-r', {scale: 2, translateY:210, translateX:120 }).then(function(theControl){
-                //     me.onOffButton1 = theControl;
-                // });
-                // me.wsHome.addControl('btn-round-glossy1', 'btn-round-glossy', {scale: .25, translateY:280, translateX:60, states:{switchColor:'#ff00ff',switchStatus:true} }).then(function(theControl){
-                //     me.roundGlossyButton = theControl;
-                // });
-                // me.wsHome.addControl('btn-round-glossy2', 'btn-round-glossy', {scale: .25, translateY:280, translateX:160, states:{switchColor:'#ffff00',switchStatus:true} }).then(function(theControl){
-                //     me.roundGlossyButton2 = theControl;
-                // });
-                // me.wsHome.addControl('btn-round-glossy3', 'btn-round-glossy', {scale: .25, translateY:280, translateX:260, states:{switchColor:'#00ffff',switchStatus:true} }).then(function(theControl){
-                //     me.roundGlossyButton3 = theControl;
-                // });
-                // me.wsHome.addControl('color-bar-main', 'color-bar', {scale: .4, translateY:160, translateX:20, states:{switchColor:'#00ffff',switchStatus:true} }).then(function(theControl){
-                //     me.roundGlossyButton3 = theControl;
-                // });
+                me.wsHome.addControl('icon-database1', 'icon-database', {scale: 1 }).then(function(theControl){
+                    me.wsDatabaseIcon = theControl;
+                });
+                me.wsHome.addControl('on-off-g-r1', 'on-off-g-r', {scale: 2, translateY:210, translateX:120 }).then(function(theControl){
+                    me.onOffButton1 = theControl;
+                });
+                me.wsHome.addControl('btn-round-glossy1', 'btn-round-glossy', {scale: .25, translateY:280, translateX:60, states:{switchColor:'#ff00ff',switchStatus:true} }).then(function(theControl){
+                    me.roundGlossyButton = theControl;
+                });
+                me.wsHome.addControl('btn-round-glossy2', 'btn-round-glossy', {scale: .25, translateY:280, translateX:160, states:{switchColor:'#ffff00',switchStatus:true} }).then(function(theControl){
+                    me.roundGlossyButton2 = theControl;
+                });
+                me.wsHome.addControl('btn-round-glossy3', 'btn-round-glossy', {scale: .25, translateY:280, translateX:260, states:{switchColor:'#00ffff',switchStatus:true} }).then(function(theControl){
+                    me.roundGlossyButton3 = theControl;
+                });
+                me.wsHome.addControl('color-bar-main', 'color-bar', {scale: .4, translateY:160, translateX:20, states:{switchColor:'#00ffff',switchStatus:true} }).then(function(theControl){
+                    me.roundGlossyButton3 = theControl;
+                });
 
-                // //==========================
+                //==========================
 
-                // $("#test").swipe( {
-                //     swipeStatus:function(event, phase, direction, distance , duration , fingerCount) {
-                //        $(this).find('#swipe_text').text("swiped " + distance + ' px');
-                //        if(phase === $.fn.swipe.phases.PHASE_END || phase === $.fn.swipe.phases.PHASE_CANCEL) {
-                //            //The handlers below fire after the status, 
-                //            // so we can change the text here, and it will be replaced if the handlers below fire
-                //            $(this).find('#swipe_text').text("No swipe was made");
-                //        }
-                //     },
-                //     pinchStatus:function(event, phase, direction, distance , duration , fingerCount, pinchZoom) {
-                //         $(this).find('#pinch_text').text("pinched " + distance + " px ");
-                //         if(phase === $.fn.swipe.phases.PHASE_END || phase === $.fn.swipe.phases.PHASE_CANCEL) {
-                //            //The handlers below fire after the status, 
-                //            // so we can change the text here, and it will be replaced if the handlers below fire
-                //            $(this).find('#pinch_text').text("No pinch was made");
-                //        }
-                //     },
-                //     swipe:function(event, direction, distance, duration, fingerCount) {
-                //          $(this).find('#swipe_text').text("You swiped " + direction + " with " + fingerCount + " fingers");
-                //     },
-                //     pinchIn:function(event, direction, distance, duration, fingerCount, pinchZoom) {
-                //         $(this).find('#pinch_text').text("You pinched " +direction + " by " + distance +"px, zoom scale is "+pinchZoom); 
-                //     },
-                //     pinchOut:function(event, direction, distance, duration, fingerCount, pinchZoom) {
-                //         $(this).find('#pinch_text').text("You pinched " +direction + " by " + distance +"px, zoom scale is "+pinchZoom);
-                //     },
-                //     fingers:$.fn.swipe.fingers.ALL	
-                // });
+                $("#pinch-test").swipe( {
+                    swipeStatus:function(event, phase, direction, distance , duration , fingerCount) {
+                       $(this).find('#swipe_text').text("swiped " + distance + ' px');
+                       if(phase === $.fn.swipe.phases.PHASE_END || phase === $.fn.swipe.phases.PHASE_CANCEL) {
+                           //The handlers below fire after the status, 
+                           // so we can change the text here, and it will be replaced if the handlers below fire
+                           $(this).find('#swipe_text').text("No swipe was made");
+                       }
+                    },
+                    pinchStatus:function(event, phase, direction, distance , duration , fingerCount, pinchZoom) {
+                        $(this).find('#pinch_text').text("pinched " + distance + " px ");
+                        if(phase === $.fn.swipe.phases.PHASE_END || phase === $.fn.swipe.phases.PHASE_CANCEL) {
+                           //The handlers below fire after the status, 
+                           // so we can change the text here, and it will be replaced if the handlers below fire
+                           $(this).find('#pinch_text').text("No pinch was made");
+                       }
+                    },
+                    swipe:function(event, direction, distance, duration, fingerCount) {
+                         $(this).find('#swipe_text').text("You swiped " + direction + " with " + fingerCount + " fingers");
+                    },
+                    pinchIn:function(event, direction, distance, duration, fingerCount, pinchZoom) {
+                        $(this).find('#pinch_text').text("You pinched " +direction + " by " + distance +"px, zoom scale is "+pinchZoom); 
+                    },
+                    pinchOut:function(event, direction, distance, duration, fingerCount, pinchZoom) {
+                        $(this).find('#pinch_text').text("You pinched " +direction + " by " + distance +"px, zoom scale is "+pinchZoom);
+                    },
+                    fingers:$.fn.swipe.fingers.ALL	
+                });
 
 
 
