@@ -49,23 +49,29 @@
         return true;
     }
     me.onClick = function (e) {
+        
         if (e && e.detail && e.ctrlKey !== true && e.altKey !== true) {
-            //this.publish('clicked',[this, this.getSliderValue()]);
-            if( this.states.size == 'large'){
-                this.states.size = 'huge';
-            } else {
-                this.states.size = 'large';
-            }
-            this.refreshUI();
+            this.publish('onClick',[this]);
+            this.onContextMenu({trigger:'left'});
+            // //this.publish('clicked',[this, this.getSliderValue()]);
+            // if( this.states.size == 'large'){
+            //     this.states.size = 'huge';
+            // } else {
+            //     this.states.size = 'large';
+            // }
+            // this.refreshUI();
         }
     }
 
-    me.onContextMenu = function (e) {
+    me.onContextMenu = onContextMenu;
+    function onContextMenu(theOptions) {
         var tmpParentEl = this.el;
         var tmpOID = tmpParentEl.attr('oid');
         var tmpThisControl = this;
-
-        $.contextMenu({
+        var tmpOptions = theOptions || {};
+        this.publish('onContextMenu',[this]);
+        
+        var tmpMenu = {
             selector:'[oid="' + tmpOID + '"]',
             items: {
                 
@@ -129,7 +135,11 @@
                     }).bind(this)
                 }
             }
-        });
+        };
+        if( typeof(tmpOptions.trigger) == 'string' ){
+            tmpMenu.trigger = tmpOptions.trigger;
+        }
+        $.contextMenu(tmpMenu);
         
 
     }
