@@ -478,7 +478,39 @@ Web controls Plugin:
         this.mom.onmousedown = DragProcess.bind(this);
         this.mom.onmousemove = DragProcess.bind(this);
         this.mom.onmouseup = DragProcess.bind(this);
+
+        var tmpFN = onContextMenu.bind(this);
+        $(this.mom).contextmenu(function(e){
+           // console.log("HIT WS CM",e);
+            //e.stopPropagation();
+            if( !e.isDefaultPrevented() ){
+                tmpFN();    
+            }
+            
+        })
+
         $(document.body).on('mouseup', DragUp.bind(this));
+    }
+    function onContextMenu(){
+        console.log('ws',this)
+        $.contextMenu({
+            selector: '.page-frame', 
+            callback: function(key, options) {
+                var m = "clicked: " + key;
+                window.console && console.log(m) || alert(m); 
+            },
+            items: {
+                "edit": {name: "Edit", icon: "edit"},
+                "cut": {name: "Cut", icon: "cut"},
+               copy: {name: "Copy", icon: "copy"},
+                "paste": {name: "Paste", icon: "paste"},
+                "delete": {name: "Delete", icon: "delete"},
+                "sep1": "---------",
+                "quit": {name: "Quit", icon: function(){
+                    return 'context-menu-icon context-menu-icon-quit';
+                }}
+            }
+        });
     }
 
 
