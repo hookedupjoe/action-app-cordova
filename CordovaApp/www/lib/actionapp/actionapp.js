@@ -1022,6 +1022,9 @@ var ActionAppCore = {};
         if (typeof (tmpContent) == 'object') {
             tmpContent = me.getTemplatedContent(tmpContent);
         }
+        if( tmpHeader == ''){
+            tmpHeader = '&nbsp;';
+        }
         ThisApp.loadFacet('site:dialog-header', tmpHeader);
         ThisApp.loadFacet('site:dialog-content', tmpContent);
         ThisApp.loadFacet('site:dialog-actions', ' ');
@@ -1225,7 +1228,8 @@ var ActionAppCore = {};
         if (!commonDialog) {
             //var tmpFacet = ThisApp.loadFacet(commonDialogFacet,'',commonDialogTemplate);
             commonDialog = ThisApp.getByAttr$({ appuse: 'global-dialog' })
-            commonDialog.modal('setting', { closable: true }); // example of using modal dialog
+            commonDialog.modal({centered:false});
+            commonDialog.modal('setting', {  closable: true }); // example of using modal dialog
         }
         return commonDialog;
     }
@@ -1245,8 +1249,10 @@ var ActionAppCore = {};
     }
 
     function initGlobalDialog() {
+        //--- Dynamically create the common dialog facet
         var tmpNewDiv = $('<div facet="site:global-dialog" class="hidden"></div>').appendTo('body');
-        var tmpHTML = '<div appuse="global-dialog" class="ui modal"> <i class="close icon"></i> <div facet="site:dialog-header" class="header"></div> <div facet="site:dialog-content" class="content"> </div> <div facet="site:dialog-actions" class="actions"></div> </div> ';
+        //--- Populate with common dialog (ToDo: Allow override?)
+        var tmpHTML = '<div appuse="global-dialog" class="ui modal longer inverted"><button style="float:right;margin-top:5px;margin-right:5px;" class="icon ui basic blue button circle" action="_app:closeCommonDialog" ><i class="close icon"></i> Close</button><div facet="site:dialog-header" class="header"></div>  <div facet="site:dialog-content" class="content common-dialog-content"> </div> <div facet="site:dialog-actions" class="actions"></div> </div> ';
         me.loadFacet(commonDialogFacet, tmpHTML )
     }
 
@@ -1326,6 +1332,17 @@ var ActionAppCore = {};
         }
     }
 
+    me.runAction = runAction;
+    function runAction(theAction, theSourceObject) {
+        var tmpAction = theAction || '';
+        tmpAction = tmpAction.replace((this.pageNamespace + ":"), '');
+        if (typeof (this[tmpAction]) == 'function') {
+            this[tmpAction](tmpAction, theSourceObject);
+        } else if (typeof (me[tmpAction]) == 'function') {
+            me[tmpAction](tmpAction, theSourceObject);
+        }
+    }
+
     me.init = init;
     var ThisCoreApp = this;
     function init(theAppConfig) {
@@ -1335,7 +1352,8 @@ var ActionAppCore = {};
         //--- Init Required Plugins
         me.useModuleComponents('plugin', ['ObjectManager']);
         me.om = me.getComponent("plugin:ObjectManager");
-
+        this.registerActionDelegate("_app", this.runAction.bind(this));
+        
         //--- ToDo: Support options in theAppConfig to control this        
         me.siteLayout = $('body').layout({
             center__paneSelector: ".site-layout-center"

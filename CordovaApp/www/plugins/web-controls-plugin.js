@@ -38,7 +38,7 @@ Web controls Plugin:
     //--- Base class for application pages
     function ThisPageController(theOptions) {
         this.options = theOptions || {};
-        this.actions = this.options.actions || {};
+        //this.actions = this.options.actions || {};
         var defaults = {};
         if (typeof (this.options.app) == 'object') {
             ThisApp = this.options.app;
@@ -46,6 +46,7 @@ Web controls Plugin:
                 ThisApp.registerComponent(thisComponentID, this);
             }
         }
+        
     }
     var me = ThisPageController.prototype;
     //---ToDo: Duplicate, pull from somewhere unified?

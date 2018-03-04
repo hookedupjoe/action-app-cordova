@@ -52,8 +52,11 @@
         
         if (e && e.detail && e.ctrlKey !== true && e.altKey !== true) {
             this.publish('onClick',[this]);
-            this.onContextMenu({trigger:'left'});
-            // //this.publish('clicked',[this, this.getSliderValue()]);
+
+//--- To trigger context menu ...
+            //this.onContextMenu({trigger:'left'});
+
+//--- To effect yourself ...
             // if( this.states.size == 'large'){
             //     this.states.size = 'huge';
             // } else {

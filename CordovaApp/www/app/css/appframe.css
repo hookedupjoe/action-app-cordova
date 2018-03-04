@@ -10,6 +10,9 @@
     cursor: not-allowed !important;
   }
 
+  .common-dialog-content {
+    min-height:250px; 
+  }
   /* Context Menu Tweaks */
   .context-menu-icon.context-menu-hover:before {
     color: #38afff;
@@ -31,6 +34,11 @@
   }
   .onbottom {
     padding-top:0px;
+  }
+
+  .dimmed.dimmable>.ui.animating.dimmer, .dimmed.dimmable>.ui.visible.dimmer, .ui.active.dimmer {
+    padding: 0;
+    margin: 0;
   }
 
   i.bordered.icon {

@@ -153,6 +153,9 @@ License: MIT
             })
         }
 
+        ThisPage.aboutThisPage = function(){
+            ThisApp.showCommonDialog({ header: "About this application", content: {data:'', template:'app:about-this-app'} });
+        }
         ThisPage.initOnFirstLoad().then(
             function(){
                 ThisPage.refreshMainGrid();
@@ -169,10 +172,16 @@ License: MIT
                 me.testAreaWS = me._webctl.getNewPanel();
                 me.testAreaWS.init({ mom: tmpTestAreaEl[0]});
                 
+                
 
                 //ToDo: me.testAreaWS.getControls(['sui-icon']);                 
                 //to preload them all so we can add and know the order is good
                 me.testAreaWS.addControl('icon-control-1', 'sui-icon', {states:{bordered:true, size:'huge',icon:'user',color:'blue'} }).then(function(theControl){
+                    theControl.subscribe('onClick', function(){
+                        console.log("click")
+                        ThisApp.aboutThisApp();
+                        //ThisApp.showCommonDialog({ header: "About this page", content: 'Hello World' });
+                    })    
                     //me.testAreaIcon1 = theControl;
                     // --- Have to load all the controls in use in advance
                     // --   or control load order, this is NOT the way, this is a test

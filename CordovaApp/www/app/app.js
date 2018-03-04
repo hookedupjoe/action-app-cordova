@@ -23,6 +23,7 @@
       },
       onBackButton: function(){
         ThisApp.hideSidebar();        
+        ThisApp.closeCommonDialog();
         // if( ThisApp.sidebarGetDisplay() ){
          
         // }
@@ -131,7 +132,8 @@
             ThisApp.getByAttr$({ appuse: "app-loader" }).remove();
   
             ThisApp.aboutThisApp = function(){
-              ThisApp.showCommonDialog({ header: "About this application", content: {data:'', template:'app:about-this-app'} });
+              //header: "About this application", 
+              ThisApp.showCommonDialog({ content: {data:'', template:'app:about-this-app'} });
             }
             //--- Turn off messages by default
             ThisApp.setMessagesOptions({show:false})
