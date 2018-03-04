@@ -132,8 +132,7 @@
             ThisApp.getByAttr$({ appuse: "app-loader" }).remove();
   
             ThisApp.aboutThisApp = function(){
-              //header: "About this application", 
-              ThisApp.showCommonDialog({ content: {data:'', template:'app:about-this-app'} });
+              ThisApp.showCommonDialog({ header: "About this application", content: {data:'', template:'app:about-this-app'} });
             }
             //--- Turn off messages by default
             ThisApp.setMessagesOptions({show:false})
