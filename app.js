@@ -2,6 +2,9 @@ var express = require('express');
 var app = express();
 
 app.use(express.static('CordovaApp/www'));
+
+//--- When running node.js, Cordova is not in play.
+//-    we can plug in mock and even Node.js functionality
 app.get('/cordova.js', function (req, res) {
     res.send('window._cordovaTestMode = true;')
 })
