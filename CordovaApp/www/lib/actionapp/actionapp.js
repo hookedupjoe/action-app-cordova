@@ -1375,13 +1375,8 @@ var ActionAppCore = {};
                 tmpPopup.popup('destroy');
             }
         }
-        //$.extend(tmpPopSpecs, tmpDetails);
-        if( tmpDetails.title ){
-            tmpPopSpecs.title = tmpDetails.title;
-        }
-        if( tmpDetails.content ){
-            tmpPopSpecs.content = tmpDetails.content;
-        }
+        
+        $.extend(tmpPopSpecs, tmpDetails);
         tmpPopup = tmpTargetEl.popup(tmpPopSpecs).popup('show');
     }
 
