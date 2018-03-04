@@ -61,18 +61,9 @@
     }
 
     me.onContextMenu = function (e) {
-        console.log("HIT CTL CM",e);
-        e.preventDefault();
-//console.log('icon menu ',this);
-//return false;
-        //var tmpEl = e.target;
         var tmpParentEl = this.el;
         var tmpOID = tmpParentEl.attr('oid');
-        //alert('bind ' + tmpOID)
-        //alert($('[oid="' + tmpOID + '"]').length) 
         var tmpThisControl = this;
-        
-//        e.stopPropagation();
 
         $.contextMenu({
             selector:'[oid="' + tmpOID + '"]',

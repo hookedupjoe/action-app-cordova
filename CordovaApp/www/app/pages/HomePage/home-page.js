@@ -77,18 +77,13 @@ License: MIT
     ThisPage._onFirstActivate = function(theApp){
         //console.log("Home Page: _onFirstActivate");
 
-        //--- We are doing our own thing here, hide the overflow on the center panel
-        //ThisApp.getFacet$("home:center").css('overflow','hidden');
-
         ThisPage._svg = theApp.getComponent("plugin:SvgControls");
         ThisPage._webctl = theApp.getComponent("plugin:WebControls");
-        console.log("ThisPage._webctl",ThisPage._webctl)
         
         ThisPage._om = theApp.om;
         ThisPage.inBuffer = 40;
         ThisPage.outBuffer = 12;
         ThisPage.minHeight = 50;
-        //ThisPage.maxHeight = 200;
 
         //--- Demo special grid
         ThisPage.refreshMainGrid = function(){

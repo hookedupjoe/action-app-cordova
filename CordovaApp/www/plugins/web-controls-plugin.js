@@ -260,8 +260,15 @@ Web controls Plugin:
             }
             //--- always also catch the click event
             $(tmpThisControl._el).on("click", tmpThisControl.objectClicked.bind(tmpThisControl));
+          
             if (typeof (tmpOptions.onContextMenu) == 'function') {
-                $(tmpThisControl._el).contextmenu(tmpOptions.onContextMenu);
+                var tmpFN = tmpOptions.onContextMenu.bind(tmpThisControl);
+                $(tmpThisControl._el).contextmenu(function(e){
+                    if( !e.isDefaultPrevented() ){
+                        e.preventDefault();
+                        tmpFN();    
+                    }
+                });
             }
         }
 
@@ -481,18 +488,16 @@ Web controls Plugin:
 
         var tmpFN = onContextMenu.bind(this);
         $(this.mom).contextmenu(function(e){
-           // console.log("HIT WS CM",e);
-            //e.stopPropagation();
             if( !e.isDefaultPrevented() ){
+                e.preventDefault();
                 tmpFN();    
             }
-            
         })
 
         $(document.body).on('mouseup', DragUp.bind(this));
     }
     function onContextMenu(){
-        console.log('ws',this)
+       //Depending on mode, this will do different stuff
         $.contextMenu({
             selector: '.page-frame', 
             callback: function(key, options) {
