@@ -1249,11 +1249,13 @@ var ActionAppCore = {};
     }
 
     function initGlobalDialog() {
+        //--- ToDo: Why not just add the HTML directly to body in this case?
+
         //--- Dynamically create the common dialog facet
         var tmpNewDiv = $('<div facet="site:global-dialog" class="hidden"></div>').appendTo('body');
         //--- Populate with common dialog (ToDo: Allow override?)
         var tmpHTML = '<div appuse="global-dialog" class="ui modal longer inverted"><button style="float:right;margin-top:5px;margin-right:5px;" class="icon ui basic blue button circle" action="_app:closeCommonDialog" ><i class="close icon"></i> Close</button><div facet="site:dialog-header" class="header"></div>  <div facet="site:dialog-content" class="content common-dialog-content"> </div> <div facet="site:dialog-actions" class="actions"></div> </div> ';
-        me.loadFacet(commonDialogFacet, tmpHTML )
+        me.loadFacet(commonDialogFacet, tmpHTML )        
     }
 
     function initAppActions() {
@@ -1332,6 +1334,58 @@ var ActionAppCore = {};
         }
     }
 
+    //=== Pass title and content, optionally an onClose event (not normal part of sui popup)
+    //--- This creates the popup, then destroys when closed and does a callback if there
+    me.showPopup = showPopup;
+    function showPopup(theDetails, theTargetEl){
+        var tmpDetails = theDetails || '';
+        var tmpTargetEl = false;
+        if( typeof(tmpDetails) == 'string'){
+            //This is from an action, convert it
+            tmpTargetEl = $(theTargetEl);
+            tmpDetails = {};
+            var tmpTitle = tmpTargetEl.attr('title') || tmpTargetEl.attr('popup-title' || '');
+            var tmpContent = tmpTargetEl.attr('content') || tmpTargetEl.attr('popup-content'|| '');
+            if( tmpTitle ){
+                tmpDetails.title = tmpTitle;
+            }
+            if( tmpContent ){
+                tmpDetails.content = tmpContent;
+            }
+
+        } else {
+            tmpTargetEl = theTargetEl || tmpDetails.el || false;
+            //--- Make sure we are dealing with a jQuery element on the one passed
+            if(typeof(tmpTargetEl.get) !== 'function'){
+                tmpTargetEl = $(tmpTargetEl);
+            }
+        }
+        
+        var tmpPopup;
+        var tmpFn = false;
+        if( typeof(tmpDetails.onClose) == 'function' ){
+            tmpFn = tmpDetails.onClose;
+        }
+        var tmpPopSpecs = {
+            on:'click',
+            onHidden: function(){
+                if( tmpFn ){
+                    tmpFn();
+                }
+                tmpPopup.popup('destroy');
+            }
+        }
+        //$.extend(tmpPopSpecs, tmpDetails);
+        if( tmpDetails.title ){
+            tmpPopSpecs.title = tmpDetails.title;
+        }
+        if( tmpDetails.content ){
+            tmpPopSpecs.content = tmpDetails.content;
+        }
+        tmpPopup = tmpTargetEl.popup(tmpPopSpecs).popup('show');
+    }
+
+    //--- Run _app function, commonly used application wide functions
     me.runAction = runAction;
     function runAction(theAction, theSourceObject) {
         var tmpAction = theAction || '';

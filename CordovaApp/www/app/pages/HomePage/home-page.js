@@ -187,13 +187,35 @@ License: MIT
                     // --   or control load order, this is NOT the way, this is a test
                     // --  Also note, you couild load the first, then the rest do load in order, no async involved                    
                     me.testAreaWS.addControl('icon-control-2', 'sui-icon', {states:{bordered:true, size:'huge',icon:'group',color:'green'} }).then(function(theControl){
-                        
+                        theControl.subscribe('onClick', function(){
+                            ThisApp.showPopup({
+                                el: theControl.mom,
+                                title: 'This object is in a panel',
+                                content: 'This is the panel the object lives in.'
+                            })      
+                        })    
                     });
                     me.testAreaWS.addControl('icon-control-3', 'sui-icon', {states:{bordered:true, size:'huge',icon:'group',color:'purple'} }).then(function(theControl){
-                        
+                        theControl.subscribe('onClick', function(){
+                            ThisApp.showPopup({
+                                el: theControl.el,
+                                title: 'This object',
+                                content: 'This is the object itself.'
+                            })      
+                        })                            
                     });
                     me.testAreaWS.addControl('icon-control-4', 'sui-icon', {states:{bordered:true, size:'huge',icon:'group',color:'orange'} }).then(function(theControl){
-                        
+                        theControl.subscribe('onClick', function(){
+                           
+                            ThisApp.showPopup({
+                                el: theControl.el,
+                                title: 'This object',
+                                content: 'When closed, I shall say so in the console',
+                                onClose: function(){
+                                    console.log('The popup is now closed, refresh anyone?')
+                                }
+                            })                            
+                        })           
                     });
                 });
                 
