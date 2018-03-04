@@ -108,7 +108,7 @@ License: MIT
                 ;
 
                 var tmpZoomBarEl = me.getByAttr$({ facet: "dash:zoom-control" });
-                me.wsZoomControlWS = me._svg.getNewWorkpace();
+                me.wsZoomControlWS = me._svg.getNewPanel();
                 me.wsZoomControlWS.init({ svg: tmpZoomBarEl[0], viewBox: {x: 0, y: 0, w: 200, h: 20} });
                 me.wsZoomControlWS.addControl('zoom-slider', 'horiz-slider', { sliderStart:0, sliderEnd: 100, sliderIncr: 10, sliderValue: 50, scale: .5 }).then(function(theControl){
                     me.wsZoomControl = theControl;
@@ -116,7 +116,7 @@ License: MIT
                 });
 
                 var tmpHomeWsEl = me.getByAttr$({ facet: "dash:home-ws" });
-                me.wsHome = me._svg.getNewWorkpace();
+                me.wsHome = me._svg.getNewPanel();
                 me.wsHome.init({ svg: tmpHomeWsEl[0], viewBox: {x: 0, y: 0, w: 400, h: 400} });
 
                 me.wsHome.addControl('icon-database1', 'icon-database', {scale: 1 }).then(function(theControl){

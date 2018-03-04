@@ -137,7 +137,7 @@
             }
         };
         if( typeof(tmpOptions.trigger) == 'string' ){
-            tmpMenu.trigger = tmpOptions.trigger;
+           tmpMenu.trigger = tmpOptions.trigger;
         }
         $.contextMenu(tmpMenu);
         

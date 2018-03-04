@@ -166,7 +166,7 @@ License: MIT
                 ;
                 
                 var tmpTestAreaEl = me.getByAttr$({ facet: "home:testarea" });
-                me.testAreaWS = me._webctl.getNewWorkpace();
+                me.testAreaWS = me._webctl.getNewPanel();
                 me.testAreaWS.init({ mom: tmpTestAreaEl[0]});
                 
 
@@ -190,7 +190,7 @@ License: MIT
                 
 
                 var tmpWorkAreaEl = me.getByAttr$({ facet: "home:workarea" });
-                me.workAreaWS = me._svg.getNewWorkpace();
+                me.workAreaWS = me._svg.getNewPanel();
                 me.workAreaWS.init({ svg: tmpWorkAreaEl[0], viewBox: {x: 0, y: 0, w: 150, h: 150} });
 
                 me.workAreaWS.addControl('work-button-1', 'btn-round-glossy', {translateX: 5, translateY: 5, scale: .1,states:{switchColor:'#ffff00',switchStatus:true} }).then(function(theControl){
@@ -210,7 +210,7 @@ License: MIT
                 });
 
                 var tmpFunAreaEl = me.getByAttr$({ facet: "home:funarea" });
-                me.funAreaWS = me._svg.getNewWorkpace();
+                me.funAreaWS = me._svg.getNewPanel();
                 me.funAreaWS.init({ svg: tmpFunAreaEl[0], viewBox: {x: 0, y: 0, w: 150, h: 150} });
 
                 me.funAreaWS.addControl('fun-button-1', 'btn-round-glossy', {translateX: 5, translateY: 5, scale: .1,states:{switchColor:'#00ffff',switchStatus:true} }).then(function(theControl){
@@ -227,7 +227,7 @@ License: MIT
                 });
 
                 var tmpZoomBarEl = me.getByAttr$({ facet: "home:zoom-control" });
-                me.wsZoomControlWS = me._svg.getNewWorkpace();
+                me.wsZoomControlWS = me._svg.getNewPanel();
                 me.wsZoomControlWS.init({ svg: tmpZoomBarEl[0], viewBox: {x: 0, y: 0, w: 200, h: 20} });
                 me.wsZoomControlWS.addControl('zoom-slider', 'horiz-slider', { sliderStart:0, sliderEnd: 100, sliderIncr: 10, sliderValue: 50, scale: .5 }).then(function(theControl){
                     me.wsZoomControl = theControl;
@@ -235,7 +235,7 @@ License: MIT
                 });
 
                 var tmpHomeWsEl = me.getByAttr$({ facet: "home:home-ws" });
-                me.wsHome = me._svg.getNewWorkpace();
+                me.wsHome = me._svg.getNewPanel();
                 me.wsHome.init({ svg: tmpHomeWsEl[0], viewBox: {x: 0, y: 0, w: 400, h: 400} });
 
                 me.wsHome.addControl('icon-database1', 'icon-database', {scale: 1 }).then(function(theControl){

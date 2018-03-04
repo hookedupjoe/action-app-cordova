@@ -67,8 +67,8 @@ SVG controls Plugin:
         return this;
     }
 
-    me.getNewWorkpace = function (theOptions) {
-        return new SvgExtendMod.SvgWorkspace(theOptions);
+    me.getNewPanel = function (theOptions) {
+        return new SvgExtendMod.SvgCtlPanel(theOptions);
     }
 
     function runAction(theAction, theSourceObject) {
@@ -389,7 +389,7 @@ SVG controls Plugin:
 
 
 
-//--- SvgWorkspace Functionality =========== =========== =========== =========== =========== =========== =========== 
+//--- SvgCtlPanel Functionality =========== =========== =========== =========== =========== =========== =========== 
 
 (function (ActionAppCore, $) {
 
@@ -403,9 +403,9 @@ SVG controls Plugin:
 
     var me = ThisExtention.prototype;
 
-    //-- Every SvgWorkspace has built-in pub-sub functionality
+    //-- Every SvgCtlPanel has built-in pub-sub functionality
     //$.extend(me, ExtendMod.PubSub)
-    //-- Every SvgWorkspace has quick access to common setDisplay function
+    //-- Every SvgCtlPanel has quick access to common setDisplay function
     $.extend(me, ExtendMod.SetDisplay)
 
     me.removeControl = function (theObjectOrID) {
@@ -519,7 +519,7 @@ SVG controls Plugin:
         theOptions = theOptions || {};
         this.svg = theOptions.svg || false;
         if (!this.svg) {
-            console.error("A svg entry is required to setup a SvgWorkspace")
+            console.error("A svg entry is required to setup a SvgCtlPanel")
         }
         if (theOptions.viewBox !== false) {
             this.svg.setAttribute('viewBox', this._getViewBoxString(this.originalViewBox));
@@ -824,7 +824,7 @@ SVG controls Plugin:
 
     //--- return the prototype to be marged with prototype of target object
 
-    SvgExtendMod.SvgWorkspace = ThisExtention;
+    SvgExtendMod.SvgCtlPanel = ThisExtention;
 
 })(ActionAppCore, $);
 

@@ -60,8 +60,8 @@ Web controls Plugin:
         return this;
     }
 
-    me.getNewWorkpace = function (theOptions) {
-        return new WebCtlExtendMod.WebCtlWorkspace(theOptions);
+    me.getNewPanel = function (theOptions) {
+        return new WebCtlExtendMod.WebCtlPanel(theOptions);
     }
 
     function runAction(theAction, theSourceObject) {
@@ -301,7 +301,7 @@ Web controls Plugin:
 
 
 
-//--- WebCtlWorkspace Functionality =========== =========== =========== =========== =========== =========== =========== 
+//--- WebCtlPanel Functionality =========== =========== =========== =========== =========== =========== =========== 
 
 (function (ActionAppCore, $) {
 
@@ -315,9 +315,9 @@ Web controls Plugin:
 
     var me = ThisExtention.prototype;
 
-    //-- Every WebCtlWorkspace has built-in pub-sub functionality
+    //-- Every WebCtlPanel has built-in pub-sub functionality
     //$.extend(me, ExtendMod.PubSub)
-    //-- Every WebCtlWorkspace has quick access to common setDisplay function
+    //-- Every WebCtlPanel has quick access to common setDisplay function
     $.extend(me, ExtendMod.SetDisplay)
 
     me.removeControl = function (theObjectOrID) {
@@ -421,7 +421,7 @@ Web controls Plugin:
         theOptions = theOptions || {};
         this.mom = theOptions.mom || false;
         if (!this.mom) {
-            console.error("A parent element is required to setup a WebCtlWorkspace")
+            console.error("A parent element is required to setup a WebCtlPanel")
         }
 
         this.AttachListeners();
@@ -704,7 +704,7 @@ Web controls Plugin:
 
     //--- return the prototype to be marged with prototype of target object
 
-    WebCtlExtendMod.WebCtlWorkspace = ThisExtention;
+    WebCtlExtendMod.WebCtlPanel = ThisExtention;
 
 })(ActionAppCore, $);
 
