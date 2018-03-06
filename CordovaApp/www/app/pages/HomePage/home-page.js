@@ -153,6 +153,19 @@ License: MIT
             })
         }
 
+        ThisPage.showContextDialog = function(theTargetEl){
+            var tmpPC = ThisApp.getByAttr$({pageuse: "contextmenu"});
+            tmpPC.modal('setting', 'transition', 'fade')
+                .modal('setting','duration',250)
+                .modal('setting','centerable',false)
+                .modal('setting','dimmerSettings',{ opacity: 0 });                
+                if(theTargetEl){
+                    tmpPC.modal('setting','context', theTargetEl)
+                }
+                tmpPC.modal('show');
+
+            console.log("tmpPC",tmpPC);
+        }
         ThisPage.aboutThisPage = function(){
             ThisApp.showCommonDialog({ header: "About this application", content: {data:'', template:'app:about-this-app'} });
         }
@@ -188,11 +201,14 @@ License: MIT
                     // --  Also note, you couild load the first, then the rest do load in order, no async involved                    
                     me.testAreaWS.addControl('icon-control-2', 'sui-icon', {states:{bordered:true, size:'huge',icon:'group',color:'green'} }).then(function(theControl){
                         theControl.subscribe('onClick', function(){
-                            ThisApp.showPopup({
-                                el: theControl.mom,
-                                title: 'This object is in a panel',
-                                content: 'This is the panel the object lives in.'
-                            })      
+                            ThisApp.showContextMenu('[facet="home:testarea"]');
+                            // ThisApp.showPopup({
+                            //     el: theControl.mom,
+                            //     html: '<div class="" style="border:solid 1px blue"><h3>About Panels</h3>A panel can contain web objects.</div>'
+                            // })      
+
+                            //ThisPage.showContextDialog(tmpTestAreaEl);
+
                         })    
                     });
                     me.testAreaWS.addControl('icon-control-3', 'sui-icon', {states:{bordered:true, size:'huge',icon:'group',color:'purple'} }).then(function(theControl){

@@ -73,77 +73,157 @@
         var tmpThisControl = this;
         var tmpOptions = theOptions || {};
         this.publish('onContextMenu',[this]);
-        
-        var tmpMenu = {
-            selector:'[oid="' + tmpOID + '"]',
-            items: {
+
+        var tmpItems = {
+            toggle: {
+                icon: function(opt, $itemElement, itemKey, item){
+                    // Set the content to the menu trigger selector and add an bootstrap icon to the item.
+                    var tmpIH = '<i class="icon large list"></i> ';
+                    $itemElement.html('<button class="ui icon button blue basic context">' + tmpIH + 'Change Color</button>');
+                    // Add the context-menu-icon-updated class to the item
+                    return '';
+                },                   
+                name: "toggle",
                 
-                toggle: {
-                    
-                    icon: function(opt, $itemElement, itemKey, item){
-                        // Set the content to the menu trigger selector and add an bootstrap icon to the item.
-                        var tmpIH = '<i class="icon large list"></i> ';
-                        $itemElement.html('<button class="ui icon button blue basic context">' + tmpIH + 'Change Color</button>');
-                        // Add the context-menu-icon-updated class to the item
-                        return '';
-                    },                   
-                    name: "toggle",
-                    
-                    callback: (function (key, opt) {
-                        //this.setSwitchStatus(!this.switchStatus);
-                        var tmpNew = '';
-                        if( this.states.color == 'green'){
-                            tmpNew = 'blue'
-                        } else {
-                            tmpNew = 'green'
-                        }
-                        this.setState('color',tmpNew);
-                        this.refreshUI();
-                    }).bind(this)
-                },
-                turnon: {
-                    
-                    icon: function(opt, $itemElement, itemKey, item){
-                        // Set the content to the menu trigger selector and add an bootstrap icon to the item.
-                        var tmpIH = '<i class="icon big ' + tmpThisControl.states.icon + '"></i> ';
-                        $itemElement.html('<button class="ui icon button green basic context">' + tmpIH + 'Big</button>');
-                        // Add the context-menu-icon-updated class to the item
-                        return '';
-                    },                   
-                    name: "turnon",
-                    
-                    callback: (function (key, opt) {
-                        this.setState('size','big');
-                        this.refreshUI();
-                    }).bind(this)
-                },
-                turnoff: {
-                   
-                    icon: function(opt, $itemElement, itemKey, item){
-                        // Set the content to the menu trigger selector and add an bootstrap icon to the item.
-                        var tmpIH = '<i class="icon huge ' + tmpThisControl.states.icon + '"></i> ';
-                        $itemElement.html('<button class="ui icon button green basic context">' + tmpIH + 'Huge</button>');
-                        // Add the context-menu-icon-updated class to the item
-                        return '';
-                    },                   
-                    name: "turnoff",
-                    
-                    callback: (function (key, opt) {
-                        //this.setSwitchColor('#aaaaaa');
-                        this.setState('size','huge');
-                        this.refreshUI();
-                        // var tmpItem = opt.$trigger[0];
-                        // var tmpElOID = $(tmpItem).attr('oid');
-                        // console.log("Clicked on " + key + " for oid: " + tmpElOID, tmpItem);
-                    }).bind(this)
-                }
+                callback: (function (key, opt) {
+                    //this.setSwitchStatus(!this.switchStatus);
+                    var tmpNew = '';
+                    if( this.states.color == 'green'){
+                        tmpNew = 'blue'
+                    } else {
+                        tmpNew = 'green'
+                    }
+                    this.setState('color',tmpNew);
+                    this.refreshUI();
+                }).bind(this)
+            },
+            turnon: {
+                
+                icon: function(opt, $itemElement, itemKey, item){
+                    // Set the content to the menu trigger selector and add an bootstrap icon to the item.
+                    var tmpIH = '<i class="icon big ' + tmpThisControl.states.icon + '"></i> ';
+                    $itemElement.html('<button class="ui icon button green basic context">' + tmpIH + 'Big</button>');
+                    // Add the context-menu-icon-updated class to the item
+                    return '';
+                },                   
+                name: "turnon",
+                
+                callback: (function (key, opt) {
+                    this.setState('size','big');
+                    this.refreshUI();
+                }).bind(this)
+            },
+            turnoff: {
+               
+                icon: function(opt, $itemElement, itemKey, item){
+                    // Set the content to the menu trigger selector and add an bootstrap icon to the item.
+                    var tmpIH = '<i class="icon huge ' + tmpThisControl.states.icon + '"></i> ';
+                    $itemElement.html('<button class="ui icon button green basic context">' + tmpIH + 'Huge</button>');
+                    // Add the context-menu-icon-updated class to the item
+                    return '';
+                },                   
+                name: "turnoff",
+                
+                callback: (function (key, opt) {
+                    //this.setSwitchColor('#aaaaaa');
+                    this.setState('size','huge');
+                    this.refreshUI();
+                }).bind(this)
             }
-        };
-        if( typeof(tmpOptions.trigger) == 'string' ){
-           tmpMenu.trigger = tmpOptions.trigger;
         }
-        $.contextMenu(tmpMenu);
+
+
+        $.contextMenu({
+            selector: '[oid="' + tmpOID + '"]', 
+            build: function($trigger, e) {
+                // this callback is executed every time the menu is to be shown
+                // its results are destroyed every time the menu is hidden
+                // e is the original contextmenu event, containing e.pageX and e.pageY (amongst other data)
+                return {
+                    items: tmpItems
+                };
+            }
+        });
+
         
+        // var tmpMenu = {
+        //     selector:'[oid="' + tmpOID + '"]',
+        //     items: {
+                
+        //         toggle: {
+                    
+        //             icon: function(opt, $itemElement, itemKey, item){
+        //                 // Set the content to the menu trigger selector and add an bootstrap icon to the item.
+        //                 var tmpIH = '<i class="icon large list"></i> ';
+        //                 $itemElement.html('<button class="ui icon button blue basic context">' + tmpIH + 'Change Color</button>');
+        //                 // Add the context-menu-icon-updated class to the item
+        //                 return '';
+        //             },                   
+        //             name: "toggle",
+                    
+        //             callback: (function (key, opt) {
+        //                 //this.setSwitchStatus(!this.switchStatus);
+        //                 var tmpNew = '';
+        //                 if( this.states.color == 'green'){
+        //                     tmpNew = 'blue'
+        //                 } else {
+        //                     tmpNew = 'green'
+        //                 }
+        //                 this.setState('color',tmpNew);
+        //                 this.refreshUI();
+        //                 $.contextMenu( 'destroy', '[oid="' + tmpOID + '"]' );
+        //             }).bind(this)
+        //         },
+        //         turnon: {
+                    
+        //             icon: function(opt, $itemElement, itemKey, item){
+        //                 // Set the content to the menu trigger selector and add an bootstrap icon to the item.
+        //                 var tmpIH = '<i class="icon big ' + tmpThisControl.states.icon + '"></i> ';
+        //                 $itemElement.html('<button class="ui icon button green basic context">' + tmpIH + 'Big</button>');
+        //                 // Add the context-menu-icon-updated class to the item
+        //                 return '';
+        //             },                   
+        //             name: "turnon",
+                    
+        //             callback: (function (key, opt) {
+        //                 this.setState('size','big');
+        //                 this.refreshUI();
+        //                 $.contextMenu( 'destroy' );
+        //             }).bind(this)
+        //         },
+        //         turnoff: {
+                   
+        //             icon: function(opt, $itemElement, itemKey, item){
+        //                 // Set the content to the menu trigger selector and add an bootstrap icon to the item.
+        //                 var tmpIH = '<i class="icon huge ' + tmpThisControl.states.icon + '"></i> ';
+        //                 $itemElement.html('<button class="ui icon button green basic context">' + tmpIH + 'Huge</button>');
+        //                 // Add the context-menu-icon-updated class to the item
+        //                 return '';
+        //             },                   
+        //             name: "turnoff",
+                    
+        //             callback: (function (key, opt) {
+        //                 //this.setSwitchColor('#aaaaaa');
+        //                 this.setState('size','huge');
+        //                 this.refreshUI();
+        //                 $.contextMenu( 'destroy' );
+        //                 // var tmpItem = opt.$trigger[0];
+        //                 // var tmpElOID = $(tmpItem).attr('oid');
+        //                 // console.log("Clicked on " + key + " for oid: " + tmpElOID, tmpItem);
+        //             }).bind(this)
+        //         }
+        //     }
+        // };
+        // if( typeof(tmpOptions.trigger) == 'string' ){
+        //    tmpMenu.trigger = tmpOptions.trigger;
+        // }
+        // $.contextMenu(tmpMenu)
+
+
+        // ThisApp.showPopup({
+        //     el: tmpParentEl,
+        //     html: '<div class="" style="border:solid 1px blue"><h3>About Panels</h3>A panel can contain web objects.</div>'
+        // })  
 
     }
 

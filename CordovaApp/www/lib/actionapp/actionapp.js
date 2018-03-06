@@ -1334,12 +1334,30 @@ var ActionAppCore = {};
         }
     }
 
+    //=== Context Menu Wrapper
+    //=== Pass title and content, optionally an onClose event (not normal part of sui popup)
+    //--- This creates the popup, then destroys when closed and does a callback if there
+    me.showContextMenu = showContextMenu;
+    function showContextMenu(theDetails, theTargetEl){
+        
+    }
+
+    //=== CRAPPY ASS POPUP FUNCTIONALITY -- REMOVE IT???
+    me.clearActivePopup = clearActivePopup;    
+    function clearActivePopup(){
+        ThisApp.activePopup.popup('destroy');
+        ThisApp.activePopup = false;
+    }
     //=== Pass title and content, optionally an onClose event (not normal part of sui popup)
     //--- This creates the popup, then destroys when closed and does a callback if there
     me.showPopup = showPopup;
     function showPopup(theDetails, theTargetEl){
         var tmpDetails = theDetails || '';
         var tmpTargetEl = false;
+        if( ThisApp.activePopup ){
+            ThisApp.activePopup.popup('destroy');
+            ThisApp.activePopup = false;
+        }
         if( typeof(tmpDetails) == 'string'){
             //This is from an action, convert it
             tmpTargetEl = $(theTargetEl);
@@ -1356,7 +1374,10 @@ var ActionAppCore = {};
         } else {
             tmpTargetEl = theTargetEl || tmpDetails.el || false;
             //--- Make sure we are dealing with a jQuery element on the one passed
-            if(typeof(tmpTargetEl.get) !== 'function'){
+            if( !tmpTargetEl ){
+                tmpTargetEl = document.body;
+            }
+            if(tmpTargetEl && typeof(tmpTargetEl.get) !== 'function'){
                 tmpTargetEl = $(tmpTargetEl);
             }
         }
@@ -1366,18 +1387,29 @@ var ActionAppCore = {};
         if( typeof(tmpDetails.onClose) == 'function' ){
             tmpFn = tmpDetails.onClose;
         }
+        
         var tmpPopSpecs = {
             on:'click',
+            //hideOnScroll:true,
+            exclusive:true,
+            lastResort: 'bottom left',
             onHidden: function(){
                 if( tmpFn ){
                     tmpFn();
                 }
                 tmpPopup.popup('destroy');
+                ThisApp.activePopup = false;                
             }
         }
-        
+        //not helping ...
+        // if( tmpSP.length == 1){
+        //     console.log('set scroll',tmpSP.get(0))
+        //     tmpPopSpecs.scrollContext = tmpSP.get(0)
+            
+        // }
         $.extend(tmpPopSpecs, tmpDetails);
         tmpPopup = tmpTargetEl.popup(tmpPopSpecs).popup('show');
+        ThisApp.activePopup = tmpPopup;
     }
 
     //--- Run _app function, commonly used application wide functions

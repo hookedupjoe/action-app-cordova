@@ -267,7 +267,7 @@ Web controls Plugin:
                 $(tmpThisControl._el).contextmenu(function(e){
                     if( !e.isDefaultPrevented() ){
                         e.preventDefault();
-                        tmpFN();    
+                        tmpFN(e);    
                     }
                 });
             }
@@ -491,32 +491,38 @@ Web controls Plugin:
         $(this.mom).contextmenu(function(e){
             if( !e.isDefaultPrevented() ){
                 e.preventDefault();
-                tmpFN();    
+                tmpFN(e);    
             }
         })
 
         $(document.body).on('mouseup', DragUp.bind(this));
     }
     function onContextMenu(){
-       //Depending on mode, this will do different stuff
-        $.contextMenu({
-            selector: '.page-frame', 
-            callback: function(key, options) {
-                var m = "clicked: " + key;
-                window.console && console.log(m) || alert(m); 
-            },
-            items: {
-                "edit": {name: "Edit", icon: "edit"},
-                "cut": {name: "Cut", icon: "cut"},
-               copy: {name: "Copy", icon: "copy"},
-                "paste": {name: "Paste", icon: "paste"},
-                "delete": {name: "Delete", icon: "delete"},
-                "sep1": "---------",
-                "quit": {name: "Quit", icon: function(){
-                    return 'context-menu-icon context-menu-icon-quit';
-                }}
-            }
-        });
+       //Depending on mode, t0his will do different stuff
+       
+       ThisApp.showPopup({
+            el: this.mom,
+            variation: 'basic',
+            html: '<div class="ui container fluid"> <div class="ui four column divided center aligned grid"> <div class="column">1</div> <div class="column">2</div> <div class="column">3</div> <div class="column">4</div> </div></div>'
+        })  
+        // $.contextMenu({
+        //     selector: '.page-frame', 
+        //     callback: function(key, options) {
+        //         var m = "clicked: " + key;
+        //         window.console && console.log(m) || alert(m); 
+        //     },
+        //     items: {
+        //         "edit": {name: "Edit", icon: "edit"},
+        //         "cut": {name: "Cut", icon: "cut"},
+        //        copy: {name: "Copy", icon: "copy"},
+        //         "paste": {name: "Paste", icon: "paste"},
+        //         "delete": {name: "Delete", icon: "delete"},
+        //         "sep1": "---------",
+        //         "quit": {name: "Quit", icon: function(){
+        //             return 'context-menu-icon context-menu-icon-quit';
+        //         }}
+        //     }
+        // });
     }
 
 

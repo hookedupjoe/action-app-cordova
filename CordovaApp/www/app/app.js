@@ -24,9 +24,9 @@
       onBackButton: function(){
         ThisApp.hideSidebar();        
         ThisApp.closeCommonDialog();
-        // if( ThisApp.sidebarGetDisplay() ){
-         
-        // }
+        if( ThisApp.activePopup ){
+          ThisApp.clearActivePopup();          
+        }
         return false;
       },
       onVolUpButton: function(){
@@ -131,8 +131,36 @@
             ThisApp.initTemplates(tmpTplSpecs);
             ThisApp.getByAttr$({ appuse: "app-loader" }).remove();
   
+
             ThisApp.aboutThisApp = function(){
               ThisApp.showCommonDialog({ header: "About this application", content: {data:'', template:'app:about-this-app'} });
+            }
+
+            ThisApp.showContextMenu = function(theSelector, theOptions){
+              $.contextMenu({
+                selector: theSelector, 
+                build: function($trigger, e) {
+                    // this callback is executed every time the menu is to be shown
+                    // its results are destroyed every time the menu is hidden
+                    // e is the original contextmenu event, containing e.pageX and e.pageY (amongst other data)
+                    return {
+                        callback: function(key, options) {
+                            var m = "clicked: " + key;
+                            window.console && console.log(m) || alert(m); 
+                        },
+                        items: {
+                            "edit": {name: "Edit", icon: "edit"},
+                            "cut": {name: "Cut", icon: "cut"},
+                            "copy": {name: "Copy", icon: "copy"},
+                            "paste": {name: "Paste", icon: "paste"},
+                            "delete": {name: "Delete", icon: "delete"},
+                            "sep1": "---------",
+                            "quit": {name: "Quit", icon: function($element, key, item){ return 'context-menu-icon context-menu-icon-quit'; }}
+                        }
+                    };
+                }
+            });
+              
             }
             //--- Turn off messages by default
             ThisApp.setMessagesOptions({show:false})

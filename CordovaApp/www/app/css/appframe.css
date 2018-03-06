@@ -11,7 +11,7 @@
   }
 
   .common-dialog-content {
-    min-height:250px; 
+    min-height:200px; 
   }
   /* Context Menu Tweaks */
   .context-menu-icon.context-menu-hover:before {
