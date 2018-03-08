@@ -125,7 +125,8 @@
               , center__onresize: ThisApp.resizeLayouts
             });
   
-            ThisApp.init();
+            
+            ThisApp.init();            
             ThisApp._svg = ThisApp.getComponent("plugin:SvgControls");
 
             ThisApp.initTemplates(tmpTplSpecs);
@@ -136,6 +137,20 @@
               ThisApp.showCommonDialog({ header: "About this application", content: {data:'', template:'app:about-this-app'} });
             }
 
+            //--- Optionally set system wide menu defaults
+            //- ToDo: If we roll this up, then change to setMenuDefaults(theDefaults) ...
+            ThisApp._menuDefaults = ThisApp._menuDefaults || {};
+            $.extend(ThisApp._menuDefaults, {
+              button: {
+                  color:'blue',
+                  size: 'large'
+              },
+              icon: {
+                  color:'blue',
+                  size: 'large'
+              }
+            })
+            
             ThisApp.showContextMenu = function(theSelector, theOptions){
               $.contextMenu({
                 selector: theSelector, 

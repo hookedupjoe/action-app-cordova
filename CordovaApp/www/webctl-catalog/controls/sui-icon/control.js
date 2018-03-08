@@ -7,9 +7,149 @@
     var thisControlTitle = "Semantic UI Icon";
     var thisControlClass = 'SuiIcon';
     var me = ThisControl.prototype;
+
+    me.getMenuDefault = function(theType, theKey, theMenuItem, theOptionalDefault){
+        var tmpRet = '';
+        //--- Move up from this item, to the control then to the App in that order to look for defaults
+        if( theMenuItem && theMenuItem.hasOwnProperty(theType) ){
+            var tmpArea = theMenuItem[theType];
+            if( typeof(tmpArea) == 'object' && tmpArea.hasOwnProperty(theKey)){
+                var tmpVal = tmpArea[theKey];
+                return tmpVal;
+            }
+        }
+        if( this.hasOwnProperty('_menuDefaults') && this._menuDefaults.hasOwnProperty(theType) ){
+            var tmpArea = this._menuDefaults[theType];
+            if( typeof(tmpArea) == 'object' && tmpArea.hasOwnProperty(theKey)){
+                var tmpVal = tmpArea[theKey];
+                return tmpVal;
+            }
+        }
+        if( ThisApp.hasOwnProperty('_menuDefaults') && ThisApp._menuDefaults.hasOwnProperty(theType) ){
+            var tmpArea = ThisApp._menuDefaults[theType];
+            if( typeof(tmpArea) == 'object' && tmpArea.hasOwnProperty(theKey)){
+                var tmpVal = tmpArea[theKey];
+                return tmpVal;
+            }
+        }
+        return theOptionalDefault || '';
+    }
+
     //--- Base class for application pages
     function ThisControl(theOptions) {
+        this._menuDefaults = {
+            button: {
+                color:'blue',                
+                size: 'large'
+            },
+            icon: {
+                name: 'square outline',
+                color:'purple',
+                size: 'big'
+            }
+        }
+        this._menu = {
+            "color":{
+                caption:'Set Color',
+                icon: {
+                    color:'purple',
+                    name:'circle'
+                },
+                button: {
+                    color:'purple'
+                },
+                callback: mnuSetColor
+            },
+            "size":{
+                caption:'Set size',
+                callback: mnuSetSize
+            },            
+            "extra":{
+                caption:'Extra Item',
+                disabled: true,
+                callback: mnuSetSize
+            }
+        }
+    }
 
+    
+    function mnuSetColor(){
+        
+        var tmpNew = '';
+        if( this.states.color == 'green'){
+            tmpNew = 'blue'
+        } else {
+            tmpNew = 'green'
+        }
+        this.setState('color',tmpNew);
+        this.refreshUI();        
+    }
+    function mnuSetSize(){
+        
+        var tmpNew = '';
+        if( this.states.size == 'huge'){
+            tmpNew = 'big'
+        } else {
+            tmpNew = 'huge'
+        }
+        this.setState('size',tmpNew);
+        this.refreshUI();        
+    }
+
+    me.getMenuItemSpecs = function(theMenuKey, theMenuItem){
+        var tmpThisControl = this;
+        var tmpIconHTML = '';
+        //--- If icon not specifically excluded, look for it here and then up the chain
+        if( theMenuItem.icon !== false){
+            var tmpIcon = theMenuItem.icon || '';
+            var tmpIconColor = this.getMenuDefault('icon','color', theMenuItem);
+            var tmpIconSize = this.getMenuDefault('icon','size', theMenuItem);
+            var tmpIconName = theMenuItem.icon || '';
+            if(typeof(theMenuItem.icon) == 'object'){
+                tmpIconName = theMenuItem.icon.name || '';                
+            }
+            if( tmpIconName == ''){
+                tmpIconName = this.getMenuDefault('icon','name', theMenuItem);
+            }
+            tmpIconHTML = '<i class="icon ' + tmpIconColor + ' ' + tmpIconSize + ' ' + tmpIconName + ' ' + '"></i> ';
+        }
+        var tmpButtonColor = '';
+        var tmpButtonSize = '';
+
+        if( theMenuItem.button !== false){
+            tmpButtonColor = this.getMenuDefault('button','color', theMenuItem);
+            tmpButtonSize = this.getMenuDefault('button','size', theMenuItem);
+        }
+        var tmpNewItem = {};
+        var tmpCaption = theMenuItem.caption || '';
+        var tmpAux = '';
+        if( theMenuItem.disabled === true){
+            tmpAux += ' disabled ';
+            tmpNewItem.disabled = true;
+        }
+        var tmpContentHTML = '<button class="ui icon button ' + tmpAux + ' ' + tmpButtonColor + ' ' + tmpButtonSize + ' basic context">' + tmpIconHTML + ' ' + tmpCaption + '</button>';
+        tmpNewItem.icon = function(opt, $itemElement, itemKey, item){
+            $itemElement.html(tmpContentHTML);
+            return '';
+        };
+        tmpNewItem.name = theMenuKey;
+        if( theMenuItem.callback ){
+            tmpNewItem.callback = theMenuItem.callback.bind(this);
+        }
+        return tmpNewItem;
+    }
+
+    me.getMenuItems = function(){
+        var tmpThisControl = this;
+        var tmpItems = {};
+        for( aMenuKey in this._menu ){
+            var tmpMenuItem = this._menu[aMenuKey];
+            var tmpNewItem = this.getMenuItemSpecs(aMenuKey, tmpMenuItem);
+            if( tmpNewItem ){
+                tmpItems[aMenuKey] = tmpNewItem
+            }
+        }
+        return tmpItems;
     }
 
     $.extend(me, WebCtlExtendMod.WebControl);
@@ -48,8 +188,8 @@
         this.states[theState] = theValue;
         return true;
     }
+
     me.onClick = function (e) {
-        
         if (e && e.detail && e.ctrlKey !== true && e.altKey !== true) {
             this.publish('onClick',[this]);
 
@@ -74,63 +214,7 @@
         var tmpOptions = theOptions || {};
         this.publish('onContextMenu',[this]);
 
-        var tmpItems = {
-            toggle: {
-                icon: function(opt, $itemElement, itemKey, item){
-                    // Set the content to the menu trigger selector and add an bootstrap icon to the item.
-                    var tmpIH = '<i class="icon large list"></i> ';
-                    $itemElement.html('<button class="ui icon button blue basic context">' + tmpIH + 'Change Color</button>');
-                    // Add the context-menu-icon-updated class to the item
-                    return '';
-                },                   
-                name: "toggle",
-                
-                callback: (function (key, opt) {
-                    //this.setSwitchStatus(!this.switchStatus);
-                    var tmpNew = '';
-                    if( this.states.color == 'green'){
-                        tmpNew = 'blue'
-                    } else {
-                        tmpNew = 'green'
-                    }
-                    this.setState('color',tmpNew);
-                    this.refreshUI();
-                }).bind(this)
-            },
-            turnon: {
-                
-                icon: function(opt, $itemElement, itemKey, item){
-                    // Set the content to the menu trigger selector and add an bootstrap icon to the item.
-                    var tmpIH = '<i class="icon big ' + tmpThisControl.states.icon + '"></i> ';
-                    $itemElement.html('<button class="ui icon button green basic context">' + tmpIH + 'Big</button>');
-                    // Add the context-menu-icon-updated class to the item
-                    return '';
-                },                   
-                name: "turnon",
-                
-                callback: (function (key, opt) {
-                    this.setState('size','big');
-                    this.refreshUI();
-                }).bind(this)
-            },
-            turnoff: {
-               
-                icon: function(opt, $itemElement, itemKey, item){
-                    // Set the content to the menu trigger selector and add an bootstrap icon to the item.
-                    var tmpIH = '<i class="icon huge ' + tmpThisControl.states.icon + '"></i> ';
-                    $itemElement.html('<button class="ui icon button green basic context">' + tmpIH + 'Huge</button>');
-                    // Add the context-menu-icon-updated class to the item
-                    return '';
-                },                   
-                name: "turnoff",
-                
-                callback: (function (key, opt) {
-                    //this.setSwitchColor('#aaaaaa');
-                    this.setState('size','huge');
-                    this.refreshUI();
-                }).bind(this)
-            }
-        }
+        var tmpItems = this.getMenuItems();
 
 
         $.contextMenu({
@@ -145,85 +229,6 @@
             }
         });
 
-        
-        // var tmpMenu = {
-        //     selector:'[oid="' + tmpOID + '"]',
-        //     items: {
-                
-        //         toggle: {
-                    
-        //             icon: function(opt, $itemElement, itemKey, item){
-        //                 // Set the content to the menu trigger selector and add an bootstrap icon to the item.
-        //                 var tmpIH = '<i class="icon large list"></i> ';
-        //                 $itemElement.html('<button class="ui icon button blue basic context">' + tmpIH + 'Change Color</button>');
-        //                 // Add the context-menu-icon-updated class to the item
-        //                 return '';
-        //             },                   
-        //             name: "toggle",
-                    
-        //             callback: (function (key, opt) {
-        //                 //this.setSwitchStatus(!this.switchStatus);
-        //                 var tmpNew = '';
-        //                 if( this.states.color == 'green'){
-        //                     tmpNew = 'blue'
-        //                 } else {
-        //                     tmpNew = 'green'
-        //                 }
-        //                 this.setState('color',tmpNew);
-        //                 this.refreshUI();
-        //                 $.contextMenu( 'destroy', '[oid="' + tmpOID + '"]' );
-        //             }).bind(this)
-        //         },
-        //         turnon: {
-                    
-        //             icon: function(opt, $itemElement, itemKey, item){
-        //                 // Set the content to the menu trigger selector and add an bootstrap icon to the item.
-        //                 var tmpIH = '<i class="icon big ' + tmpThisControl.states.icon + '"></i> ';
-        //                 $itemElement.html('<button class="ui icon button green basic context">' + tmpIH + 'Big</button>');
-        //                 // Add the context-menu-icon-updated class to the item
-        //                 return '';
-        //             },                   
-        //             name: "turnon",
-                    
-        //             callback: (function (key, opt) {
-        //                 this.setState('size','big');
-        //                 this.refreshUI();
-        //                 $.contextMenu( 'destroy' );
-        //             }).bind(this)
-        //         },
-        //         turnoff: {
-                   
-        //             icon: function(opt, $itemElement, itemKey, item){
-        //                 // Set the content to the menu trigger selector and add an bootstrap icon to the item.
-        //                 var tmpIH = '<i class="icon huge ' + tmpThisControl.states.icon + '"></i> ';
-        //                 $itemElement.html('<button class="ui icon button green basic context">' + tmpIH + 'Huge</button>');
-        //                 // Add the context-menu-icon-updated class to the item
-        //                 return '';
-        //             },                   
-        //             name: "turnoff",
-                    
-        //             callback: (function (key, opt) {
-        //                 //this.setSwitchColor('#aaaaaa');
-        //                 this.setState('size','huge');
-        //                 this.refreshUI();
-        //                 $.contextMenu( 'destroy' );
-        //                 // var tmpItem = opt.$trigger[0];
-        //                 // var tmpElOID = $(tmpItem).attr('oid');
-        //                 // console.log("Clicked on " + key + " for oid: " + tmpElOID, tmpItem);
-        //             }).bind(this)
-        //         }
-        //     }
-        // };
-        // if( typeof(tmpOptions.trigger) == 'string' ){
-        //    tmpMenu.trigger = tmpOptions.trigger;
-        // }
-        // $.contextMenu(tmpMenu)
-
-
-        // ThisApp.showPopup({
-        //     el: tmpParentEl,
-        //     html: '<div class="" style="border:solid 1px blue"><h3>About Panels</h3>A panel can contain web objects.</div>'
-        // })  
 
     }
 
