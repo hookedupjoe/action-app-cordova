@@ -1345,6 +1345,9 @@ var ActionAppCore = {};
     //=== CRAPPY ASS POPUP FUNCTIONALITY -- REMOVE IT???
     me.clearActivePopup = clearActivePopup;    
     function clearActivePopup(){
+        if( !ThisApp.activePopup ){
+            return;
+        }
         ThisApp.activePopup.popup('destroy');
         ThisApp.activePopup = false;
     }

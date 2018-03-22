@@ -72,8 +72,15 @@
         }
     }
 
-    
+    function dlgSetColor(theAction, theTargetEl){
+        console.log("dlgItemClick",theAction, theTargetEl)
+    }
     function mnuSetColor(){
+        var tmpIOD = this.el.attr('oid')
+        ThisApp.registerAction("dlgSetColor", dlgSetColor);
+        var tmpEl = this.el;
+        var tmpHTMLForLargeOptionSet = '<h3>Select One</h3><div><i oid="' + tmpIOD + '" action="dlgSetColor" color="red" class="icon red huge square" /><i oid="' + tmpIOD + '" color="blue" action="dlgSetColor" class="icon huge blue square" /><i oid="' + tmpIOD + '" color="blue" action="dlgSetColor" class="icon huge blue square" /><i oid="' + tmpIOD + '" color="blue" action="dlgSetColor" class="icon huge blue square" /><i oid="' + tmpIOD + '" color="blue" action="dlgSetColor" class="icon huge blue square" /><i oid="' + tmpIOD + '" color="blue" action="dlgSetColor" class="icon huge blue square" /><i oid="' + tmpIOD + '" color="blue" action="dlgSetColor" class="icon huge blue square" /><i oid="' + tmpIOD + '" color="blue" action="dlgSetColor" class="icon huge blue square" /><i oid="' + tmpIOD + '" color="blue" action="dlgSetColor" class="icon huge blue square" /><i oid="' + tmpIOD + '" action="dlgSetColor" color="red" class="icon red huge square" /><i oid="' + tmpIOD + '" color="blue" action="dlgSetColor" class="icon huge blue square" /><i oid="' + tmpIOD + '" color="blue" action="dlgSetColor" class="icon huge blue square" /><i oid="' + tmpIOD + '" color="blue" action="dlgSetColor" class="icon huge blue square" /><i oid="' + tmpIOD + '" color="blue" action="dlgSetColor" class="icon huge blue square" /><i oid="' + tmpIOD + '" color="blue" action="dlgSetColor" class="icon huge blue square" /><i oid="' + tmpIOD + '" color="blue" action="dlgSetColor" class="icon huge blue square" /><i oid="' + tmpIOD + '" color="blue" action="dlgSetColor" class="icon huge blue square" /><i oid="' + tmpIOD + '" color="blue" action="dlgSetColor" class="icon huge blue square" /></div>';
+        ThisApp.showCommonDialog({ header: "Some options", content: tmpHTMLForLargeOptionSet });
         
         var tmpNew = '';
         if( this.states.color == 'green'){
@@ -81,6 +88,7 @@
         } else {
             tmpNew = 'green'
         }
+
         this.setState('color',tmpNew);
         this.refreshUI();        
     }
@@ -213,7 +221,7 @@
         var tmpThisControl = this;
         var tmpOptions = theOptions || {};
         this.publish('onContextMenu',[this]);
-
+        ThisApp.clearActivePopup();
         var tmpItems = this.getMenuItems();
 
 
