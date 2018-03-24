@@ -201,16 +201,10 @@ License: MIT
                     // --  Also note, you couild load the first, then the rest do load in order, no async involved                    
                     me.testAreaWS.addControl('icon-control-2', 'sui-icon', {states:{bordered:true, size:'huge',icon:'group',color:'green'} }).then(function(theControl){
                         theControl.subscribe('onClick', function(){
-                            //ThisApp.showContextMenu('[facet="home:testarea"]');
-                            // ThisApp.showPopup({
-                            //     el: theControl.mom,
-                            //     html: '<div class="" style="border:solid 1px blue"><h3>About Panels</h3>A panel can contain web objects.</div>'
-                            // })      
 
                             var tmpIOD = 'test';
                             var tmpHTMLForLargeOptionSet = '<h3>Select One</h3><div><i oid="' + tmpIOD + '" action="dlgSetColor" color="red" class="icon red huge square" /><i oid="' + tmpIOD + '" color="blue" action="dlgSetColor" class="icon huge blue square" /><i oid="' + tmpIOD + '" color="blue" action="dlgSetColor" class="icon huge blue square" /><i oid="' + tmpIOD + '" color="blue" action="dlgSetColor" class="icon huge blue square" /><i oid="' + tmpIOD + '" color="blue" action="dlgSetColor" class="icon huge blue square" /><i oid="' + tmpIOD + '" color="blue" action="dlgSetColor" class="icon huge blue square" /><i oid="' + tmpIOD + '" color="blue" action="dlgSetColor" class="icon huge blue square" /><i oid="' + tmpIOD + '" color="blue" action="dlgSetColor" class="icon huge blue square" /><i oid="' + tmpIOD + '" color="blue" action="dlgSetColor" class="icon huge blue square" /><i oid="' + tmpIOD + '" action="dlgSetColor" color="red" class="icon red huge square" /><i oid="' + tmpIOD + '" color="blue" action="dlgSetColor" class="icon huge blue square" /><i oid="' + tmpIOD + '" color="blue" action="dlgSetColor" class="icon huge blue square" /><i oid="' + tmpIOD + '" color="blue" action="dlgSetColor" class="icon huge blue square" /><i oid="' + tmpIOD + '" color="blue" action="dlgSetColor" class="icon huge blue square" /><i oid="' + tmpIOD + '" color="blue" action="dlgSetColor" class="icon huge blue square" /><i oid="' + tmpIOD + '" color="blue" action="dlgSetColor" class="icon huge blue square" /><i oid="' + tmpIOD + '" color="blue" action="dlgSetColor" class="icon huge blue square" /><i oid="' + tmpIOD + '" color="blue" action="dlgSetColor" class="icon huge blue square" /></div>';
                             ThisApp.showCommonDialog({ header: "Some options", content: tmpHTMLForLargeOptionSet });
-                            //ThisPage.showContextDialog(tmpTestAreaEl);
 
                         })    
                     });

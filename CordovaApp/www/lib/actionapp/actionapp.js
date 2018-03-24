@@ -1068,56 +1068,10 @@ var ActionAppCore = {};
         }
 
         return me.renderTemplate(tmpTemplateName, tmpData, theOptions);
-        //return me.getTemplatedContentFromJSRender(theTemplateName, theData);
     }
     me.tplIndex = {};
     
-    // *******************
-    //=== ToDo: Move to extension so each thing can have it's own templating engine / namespace / object
-    // *******************
-
-    //--- More stuff to create... ====================
-    me.loadTemplateIndex = function (theIndex, theOptions) {
-        //--- Tells the templating where to find pages
-    }
-    me.loadTemplateOptions = function (theOptions) {
-        //--- Tells the templating engine stuff like where to find
-    }
-    me.loadTemplateHTML = function (theTemplateName, theHTML, theOptions) {
-        //--- Adds HTML by name, the templating engine will determine what to do
-
-    }
-
-
-    /**
-     * getTemplatedContentFromJSRender
-     *    - Returns HTML rendered from a template using jsRender
-     *
-     * @param  {String} theActionDelegateName   [the prefix to use (do not iclude the ":")]
-     * @param  {Function} theDelegate   [The standard "Action" function to handle the action pass (action name, target object)]
-     * @return void
-     */
-    me.getTemplatedContentFromJSRender = function (theOptionsOrTemplateName, theDataIfNotObject) {
-        var tmpTemplateName = theOptionsOrTemplateName;
-        var tmpData = theDataIfNotObject;
-        if (typeof (theOptionsOrTemplateName) == 'object') {
-            tmpTemplateName = theOptionsOrTemplateName.template;
-            tmpData = theOptionsOrTemplateName.data || theDataIfNotObject || '';
-        }
-        tmpData = tmpData || '';
-        if (!(tmpTemplateName)) {
-            console.error("Need to pass template name as a string or an object with a .template")
-            return;
-        }
-        return $.templates[tmpTemplateName].render(tmpData);
-    }
-
-
-    
-    //======================================
-    //======================================
-    //======================================
-
+   
 
     /**
      * compileTemplates
@@ -1334,14 +1288,6 @@ var ActionAppCore = {};
         }
     }
 
-    //=== Context Menu Wrapper
-    //=== Pass title and content, optionally an onClose event (not normal part of sui popup)
-    //--- This creates the popup, then destroys when closed and does a callback if there
-    me.showContextMenu = showContextMenu;
-    function showContextMenu(theDetails, theTargetEl){
-        
-    }
-
     //=== CRAPPY ASS POPUP FUNCTIONALITY -- REMOVE IT???
     me.clearActivePopup = clearActivePopup;    
     function clearActivePopup(){
@@ -1404,12 +1350,7 @@ var ActionAppCore = {};
                 ThisApp.activePopup = false;                
             }
         }
-        //not helping ...
-        // if( tmpSP.length == 1){
-        //     console.log('set scroll',tmpSP.get(0))
-        //     tmpPopSpecs.scrollContext = tmpSP.get(0)
-            
-        // }
+
         $.extend(tmpPopSpecs, tmpDetails);
         tmpPopup = tmpTargetEl.popup(tmpPopSpecs).popup('show');
         ThisApp.activePopup = tmpPopup;

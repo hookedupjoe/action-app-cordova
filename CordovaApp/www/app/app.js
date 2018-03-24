@@ -7,13 +7,7 @@
       window.isWeb = true;
       setup();
     }
-    //-- ToDo: Client detection ***  
-    // window.setTimeout( function(){
-    //   if( !tmpHasLaunched) {
-    //     tmpHasLaunched = true;
-    //     (app.onDeviceReady.bind(app))();
-    //   }
-    // },500)
+   
     //---- ACTUAL CODE ==    
     ActionAppCore = ActionAppCore || window.ActionAppCore;
     
@@ -47,12 +41,9 @@
         this.receivedEvent('deviceready');
         
         document.addEventListener('backbutton', this.onBackButton.bind(this), false);
-        // document.addEventListener('volumedownbutton', this.onVolDownButton.bind(this), false);
-        // document.addEventListener('volumeupbutton', this.onVolUpButton.bind(this), false);            
         if( typeof(navigator) != 'undefined' && typeof(navigator.app) != 'undefined' && typeof(navigator.app.overrideButton) === 'function'){
           navigator.app.overrideButton("menubutton", true);  // <-- Add this line
         }
-        //
         document.addEventListener("menubutton", this.onMenuButton, false);
       },
       receivedEvent: function(id) {
@@ -150,33 +141,7 @@
                   size: 'large'
               }
             })
-            
-            ThisApp.showContextMenu = function(theSelector, theOptions){
-              $.contextMenu({
-                selector: theSelector, 
-                build: function($trigger, e) {
-                    // this callback is executed every time the menu is to be shown
-                    // its results are destroyed every time the menu is hidden
-                    // e is the original contextmenu event, containing e.pageX and e.pageY (amongst other data)
-                    return {
-                        callback: function(key, options) {
-                            var m = "clicked: " + key;
-                            window.console && console.log(m) || alert(m); 
-                        },
-                        items: {
-                            "edit": {name: "Edit", icon: "edit"},
-                            "cut": {name: "Cut", icon: "cut"},
-                            "copy": {name: "Copy", icon: "copy"},
-                            "paste": {name: "Paste", icon: "paste"},
-                            "delete": {name: "Delete", icon: "delete"},
-                            "sep1": "---------",
-                            "quit": {name: "Quit", icon: function($element, key, item){ return 'context-menu-icon context-menu-icon-quit'; }}
-                        }
-                    };
-                }
-            });
-              
-            }
+
             //--- Turn off messages by default
             ThisApp.setMessagesOptions({show:false})
     

@@ -58,14 +58,32 @@ License: MIT
         ThisPage.initOnFirstLoad();
     }
 
+    function toOut(theStuff){
+        ThisApp.addToFacet('ws:workspaces-out', theStuff)
+    }
+    
     //--- Implement this apge
     ThisPage.doSomething = function () {
-        var tmpMarkup = '<hr/>We did something';
-        var tmpVal = $('[field="ws:demo-field"]').val();
-        if( tmpVal ){
-            tmpMarkup += ' with ' + tmpVal
-        }
-        ThisApp.addToFacet('ws:workspaces-out', tmpMarkup);
+        // var tmpMarkup = '<hr/>We did something';
+        // var tmpVal = $('[field="ws:demo-field"]').val();
+        // if( tmpVal ){
+        //     tmpMarkup += ' with ' + tmpVal
+        // }
+        // ThisApp.addToFacet('ws:workspaces-out', tmpMarkup);
+
+
+        toOut("Starting");
+        evothings.ble.startScan(
+            function(device)
+            {
+                toOut('<br />Found: ' + device.name + "<br />&#160;&#160;" + JSON.stringify(device));            
+            },
+            function(errorCode)
+            {
+                toOut('startScan error: ' + errorCode);
+            }
+        );
+        toOut("<br />Done");        
     }
     
 
