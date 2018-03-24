@@ -1,6 +1,6 @@
 /*
 ActionAppCore Core Library
-Author: Joseph Francis, 2017
+Author: Joseph Francis, 2017 - 2018
 License: MIT
 */
 
@@ -101,8 +101,6 @@ var ActionAppCore = {};
     * @return void
     * 
     */
-
-
 
 
 //--- PubSub Functionality
@@ -1028,8 +1026,24 @@ var ActionAppCore = {};
         ThisApp.loadFacet('site:dialog-header', tmpHeader);
         ThisApp.loadFacet('site:dialog-content', tmpContent);
         ThisApp.loadFacet('site:dialog-actions', ' ');
+
         getCommonDialog().modal('show');
+        
+        setTimeout(resetDialogBodyArea,10)
+
         return me;
+    }
+
+    function resetDialogBodyArea(){
+        var tmpHeader = ThisApp.getFacet$('site:dialog-header');
+        var tmpBody = ThisApp.getFacet$('site:dialog-content');
+        var tmpFooter = ThisApp.getFacet$('site:dialog-actions');
+        
+        var tmpOutHeight = tmpHeader.get(0).clientHeight + tmpFooter.get(0).clientHeight;
+        tmpOutHeight = tmpOutHeight + 80; 
+        var tmpWiHeight = $( window ).height(); //$( window ).height();
+        var tmpBodyNewH = (tmpWiHeight - tmpOutHeight) + 'px';
+        tmpBody.css({"height":tmpBodyNewH,"overflow":"auto"});
     }
 
     me.closeCommonDialog = closeCommonDialog;
@@ -1178,12 +1192,51 @@ var ActionAppCore = {};
         commonDialogTemplate = 'tpl-common-global-dialog',
         commonDialogFacet = 'site:global-dialog';
 
+    me.commonDialogIsOpen = false;
+    me.commonDialogWindowsBind = false;
+
+    function commonDialogOnWindowResize(){
+        if(ThisApp.commonDialogIsOpen){
+            resetDialogBodyArea();
+        };        
+    }
+
+    var $window = $(window), previousScrollTop = 0, scrollLock = false;
+    $window.scroll(function(event) {     
+        if(scrollLock) {
+            $window.scrollTop(previousScrollTop); 
+        }
+        previousScrollTop = $window.scrollTop();
+    });
+
+    function onCommonDialogShow(){
+        if( !ThisApp.commonDialogWindowsBind ){
+            //--- Lazy init one resize handler / move to even more common? Do this everytime and remove?  Reasons?
+            ThisApp.commonDialogWindowsBind = true;
+            window.onresize = commonDialogOnWindowResize.bind(ThisApp);
+        }
+        console.log("onCommonDialogShow - callbacks?");
+        ThisApp.commonDialogIsOpen = true;
+        //Lock the main window so it does not scroll in background?
+        scrollLock = true;
+        //On window resize, redo the body
+    }
+    function onCommonDialogHide(){
+        ThisApp.commonDialogIsOpen = true;
+        console.log("onCommonDialogHide - callbacks?");
+        scrollLock = false;
+        //Remove window on resize or just have it there all the time?
+    }
     function getCommonDialog() {
         if (!commonDialog) {
             //var tmpFacet = ThisApp.loadFacet(commonDialogFacet,'',commonDialogTemplate);
             commonDialog = ThisApp.getByAttr$({ appuse: 'global-dialog' })
-            commonDialog.modal({centered:false});
+            commonDialog.modal('setting', {  detachable: false }); // example of using modal dialog
+            commonDialog.modal('setting', {  centered: false }); // example of using modal dialog
             commonDialog.modal('setting', {  closable: true }); // example of using modal dialog
+            commonDialog.modal('setting', {  dimmerSettings: {opacity:1} }); // example of using modal dialog
+            commonDialog.modal('setting', {  onShow: onCommonDialogShow }); // example of using modal dialog
+            commonDialog.modal('setting', {  onHide: onCommonDialogHide }); // example of using modal dialog
         }
         return commonDialog;
     }

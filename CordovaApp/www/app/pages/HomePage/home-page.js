@@ -85,7 +85,8 @@ License: MIT
         ThisPage.outBuffer = 12;
         ThisPage.minHeight = 50;
 
-        //--- Demo special grid
+
+        //--- Demo special grid - Incomplete, just playing on this one
         ThisPage.refreshMainGrid = function(){
 
             $('[appuse="mobile-cards"]').each(function(theEl){
@@ -148,8 +149,6 @@ License: MIT
                     
                     $(this).width(tmpColW-ThisPage.inBuffer-(tmpExtraBuffer*2));
                 })
-                // tmpPgs.height($(tmpPF).height()-ThisPage.outBuffer-ThisPage.inBuffer);
-                // tmpPgs.width($(tmpPF).width()-ThisPage.outBuffer-(ThisPage.inBuffer*8));
             })
         }
 
@@ -184,15 +183,16 @@ License: MIT
                 var tmpTestAreaEl = me.getByAttr$({ facet: "home:testarea" });
                 me.testAreaWS = me._webctl.getNewPanel();
                 me.testAreaWS.init({ mom: tmpTestAreaEl[0]});
-                
-                
-
+    
                 //ToDo: me.testAreaWS.getControls(['sui-icon']);                 
                 //to preload them all so we can add and know the order is good
                 me.testAreaWS.addControl('icon-control-1', 'sui-icon', {states:{bordered:true, size:'huge',icon:'user',color:'blue'} }).then(function(theControl){
                     theControl.subscribe('onClick', function(){
                         console.log("click")
-                        ThisApp.aboutThisApp();
+                       // ThisApp.aboutThisApp();
+                       var tmpHTML = '';
+                       tmpHTML += "Testing<br />Testing<br />Testing<br />Testing<br />Testing<br />Testing<br />Testing<br />Testing<br />Testing<br />Testing<br />Testing<br />Testing<br />Testing<br />Testing<br />Testing<br />Testing<br />Testing<br />Testing<br />Testing<br />Testing<br />Testing<br />Testing<br />Testing<br />Testing<br />Testing<br />Testing<br />Testing<br />Testing<br />Testing<br />Testing<br />Testing<br />Testing<br />"
+                       ThisApp.showCommonDialog({ header: "About this page", content: tmpHTML });
                         //ThisApp.showCommonDialog({ header: "About this page", content: 'Hello World' });
                     })    
                     //me.testAreaIcon1 = theControl;
