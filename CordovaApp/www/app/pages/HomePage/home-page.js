@@ -192,7 +192,12 @@ License: MIT
                        // ThisApp.aboutThisApp();
                        var tmpHTML = '';
                        tmpHTML += "Testing<br />Testing<br />Testing<br />Testing<br />Testing<br />Testing<br />Testing<br />Testing<br />Testing<br />Testing<br />Testing<br />Testing<br />Testing<br />Testing<br />Testing<br />Testing<br />Testing<br />Testing<br />Testing<br />Testing<br />Testing<br />Testing<br />Testing<br />Testing<br />Testing<br />Testing<br />Testing<br />Testing<br />Testing<br />Testing<br />Testing<br />Testing<br />"
-                       ThisApp.showCommonDialog({ header: "About this page", content: tmpHTML });
+                       var tmpFooterHTML = '';
+                       tmpFooterHTML += '<button class="ui button basic green">Testing</button>';
+                       //Right Align if desired?
+                       //tmpFooterHTML += '<div style="float:right;padding-right:5px;margin-bottom:5px;"><button class="ui button basic green">Testing</button></div>';
+
+                       ThisApp.showCommonDialog({ footer: tmpFooterHTML,header: "About this page", content: tmpHTML });
                         //ThisApp.showCommonDialog({ header: "About this page", content: 'Hello World' });
                     })    
                     //me.testAreaIcon1 = theControl;

@@ -1017,15 +1017,30 @@ var ActionAppCore = {};
     function showCommonDialog(theOptions) {
         var tmpHeader = theOptions.header || '';
         var tmpContent = theOptions.content || '';
+        var tmpFooter = theOptions.footer || '';
+
         if (typeof (tmpContent) == 'object') {
             tmpContent = me.getTemplatedContent(tmpContent);
         }
-        if( tmpHeader == ''){
+        if( tmpHeader === ''){
             tmpHeader = '&nbsp;';
+        } else if (typeof (tmpHeader) == 'object') {
+            tmpHeader = me.getTemplatedContent(tmpHeader);
         }
+        if( tmpFooter === ''){
+            //ThisApp.getFacet$('site:dialog-footer').css('display','none')
+            ThisApp.getFacet$('site:dialog-footer').removeClass('actions');
+        } else if (typeof (tmpFooter) == 'object') {
+            tmpFooter = me.getTemplatedContent(tmpFooter);
+            ThisApp.getFacet$('site:dialog-footer').addClass('actions');
+            //ThisApp.getFacet$('site:dialog-footer').css('display','')
+        }
+
+
+
         ThisApp.loadFacet('site:dialog-header', tmpHeader);
         ThisApp.loadFacet('site:dialog-content', tmpContent);
-        ThisApp.loadFacet('site:dialog-actions', ' ');
+        ThisApp.loadFacet('site:dialog-footer', tmpFooter);
 
         getCommonDialog().modal('show');
         
@@ -1037,7 +1052,7 @@ var ActionAppCore = {};
     function resetDialogBodyArea(){
         var tmpHeader = ThisApp.getFacet$('site:dialog-header');
         var tmpBody = ThisApp.getFacet$('site:dialog-content');
-        var tmpFooter = ThisApp.getFacet$('site:dialog-actions');
+        var tmpFooter = ThisApp.getFacet$('site:dialog-footer');
         
         var tmpOutHeight = tmpHeader.get(0).clientHeight + tmpFooter.get(0).clientHeight;
         tmpOutHeight = tmpOutHeight + 80; 
@@ -1227,16 +1242,16 @@ var ActionAppCore = {};
         scrollLock = false;
         //Remove window on resize or just have it there all the time?
     }
+
     function getCommonDialog() {
         if (!commonDialog) {
-            //var tmpFacet = ThisApp.loadFacet(commonDialogFacet,'',commonDialogTemplate);
             commonDialog = ThisApp.getByAttr$({ appuse: 'global-dialog' })
-            commonDialog.modal('setting', {  detachable: false }); // example of using modal dialog
-            commonDialog.modal('setting', {  centered: false }); // example of using modal dialog
-            commonDialog.modal('setting', {  closable: true }); // example of using modal dialog
-            commonDialog.modal('setting', {  dimmerSettings: {opacity:1} }); // example of using modal dialog
-            commonDialog.modal('setting', {  onShow: onCommonDialogShow }); // example of using modal dialog
-            commonDialog.modal('setting', {  onHide: onCommonDialogHide }); // example of using modal dialog
+            commonDialog.modal('setting', {  detachable: false }); 
+            commonDialog.modal('setting', {  centered: false }); 
+            commonDialog.modal('setting', {  closable: true }); 
+            commonDialog.modal('setting', {  dimmerSettings: {opacity:1} }); 
+            commonDialog.modal('setting', {  onShow: onCommonDialogShow }); 
+            commonDialog.modal('setting', {  onHide: onCommonDialogHide }); 
         }
         return commonDialog;
     }
@@ -1261,7 +1276,7 @@ var ActionAppCore = {};
         //--- Dynamically create the common dialog facet
         var tmpNewDiv = $('<div facet="site:global-dialog" class="hidden"></div>').appendTo('body');
         //--- Populate with common dialog (ToDo: Allow override?)
-        var tmpHTML = '<div appuse="global-dialog" class="ui modal longer inverted"><button style="float:right;margin-top:5px;margin-right:5px;" class="icon ui basic blue button circle" action="_app:closeCommonDialog" ><i class="close icon"></i> Close</button><div facet="site:dialog-header" class="header"></div>  <div facet="site:dialog-content" class="content common-dialog-content"> </div> <div facet="site:dialog-actions" class="actions"></div> </div> ';
+        var tmpHTML = '<div appuse="global-dialog" class="ui modal longer inverted"><button style="float:right;margin-top:5px;margin-right:5px;" class="icon ui basic blue button circle" action="_app:closeCommonDialog" ><i class="close icon"></i> Close</button><div facet="site:dialog-header" class="header"></div>  <div facet="site:dialog-content" class="content common-dialog-content"> </div> <div facet="site:dialog-footer" class="common-dialog-footer"></div> </div> ';
         me.loadFacet(commonDialogFacet, tmpHTML )        
     }
 

@@ -10,9 +10,12 @@
     cursor: not-allowed !important;
   }
 
-  .common-dialog-content {
-    min-height:200px; 
+  .common-dialog-footer {
+    border-top:solid 1px #dddddd;
+    padding:4px;
   }
+  
+
   /* Context Menu Tweaks */
   .context-menu-icon.context-menu-hover:before {
     color: #38afff;
