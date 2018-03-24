@@ -197,7 +197,13 @@ License: MIT
                        //Right Align if desired?
                        //tmpFooterHTML += '<div style="float:right;padding-right:5px;margin-bottom:5px;"><button class="ui button basic green">Testing</button></div>';
 
-                       ThisApp.showCommonDialog({ footer: tmpFooterHTML,header: "About this page", content: tmpHTML });
+                       ThisApp.showCommonDialog({ 
+                           header: "This is a test, only a test",
+                           content: tmpHTML,         
+                           //onBeforeClose: function(){alert('WAIT!');return false},
+                           onClose: function(){alert('See the results');},
+                           footer: tmpFooterHTML
+                        });
                         //ThisApp.showCommonDialog({ header: "About this page", content: 'Hello World' });
                     })    
                     //me.testAreaIcon1 = theControl;

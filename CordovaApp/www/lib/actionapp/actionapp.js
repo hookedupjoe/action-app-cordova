@@ -1011,14 +1011,57 @@ var ActionAppCore = {};
      *   ThisApp.showCommonDialog();
      *
      * @param  {Object} theOptions   [The options object with header and content and optional actions]
+     * 
+     * theOptions ...
+     * 
+     * Dialog content:
+     *   header: String for HTML or Object with content and data
+     *   content: String for HTML or Object with content and data
+     *   footer: String for HTML or Object with content and data
+     *     Note: Footer usually used for actions
+     * 
+     * Callback Functions: 
+     *   onBeforeClose = function that is called before the dialog closes
+     *    Note: When used, ESC and clicking off the dialog do NOT close the dialog
+     *        When used - return false to not allow the dialog to close (i.e. validation)
+     *        This is used for forms and advanced dialogs
+     * 
+     *   onClose = function that is called AFTER the dialog closes
+     *   onShow = function that is called when the dialog loads
+     * 
      * @return this
      */
     me.showCommonDialog = showCommonDialog;
+    
+    var commonDialogCallbackOnShow = false;
+    var commonDialogCallbackOnHide = false;
+    var commonDialogCallbackOnHidden = false;
+    
     function showCommonDialog(theOptions) {
         var tmpHeader = theOptions.header || '';
         var tmpContent = theOptions.content || '';
         var tmpFooter = theOptions.footer || '';
 
+        var tmpOnClose = theOptions.onClose || '';
+        var tmpOnBeforeClose = theOptions.onBeforeClose || '';
+        var tmpOnOpen = theOptions.onOpen || '';
+
+        var tmpDialog = getCommonDialog();
+
+        if( typeof(tmpOnBeforeClose) == 'function'){
+            commonDialogCallbackOnHide = tmpOnBeforeClose;
+            //--- If we are going to allow a stop of close, this is needed
+            tmpDialog.modal('setting', {  closable: false }); 
+        } else {
+            //--- This is a normal dialog, allow esc and off-click to close
+            tmpDialog.modal('setting', {  closable: true }); 
+        }
+        if( typeof(tmpOnClose) == 'function'){
+            commonDialogCallbackOnHidden = tmpOnClose;
+        }
+        if( typeof(tmpOnOpen) == 'function'){
+            commonDialogCallbackOnShow = tmpOnOpen;
+        }
         if (typeof (tmpContent) == 'object') {
             tmpContent = me.getTemplatedContent(tmpContent);
         }
@@ -1042,7 +1085,7 @@ var ActionAppCore = {};
         ThisApp.loadFacet('site:dialog-content', tmpContent);
         ThisApp.loadFacet('site:dialog-footer', tmpFooter);
 
-        getCommonDialog().modal('show');
+        tmpDialog.modal('show');
         
         setTimeout(resetDialogBodyArea,10)
 
@@ -1230,17 +1273,29 @@ var ActionAppCore = {};
             ThisApp.commonDialogWindowsBind = true;
             window.onresize = commonDialogOnWindowResize.bind(ThisApp);
         }
-        console.log("onCommonDialogShow - callbacks?");
         ThisApp.commonDialogIsOpen = true;
-        //Lock the main window so it does not scroll in background?
         scrollLock = true;
-        //On window resize, redo the body
+        if( typeof(commonDialogCallbackOnShow) == 'function' ){
+            commonDialogCallbackOnShow();
+        }
     }
-    function onCommonDialogHide(){
+    function onCommonDialogHide(theEl){
+        if( typeof(commonDialogCallbackOnHide) == 'function' ){
+            tmpResults = commonDialogCallbackOnHide(theEl);
+            if(tmpResults === false){
+                return false;
+            }
+        }
+
         ThisApp.commonDialogIsOpen = true;
-        console.log("onCommonDialogHide - callbacks?");
         scrollLock = false;
-        //Remove window on resize or just have it there all the time?
+        var tmpResults = true;
+        
+        commonDialogCallbackOnShow = false;
+        commonDialogCallbackOnHide = false;
+        commonDialogCallbackOnHidden = false;
+        
+        return tmpResults;
     }
 
     function getCommonDialog() {
@@ -1252,6 +1307,7 @@ var ActionAppCore = {};
             commonDialog.modal('setting', {  dimmerSettings: {opacity:1} }); 
             commonDialog.modal('setting', {  onShow: onCommonDialogShow }); 
             commonDialog.modal('setting', {  onHide: onCommonDialogHide }); 
+            ThisApp.commonDialog = commonDialog;
         }
         return commonDialog;
     }
