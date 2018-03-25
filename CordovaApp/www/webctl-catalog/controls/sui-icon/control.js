@@ -8,6 +8,23 @@
     var thisControlClass = 'SuiIcon';
     var me = ThisControl.prototype;
 
+    var colorList = {
+        "red": "Red",
+        "orange": "Orange",
+        "yellow": "Yellow",
+        "olive": "Olive",
+        "green": "Green",
+        "teal": "Teal",
+        "blue": "Blue",
+        "violet": "Violet",
+        "purple": "Purple",
+        "pink": "Pink",
+        "brown": "Brown",
+        "grey": "Grey",
+        "black": "Black"
+    };
+
+
     me.getMenuDefault = function(theType, theKey, theMenuItem, theOptionalDefault){
         var tmpRet = '';
         //--- Move up from this item, to the control then to the App in that order to look for defaults
@@ -59,7 +76,11 @@
                     color:'purple'
                 },
                 callback: mnuSetColor
-            },
+            },            
+            "inverted":{
+                caption:'Toggle Inverted',
+                callback: mnuToggleInverted
+            },            
             "size":{
                 caption:'Set size',
                 callback: mnuSetSize
@@ -73,27 +94,36 @@
     }
 
     function dlgSetColor(theAction, theTargetEl){
-        console.log("dlgItemClick",theAction, theTargetEl)
+        var tmpColor = $(theTargetEl).attr('color');
+        this.setState('color',tmpColor);
+        this.refreshUI();        
+        ThisApp.closeCommonDialog();
     }
+
     function mnuSetColor(){
         var tmpIOD = this.el.attr('oid')
-        ThisApp.registerAction("dlgSetColor", dlgSetColor);
+        ThisApp.registerAction("dlgSetColor", dlgSetColor.bind(this));
         var tmpEl = this.el;
-        var tmpHTMLForLargeOptionSet = '<h3>Select One</h3><div><i oid="' + tmpIOD + '" action="dlgSetColor" color="red" class="icon red huge square" /><i oid="' + tmpIOD + '" color="blue" action="dlgSetColor" class="icon huge blue square" /><i oid="' + tmpIOD + '" color="blue" action="dlgSetColor" class="icon huge blue square" /><i oid="' + tmpIOD + '" color="blue" action="dlgSetColor" class="icon huge blue square" /><i oid="' + tmpIOD + '" color="blue" action="dlgSetColor" class="icon huge blue square" /><i oid="' + tmpIOD + '" color="blue" action="dlgSetColor" class="icon huge blue square" /><i oid="' + tmpIOD + '" color="blue" action="dlgSetColor" class="icon huge blue square" /><i oid="' + tmpIOD + '" color="blue" action="dlgSetColor" class="icon huge blue square" /><i oid="' + tmpIOD + '" color="blue" action="dlgSetColor" class="icon huge blue square" /><i oid="' + tmpIOD + '" action="dlgSetColor" color="red" class="icon red huge square" /><i oid="' + tmpIOD + '" color="blue" action="dlgSetColor" class="icon huge blue square" /><i oid="' + tmpIOD + '" color="blue" action="dlgSetColor" class="icon huge blue square" /><i oid="' + tmpIOD + '" color="blue" action="dlgSetColor" class="icon huge blue square" /><i oid="' + tmpIOD + '" color="blue" action="dlgSetColor" class="icon huge blue square" /><i oid="' + tmpIOD + '" color="blue" action="dlgSetColor" class="icon huge blue square" /><i oid="' + tmpIOD + '" color="blue" action="dlgSetColor" class="icon huge blue square" /><i oid="' + tmpIOD + '" color="blue" action="dlgSetColor" class="icon huge blue square" /><i oid="' + tmpIOD + '" color="blue" action="dlgSetColor" class="icon huge blue square" /></div>';
-        ThisApp.showCommonDialog({ header: "Some options", content: tmpHTMLForLargeOptionSet });
-        
-        var tmpNew = '';
-        if( this.states.color == 'green'){
-            tmpNew = 'blue'
-        } else {
-            tmpNew = 'green'
+        var tmpHTML = '';
+        tmpHTML += '<div>';
+        for( var aColor in colorList){
+            var tmpColorLabel = colorList[aColor];
+            tmpHTML += '<i oid="' + tmpIOD + '" action="dlgSetColor" color="' + aColor + '" class="icon ' + aColor + ' huge square" />';
         }
+        tmpHTML += '</div>';
+        ThisApp.showCommonDialog({ onClose: onSetColorClose, header: "Select a color", content: tmpHTML });
+    }
 
-        this.setState('color',tmpNew);
-        this.refreshUI();        
+    function mnuToggleInverted(){
+        this.setState('inverted',!this.getState('inverted'));
+        this.refreshUI();
+    }
+
+    function onSetColorClose(){
+        console.log("closed")
+        ThisApp.unRegisterAction("dlgSetColor");
     }
     function mnuSetSize(){
-        
         var tmpNew = '';
         if( this.states.size == 'huge'){
             tmpNew = 'big'
@@ -177,6 +207,10 @@
         if( this.states.bordered ){
             tmpHTML+= ' bordered';
         }
+        if( this.states.inverted === true ){
+            tmpHTML+= ' inverted';
+        }
+
         tmpHTML = '<i class="' + tmpHTML + '"></i>';
         this.el.html(tmpHTML);
     }

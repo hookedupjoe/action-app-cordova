@@ -935,6 +935,13 @@ var ActionAppCore = {};
         ThisCoreApp.actions[theActionName] = theFunction;
     }
 
+    me.unRegisterAction = unRegisterAction;
+    function unRegisterAction(theActionName) {
+        if(typeof(ThisCoreApp.actions[theActionName]) != 'undefined'){
+            delete ThisCoreApp.actions[theActionName];
+        }
+    }
+
     /**
      * registerActionDelegate
      *    - Register an delegate for all actions with a prefix using (:)
@@ -1279,6 +1286,19 @@ var ActionAppCore = {};
             commonDialogCallbackOnShow();
         }
     }
+
+    function onCommonDialogHidden(theEl){
+        //console.log("onCommonDialogHidden")
+        ThisApp.commonDialogIsOpen = true;
+        scrollLock = false;
+        if( typeof(commonDialogCallbackOnHidden) == 'function' ){
+            commonDialogCallbackOnHidden();
+        }        
+        commonDialogCallbackOnShow = false;
+        commonDialogCallbackOnHide = false;
+        commonDialogCallbackOnHidden = false;        
+    }
+
     function onCommonDialogHide(theEl){
         if( typeof(commonDialogCallbackOnHide) == 'function' ){
             tmpResults = commonDialogCallbackOnHide(theEl);
@@ -1286,27 +1306,24 @@ var ActionAppCore = {};
                 return false;
             }
         }
-
-        ThisApp.commonDialogIsOpen = true;
-        scrollLock = false;
-        var tmpResults = true;
-        
-        commonDialogCallbackOnShow = false;
-        commonDialogCallbackOnHide = false;
-        commonDialogCallbackOnHidden = false;
-        
-        return tmpResults;
+        return true;
     }
 
     function getCommonDialog() {
         if (!commonDialog) {
             commonDialog = ThisApp.getByAttr$({ appuse: 'global-dialog' })
-            commonDialog.modal('setting', {  detachable: false }); 
-            commonDialog.modal('setting', {  centered: false }); 
-            commonDialog.modal('setting', {  closable: true }); 
-            commonDialog.modal('setting', {  dimmerSettings: {opacity:1} }); 
-            commonDialog.modal('setting', {  onShow: onCommonDialogShow }); 
-            commonDialog.modal('setting', {  onHide: onCommonDialogHide }); 
+            commonDialog.modal('setting', {
+                detachable: false,
+                centered: false,
+                closable: true,
+                dimmerSettings: {
+                    opacity: 1
+                },
+                onShow: onCommonDialogShow,
+                onHide: onCommonDialogHide,
+                onHidden: onCommonDialogHidden
+            }); 
+            
             ThisApp.commonDialog = commonDialog;
         }
         return commonDialog;
