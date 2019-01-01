@@ -75,6 +75,7 @@ License: MIT
             var tmpID = theDoc[tmpKeyField];
             if( tmpID ){
                 console.log("Selected",tmpID);
+                console.log("theDoc",theDoc);
                 // var tmpEls = ThisPage.getByAttr$({group:'dts:session-card', item:tmpID});
                 // if( !(tmpEls) || tmpEls.length < 1){
                 //     ThisApp.addToFacet('dts:session-details-out', theDoc, 'dts:session-card-fluid',true);
@@ -339,12 +340,72 @@ License: MIT
          })
     }
     ThisPage.runTest4 = function(){
-       //ThisPage.wsZoomControl.setState('sliderValue', 75);
-       ThisApp.appMessage("ThisPage.wsHome is " + JSON.stringify(ThisPage.wsHome.getAsObject()), "i", {show:false});
-       var tmpWSObj = false;
-       ThisPage._om.getObject('[get]:app/app-data','ws-home.json').then(function(theDoc){
-        ThisPage.wsHome.loadFromObject(theDoc)
-       })
+        ThisPage._om.getObject('[get]:app/app-data','session-data.json').then(function(theDoc){
+            //ThisPage.writeToOut(JSON.stringify(theDoc));
+            var tmpData = ThisPage.transformDocs(theDoc.rows);
+            ThisPage.activeData = tmpData;
+
+            var tmpTableEl = ThisPage.dt.addTable('dts:home-output');
+                var tmpNewTable = tmpTableEl.DataTable({
+                    data: tmpData.data,
+                    responsive: {
+                        'details': {
+                            'type': 'column',
+                            'target': 0
+                            }    
+                    },
+                    select: {
+                        'style': 'single',
+                        'selector': 'td:not(.control)'
+                     },
+                    order: [[1, 'asc']],
+                    buttons: [
+                        'copy',
+                        'excel',
+                        'csv',
+                        'pdf',
+                        'print'
+                    ],
+                    dom: 'Bfrtip',
+                    columnDefs: [ {
+                        'data': null,
+                        'defaultContent': '',
+                        'className': 'control',
+                        'orderable': false,
+                        width:5,
+                        'targets': 0
+                      }],
+                    "columns": [
+                        { "title:": "", "data": null },
+                        { "title": "ID", "data": "id" },
+                        { "title": "Title", "data": "title" },
+                        { "title": "Status", "data": "status" },
+                        { "title": "Type", "data": "type" },
+                        { "title": "Level", "data": "level" },
+                        { "title": "Session", "data": "session" }
+                    ]
+                });
+
+                $(tmpTableEl.find('.checkbox')).checkbox();
+    
+                tmpNewTable
+                    .on('select', function (e, dt, type, indexes) {
+                        ThisPage.dt.onCheckboxSelect(e, dt, type, indexes, tmpNewTable, tmpTableEl)
+                        ThisPage.sessionsSelected(tmpNewTable, indexes);
+                    })
+                    .on('deselect', function (e, dt, type, indexes) {
+                        ThisPage.dt.onCheckboxDeselect(e, dt, type, indexes, tmpNewTable, tmpTableEl)
+                        ThisPage.sessionsDeselected(tmpNewTable, indexes);
+                    });
+    
+                ThisPage.currentSessionTable = tmpNewTable;
+    
+    
+                ThisApp.appMessage("Loaded Data","i",{show:true});
+    
+
+
+         })
     }
 
     ThisPage._onInit = function(theApp) {
