@@ -101,17 +101,17 @@
     }
 
     function mnuSetColor(){
+        //--- Register custom dialog actions to call back to this component
+        //-     then unregister them again on close
         var tmpIOD = this.el.attr('oid')
-        ThisApp.registerAction("dlgSetColor", dlgSetColor.bind(this));
-        var tmpEl = this.el;
+        ThisApp.registerAction("_wc" + tmpIOD + ":dlgSetColor", dlgSetColor.bind(this));
         var tmpHTML = '';
         tmpHTML += '<div>';
         for( var aColor in colorList){
-            var tmpColorLabel = colorList[aColor];
-            tmpHTML += '<i oid="' + tmpIOD + '" action="dlgSetColor" color="' + aColor + '" class="icon ' + aColor + ' huge square" />';
+            tmpHTML += '<i oid="' + tmpIOD + '" action="' + "_wc" + tmpIOD + ':' + 'dlgSetColor" color="' + aColor + '" class="icon ' + aColor + ' huge square" />';
         }
         tmpHTML += '</div>';
-        ThisApp.showCommonDialog({ onClose: onSetColorClose, header: "Select a color", content: tmpHTML });
+        ThisApp.showCommonDialog({ onClose: onSetColorClose.bind(this), header: "Select a color", content: tmpHTML });
     }
 
     function mnuToggleInverted(){
@@ -120,8 +120,8 @@
     }
 
     function onSetColorClose(){
-        console.log("closed")
-        ThisApp.unRegisterAction("dlgSetColor");
+        var tmpIOD = this.el.attr('oid');
+        ThisApp.unRegisterAction("_wc" + tmpIOD + ":dlgSetColor");
     }
     function mnuSetSize(){
         var tmpNew = '';
@@ -252,8 +252,6 @@
     function onContextMenu(theOptions) {
         var tmpParentEl = this.el;
         var tmpOID = tmpParentEl.attr('oid');
-        var tmpThisControl = this;
-        var tmpOptions = theOptions || {};
         this.publish('onContextMenu',[this]);
         ThisApp.clearActivePopup();
         var tmpItems = this.getMenuItems();

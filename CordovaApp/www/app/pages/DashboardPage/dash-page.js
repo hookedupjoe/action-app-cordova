@@ -100,11 +100,11 @@ License: MIT
             function(){
                 var me = ThisPage;
                 //--- Add any custom init stuff
-                $('[appuse="dash:home-sidebar"] .ui.sidebar')
+                $('[appuse="dash:home-sidebar-menu"]')
                 .sidebar({
-                    context: $('[appuse="dash:home-sidebar"] .bottom.segment')
+                    context: $('[appuse="dash:home-sidebar-menu-container"]')
                 })
-                .sidebar('attach events', '[appuse="dash:home-sidebar"] .menu .item')
+                .sidebar('attach events', '[appuse="dash:home-sidebar-menu-trigger"]')
                 ;
 
                 var tmpZoomBarEl = me.getByAttr$({ facet: "dash:zoom-control" });

@@ -30,7 +30,6 @@ Web controls Plugin:
     //--- This this component to the Plugin Module
     MyMod[thisCompName] = ThisPageController;
 
-
     var ThisApp = null;
 
     var thisComponentID = "plugin:" + thisCompName;
@@ -38,16 +37,14 @@ Web controls Plugin:
     //--- Base class for application pages
     function ThisPageController(theOptions) {
         this.options = theOptions || {};
-        //this.actions = this.options.actions || {};
-        var defaults = {};
         if (typeof (this.options.app) == 'object') {
             ThisApp = this.options.app;
             if (ThisApp && ThisApp.registerComponent) {
                 ThisApp.registerComponent(thisComponentID, this);
             }
         }
-        
     }
+
     var me = ThisPageController.prototype;
     //---ToDo: Duplicate, pull from somewhere unified?
     me.controlsBaseURL = "./webctl-catalog/controls/";
@@ -61,19 +58,15 @@ Web controls Plugin:
         return this;
     }
 
-    me.getNewPanel = function (theOptions) {
-        return new WebCtlExtendMod.WebCtlPanel(theOptions);
-    }
-
     function runAction(theAction, theSourceObject) {
         if (typeof (me[theAction]) == 'function') {
             me[theAction](theAction, theSourceObject);
         }
     }
 
-    //---ToDo: Duplicate, pull from somewhere unified?
-    me.controlsBaseURL = "./webctl-catalog/controls/";
-    var controlPromises = {};
+    me.getNewPanel = function (theOptions) {
+        return new WebCtlExtendMod.WebCtlPanel(theOptions);
+    }
 
     /*
     *
@@ -115,15 +108,9 @@ Web controls Plugin:
         return WebCtlCatalogMod.hasOwnProperty(theControlName);
     }
 
-    me.resolveWhenLoaded = function (theControlName, thePromise) {
-        me.controlPromises(theControlName) = thePromise;
-    }
-
 })(ActionAppCore, $);
 
 ///--- End of the plugin
-
-
 
 
 
@@ -140,12 +127,11 @@ Web controls Plugin:
     var me = ThisExtention.prototype;
 
     //-- Every WebControl has quick access to common setDisplay function
-    $.extend(me, ExtendMod.SetDisplay)
+    $.extend(me, ExtendMod.SetDisplay);
     //-- Every WebControl has built-in pub-sub functionality
-    $.extend(me, ExtendMod.PubSub)
+    $.extend(me, ExtendMod.PubSub);
 
     me.createdCount = 0;
-    me.loadedControls = {};
 
     me.getAsObject = getAsObject;
     function getAsObject() {
@@ -184,22 +170,6 @@ Web controls Plugin:
         return this.states[theState]
     }    
 
-    me.getTransform = getTransform;
-    function getTransform() {
-        var tmpRet = '';
-        // tmpRet += 'translate(' + this.translateX + ',' + this.translateY + ') ';
-        // tmpRet += 'scale(' + this.scale + ') ';
-        return tmpRet;
-    }
-
-    me.refreshLocation = function () {
-        // this.controlWrap.attr("transform", this.getTransform());
-    }
-
-
-    me.getMousePos = function (thePoint) {
-       //see other duplicate functon for notes
-    }
 
     me.objectClicked = objectClicked;
     function objectClicked(theEvent) {
@@ -236,11 +206,6 @@ Web controls Plugin:
         if (typeof (tmpOptions.colorOffset) == 'number') {
             tmpThisControl.colorOffset = tmpOptions.colorOffset;
         }
-        var tmpBaseURL = me.baseURL;
-
-        // var tmpWebCtlFrag = document.createDocumentFragment();
-        // var tmpWebCtlBase = d3.select(tmpWebCtlFrag).append("webctl");
-        // var tmpWebCtlNode = tmpWebCtlBase.node();
 
         var tmpOID = theOptions.oid || (tmpThisControl.cid + "-" + me.createdCount++);
 
@@ -254,7 +219,6 @@ Web controls Plugin:
             tmpThisControl._el = tmpAddedEl;
             tmpThisControl.el = $(tmpThisControl._el);
 
-//*******************            
             //--- ToDo: Move this, do not want events by default *****
             if (typeof (tmpOptions.onClick) == 'function') {
                 $(tmpThisControl._el).on("click", tmpOptions.onClick);
@@ -275,13 +239,6 @@ Web controls Plugin:
 
         
         tmpThisControl.states = {};
-
-        //--- To Do, get message / details when fully loaded and do it then
-        // setTimeout(function () {
-        //     tmpThisControl.loadStates(tmpOptions.states || {});
-        // }, 10);
-
-        tmpThisControl.refreshLocation();
 
         dfd.resolve(tmpThisControl);
         
@@ -334,9 +291,8 @@ Web controls Plugin:
     //--- Called by objects when they are clicked
     me.objectClicked = objectClicked;
     function objectClicked(theEvent, theObj) {
-        //console.log("object clicked", theEvent, theObj, theDetails)
-    }
 
+    }
 
     me.getAsObject = getAsObject;
     function getAsObject() {
@@ -371,7 +327,6 @@ Web controls Plugin:
             for (var i = 0; i < tmpLen; i++) {
                 var tmpO = tmpAllObjects[i];
                 $(tmpO).remove();
-                //ToDo: Remove listeners?
             }
         }
         this.activeControl = null;
@@ -396,9 +351,7 @@ Web controls Plugin:
                 var tmpO = tmpObjects[i];
                 var tmpOID = tmpO.oid;
                 var tmpCID = tmpO.cid;
-                //console.log("tmpO", tmpO);
                 this.addControl(tmpOID, tmpCID, tmpO)
-
             }
         }
 
@@ -408,16 +361,10 @@ Web controls Plugin:
 
     me.init = init;
     function init(theOptions) {
-        this.originalViewBox = theOptions.viewBox || { x: 0, y: 0, w: 800, h: 800 };
-        this.currentViewBox = $.extend({}, this.originalViewBox);
         this.workspaceControls = {};
-        this.drag = null;
         this.mom = null;
-        this.dPoint = null;
-        this.dragOperation = '';
 
         this.activeControl = null;
-        //console.log("INit",this,theOptions)
         me._webctl = me._webctl || ActionAppCore.app.getComponent("plugin:WebControls");
         theOptions = theOptions || {};
         this.mom = theOptions.mom || false;
@@ -429,10 +376,6 @@ Web controls Plugin:
 
     }
 
-    me._getViewBoxString = function (theObj) {
-        return '' + theObj.x + ' ' + theObj.y + ' ' + theObj.w + ' ' + theObj.h;
-    }
-
     /**
       * addControl
       *    - adds a control to this Workspace
@@ -442,7 +385,7 @@ Web controls Plugin:
       * @param  {String} theObjectID   [A unique id for this conrol]
       *    Note: Use blank to have auto-generated unique id for this conrol
       * @param  {String} theControlName   [The name/id of the control from the control catalog]
-      * @param  {Object} theOptions   [standard options object with control options such as scale, transformX, etc]
+      * @param  {Object} theOptions   [standard options object with control options]
       * @return void
       */
     me.addControl = function (theObjectID, theControlName, theOptions) {
@@ -483,10 +426,6 @@ Web controls Plugin:
 
     me.AttachListeners = AttachListeners;
     function AttachListeners() {
-        this.mom.onmousedown = DragProcess.bind(this);
-        this.mom.onmousemove = DragProcess.bind(this);
-        this.mom.onmouseup = DragProcess.bind(this);
-
         var tmpFN = onContextMenu.bind(this);
         $(this.mom).contextmenu(function(e){
             if( !e.isDefaultPrevented() ){
@@ -494,219 +433,13 @@ Web controls Plugin:
                 tmpFN(e);    
             }
         })
-
-        $(document.body).on('mouseup', DragUp.bind(this));
     }
     function onContextMenu(){
-       //Depending on mode, t0his will do different stuff
-       
        ThisApp.showPopup({
             el: this.mom,
             variation: 'basic',
             html: '<div class="ui container fluid"> <div class="ui four column divided center aligned grid"> <div class="column">1</div> <div class="column">2</div> <div class="column">3</div> <div class="column">4</div> </div></div>'
         })  
-        // $.contextMenu({
-        //     selector: '.page-frame', 
-        //     callback: function(key, options) {
-        //         var m = "clicked: " + key;
-        //         window.console && console.log(m) || alert(m); 
-        //     },
-        //     items: {
-        //         "edit": {name: "Edit", icon: "edit"},
-        //         "cut": {name: "Cut", icon: "cut"},
-        //        copy: {name: "Copy", icon: "copy"},
-        //         "paste": {name: "Paste", icon: "paste"},
-        //         "delete": {name: "Delete", icon: "delete"},
-        //         "sep1": "---------",
-        //         "quit": {name: "Quit", icon: function(){
-        //             return 'context-menu-icon context-menu-icon-quit';
-        //         }}
-        //     }
-        // });
-    }
-
-
-    me.DragUp = DragUp;
-    function DragUp(e) {
-        if (this.drag) {
-            e.preventDefault();
-            e.stopPropagation();
-        }
-
-        this.drag = null;
-        this.dragOperation = '';
-        if (this.activeControl) {
-            if (this.dragOperation == 's') {
-                this.activeControl.translateX = 0;
-                this.activeControl.translateY = 0;
-
-            }
-            this.activeControl = false;
-        }
-    }
-
-    this.DragProcess = DragProcess;
-    function DragProcess(e) {
-
-        var t = e.target, id = t.id, et = e.type;
-        if (e.ctrlKey == true || e.altKey == true) {
-            if (e.ctrlKey == true) {
-                this.dragOperation = 'm';
-            } else {
-                this.dragOperation = 's';
-            }
-            e.preventDefault();
-            e.stopPropagation();
-                this.MoveDrag(e);
-        }
-
-        // stop drag no matter what
-        if ((et == "mouseup")) {
-            //console.log("DragUp");
-            //this.drag.className.baseVal="draggable";
-            this.drag = null;
-            this.dragOperation = '';
-            if (this.activeControl) {
-                if (this.dragOperation == 's') {
-                    this.activeControl.translateX = 0;
-                    this.activeControl.translateY = 0;
-
-                }
-                this.activeControl = false;
-            }
-        }
-    }
-
-    //var this.activeControl = false;
-
-    // Drag function that needs to be modified;//
-    me.MoveDrag = MoveDrag;
-    function MoveDrag(e) {
-
-        var t = e.target, id = t.id, et = e.type; m = MousePos.bind(this)(e);
-        //        //console.log("MoveDrag",et,m)
-
-        if (!this.drag && (et == "mousedown")) {
-            var tmpParent$ = ($(t).closest('[oid]'));
-            //            //console.log("tmpParent$",tmpParent$);
-            if (!tmpParent$ || tmpParent$.length == 0) {
-                return;
-            }
-
-            var tmpOID = tmpParent$.attr("oid") || '';
-            var tmpScale = 1;
-            var tmpControl = this.workspaceControls[tmpOID];
-            if (tmpControl) {
-                this.activeControl = tmpControl;
-                tmpScale = this.activeControl.scale;
-            }
-            var tmpParent = tmpParent$[0].parentNode;
-            if (!tmpParent._x) {
-                tmpParent._x = tmpControl.translateX;
-                tmpParent._y = tmpControl.translateY;
-
-            }
-
-            this.dPoint = m;
-            this.dPoint.scale = tmpScale;
-            // //console.log("setting drag",tmpParent)
-            this.drag = tmpParent;
-
-            //this.drag = tmpControl.controlWrap[0];
-        }
-
-        // drag the spawned/copied draggable element now
-        if (this.drag && (et == "mousemove")) {
-
-            var tmpScale = 1;
-            var tmpX = 0;
-            var tmpY = 0;
-
-            if (this.activeControl) {
-
-                if (this.dragOperation == 's') {
-
-                    tmpX = this.activeControl.translateX;
-                    tmpY = this.activeControl.translateY;
-                    this.dPoint.origX = this.dPoint.origX || this.dPoint.x;
-                    var tmpDiff = m.x - this.dPoint.x;
-                    this.dPoint.x = m.x;
-
-                    var tmpDiffOrig = m.x - this.dPoint.origX;
-
-                    var tmpDiffPerc = Math.abs(tmpDiffOrig) / 500;
-                    var tmpMoveAmt = .02;
-                    if (tmpDiffPerc > .4) {
-                        tmpMoveAmt *= 5;
-                    }
-                    if (tmpDiff > 0) {
-                        this.activeControl.scale += tmpMoveAmt
-                    } else {
-                        this.activeControl.scale -= tmpMoveAmt
-                    }
-
-
-                } else {
-                    this.drag._x += m.x - this.dPoint.x;
-                    this.drag._y += m.y - this.dPoint.y;
-                    this.dPoint = m;
-                    tmpX = this.drag._x;
-                    tmpY = this.drag._y;
-                    this.activeControl.translateX = this.drag._x;
-                    this.activeControl.translateY = this.drag._y;
-                    tmpScale = this.activeControl.scale;
-                }
-                tmpScale = this.activeControl.scale;
-
-
-                //this.activeControl.translateX = this.drag._x;
-                //this.activeControl.translateY = this.drag._y;
-
-
-            }
-
-            this.drag.setAttribute("transform", "translate(" + tmpX + "," + tmpY + ") scale(" + (tmpScale) + "," + tmpScale + ") ");
-        }
-
-    }
-
-
-    // adjust mouse position ??? Do we still need this?
-    me.MousePos = MousePos;
-    function MousePos(event) {
-        //  //console.log("MousePos",this)
-        //return this.getMousePos({ x: event.clientX, y: event.clientY })
-        //for now ...
-        return { x: event.clientX, y: event.clientY };
-    }
-
-    //--- Get Mouse Position, was relative to the related SVG workspace
-    me.getMousePos = function (thePoint) {
-
-        //ToDo: Implement for web ????
-
-        //-- was this
-        //var p = this.svg.createSVGPoint();
-
-        //-- temp this now till used
-        var p = {x:0,y:0};
-
-        p.x = thePoint.x;
-        p.y = thePoint.y;
-        // var matrix = this.svg.getScreenCTM();
-        // p = p.matrixTransform(matrix.inverse());
-        var tmpX = p.x;
-        var tmpY = p.y;
-        if (tmpX < 0) {
-            tmpX = 0;
-        }
-        if (tmpY < 0) {
-            tmpY = 0;
-        }
-        return {
-            x: tmpX,
-            y: tmpY
-        }
     }
 
     //--- return the prototype to be marged with prototype of target object

@@ -1,7 +1,7 @@
 <div appuse="dash:home-sidebar" class="ui container">
     <div style="padding-top:10px">
         <div class="ui top attached demo menu">
-            <a class="item">
+            <a appuse="dash:home-sidebar-menu-trigger" class="item">
                 <i class="sidebar icon"></i>
                 Menu
             </a>
@@ -11,7 +11,7 @@
         </div>
 
         <div class="ui bottom attached segment pushable">
-            <div class="ui inverted labeled icon left inline vertical sidebar menu">
+            <div appuse="dash:home-sidebar-menu" class="ui inverted labeled icon left inline vertical sidebar menu">
                 <a class="item" appuse="tablinks" group="dash:tabs" item="home" action="showSubPage">
                     <i class="home icon"></i>
                     Home
@@ -29,7 +29,7 @@
                     History
                 </a>
             </div>
-            <div class="pusher">
+            <div appuse="dash:home-sidebar-menu-container" class="pusher">
                 <div class="ui basic segment">
                     <div>
                         <div appuse="cards" group="dash:tabs" item="home" class="med-boxed">
