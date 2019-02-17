@@ -7,6 +7,7 @@
     var thisControlTitle = "Semantic UI Icon";
     var thisControlClass = 'SuiIcon';
     var me = ThisControl.prototype;
+    me.className = thisControlClass;
 
     var colorList = {
         "red": "Red",
@@ -24,6 +25,16 @@
         "black": "Black"
     };
 
+    var sizeList = {
+        "mini": "Mini",
+        "tiny": "Tiny",
+        "small": "Small",
+        " ": "Default",
+        "large": "Large",
+        "big": "Big",
+        "huge": "Huge",
+        "massive": "Massive"
+    };
 
     me.getMenuDefault = function(theType, theKey, theMenuItem, theOptionalDefault){
         var tmpRet = '';
@@ -92,10 +103,10 @@
             }
         }
     }
-
+    
     function dlgSetColor(theAction, theTargetEl){
-        var tmpColor = $(theTargetEl).attr('color');
-        this.setState('color',tmpColor);
+        var tmpVal = $(theTargetEl).attr('color');
+        this.setState('color',tmpVal);
         this.refreshUI();        
         ThisApp.closeCommonDialog();
     }
@@ -123,15 +134,31 @@
         var tmpIOD = this.el.attr('oid');
         ThisApp.unRegisterAction("_wc" + tmpIOD + ":dlgSetColor");
     }
-    function mnuSetSize(){
-        var tmpNew = '';
-        if( this.states.size == 'huge'){
-            tmpNew = 'big'
-        } else {
-            tmpNew = 'huge'
-        }
-        this.setState('size',tmpNew);
+
+    function onSetSizeClose(){
+        var tmpIOD = this.el.attr('oid');
+        ThisApp.unRegisterAction("_wc" + tmpIOD + ":dlgSetSize");
+    }
+    
+    function dlgSetSize(theAction, theTargetEl){
+        var tmpVal = $(theTargetEl).attr('size');
+        this.setState('size',tmpVal);
         this.refreshUI();        
+        ThisApp.closeCommonDialog();
+    }
+
+    function mnuSetSize(){
+       //--- Register custom dialog actions to call back to this component
+        //-     then unregister them again on close
+        var tmpIOD = this.el.attr('oid')
+        ThisApp.registerAction("_wc" + tmpIOD + ":dlgSetSize", dlgSetSize.bind(this));
+        var tmpHTML = '';
+        tmpHTML += '<div>';
+        for( var aName in sizeList){
+            tmpHTML += '<i oid="' + tmpIOD + '" action="' + "_wc" + tmpIOD + ':' + 'dlgSetSize" size="' + aName + '" class="icon ' + aName + ' square" />';
+        }
+        tmpHTML += '</div>';
+        ThisApp.showCommonDialog({ onClose: onSetSizeClose.bind(this), header: "Select a size", content: tmpHTML });
     }
 
     me.getMenuItemSpecs = function(theMenuKey, theMenuItem){
@@ -252,8 +279,8 @@
     function onContextMenu(theOptions) {
         var tmpParentEl = this.el;
         var tmpOID = tmpParentEl.attr('oid');
-        this.publish('onContextMenu',[this]);
         ThisApp.clearActivePopup();
+        this.publish('onContextMenu',[this]);
         var tmpItems = this.getMenuItems();
 
 
@@ -291,7 +318,7 @@
         this.container$ = $(this.container);
         //--- Call default parent functionality to initialize a control
         var tmpThisControl = this;
-        var tmpPromise = this.initControl(theParentContainer, tmpOptions).then(
+        this.initControl(theParentContainer, tmpOptions).then(
             function (theControl) {
                 //theControl.el is the base jQuery element
                 //theControl._el is the base raw element, same as .el.get();
