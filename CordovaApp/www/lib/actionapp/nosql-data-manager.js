@@ -266,6 +266,21 @@ $.fn.NoSqlDataManager = (function ($) {
         return tmpHandlerDetails.handler(tmpActionDetails, tmpHandlerDetails.options);
     }
 
+    me.addDocument = addDocument;
+    function addDocument(theSourceName, thePath, theObject) {
+        var tmpHandlerDetails = getDocumentHandler(theSourceName);
+        //---ToDo: Work out deeper path or rename
+        theObject._id = thePath;
+
+        var tmpActionDetails = {
+            action: 'add',
+            doc: theObject,
+            location: thePath,
+            source: tmpHandlerDetails.source
+        }
+        return tmpHandlerDetails.handler(tmpActionDetails, tmpHandlerDetails.options);
+    }
+
     me.putDocument = putDocument;
     function putDocument(theSourceName, thePath, theObject) {
         var tmpHandlerDetails = getDocumentHandler(theSourceName);
@@ -390,12 +405,13 @@ $.fn.NoSqlDataManager = (function ($) {
         var tmpDBName = theAction.source || '';
 
         if (!(typeof (theOptions.db) == 'object')) {
+            console.log("Getting Database theAction, tmpDBName, theOptions",theAction, tmpDBName, theOptions)
             me.getDatabase(tmpDBName, theOptions).then(function (theDB) {
                 theOptions.db = theDB;
                 me.sourceHandlerForNoSQL(theAction, theOptions).then(function (theResponse) {
                     dfd.resolve(theResponse);
                 });
-            })
+            })  
             return dfd.promise();
         }
 
@@ -413,6 +429,8 @@ $.fn.NoSqlDataManager = (function ($) {
                 //dfd.reject("Error getting document from nosql db. " + err.toString());
                 dfd.reject(err);
             });
+        } else if (tmpAction == 'add') {
+            return tmpDB.put(theAction.doc);
         } else if (tmpAction == 'put') {
             var tmpDoc = theAction.doc || false;
 

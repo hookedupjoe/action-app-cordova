@@ -176,6 +176,13 @@ Web controls Plugin:
         if (this.parentWS && this.parentWS.objectClicked) {
             this.parentWS.objectClicked(theEvent, this);
         }
+        this.publish('onClick',[this,theEvent])
+    }
+
+    me.clean = clean;
+    function clean() {
+        this.el.unbind("click");
+        this.el.unbind("contextmenu");
     }
 
     me.initControl = initControl;
@@ -214,7 +221,7 @@ Web controls Plugin:
             var tmpNewEl = document.createElement("webctl");
             tmpThisControl.mom.appendChild(tmpNewEl);
             var tmpAddedEl = tmpNewEl; //$(tmpThisControl.mom).find('webctl').get(0);
-            tmpAddedEl.setAttribute('id', tmpOID);
+            //tmpAddedEl.setAttribute('id', tmpOID);
             tmpAddedEl.setAttribute('oid',tmpOID);
             tmpThisControl._el = tmpAddedEl;
             tmpThisControl.el = $(tmpThisControl._el);
@@ -266,7 +273,7 @@ Web controls Plugin:
     var ExtendMod = ActionAppCore.module("extension");
     var WebCtlExtendMod = ActionAppCore.module("WebControls:extension");
 
-    //--- Base class for application pages
+    //--- Base class for this
     function ThisExtention() {
 
     }
@@ -274,7 +281,7 @@ Web controls Plugin:
     var me = ThisExtention.prototype;
 
     //-- Every WebCtlPanel has built-in pub-sub functionality
-    //$.extend(me, ExtendMod.PubSub)
+    $.extend(me, ExtendMod.PubSub)
     //-- Every WebCtlPanel has quick access to common setDisplay function
     $.extend(me, ExtendMod.SetDisplay)
 
@@ -291,6 +298,37 @@ Web controls Plugin:
     //--- Called by objects when they are clicked
     me.objectClicked = objectClicked;
     function objectClicked(theEvent, theObj) {
+        //console.log("objectClicked (theEvent,theObj)",theEvent,theObj);
+        this.publish('controlClick',[theObj,this,theEvent]);
+    }
+
+    //--- Do this to assure all controls are ready for addControl
+    me.preloadControlsForObjects = preloadControlsForObjects;
+    function preloadControlsForObjects(theObjectsArray) {
+        var dfd = jQuery.Deferred();
+        var tmpDefs = [];
+        var tmpCIDs = {index:{},vals:[]};
+        for (let index = 0; index < theObjectsArray.length; index++) {
+            var tmpObj = theObjectsArray[index];
+            if( !tmpCIDs.index.hasOwnProperty(tmpObj.cid) ){
+                tmpCIDs.index[tmpObj.cid] = true;
+                tmpCIDs.vals.push(tmpObj.cid);
+            }
+        }
+        for (let index = 0; index < tmpCIDs.vals.length; index++) {
+            var tmpCID = tmpCIDs.vals[index];
+            if( tmpCID ){
+                tmpDefs.push(
+                    me._webctl.getControl(tmpCID)
+                );
+            }
+        }
+        $.whenAll(tmpDefs).then(
+            function(){
+                dfd.resolve(true);
+            }
+        )
+        return dfd.promise();
 
     }
 
@@ -313,7 +351,6 @@ Web controls Plugin:
                         tmpRet.objects.push(tmpObjDetails);
                     }
                 }
-
             }
         }
         return tmpRet;
@@ -326,6 +363,15 @@ Web controls Plugin:
         if (tmpLen > 0) {
             for (var i = 0; i < tmpLen; i++) {
                 var tmpO = tmpAllObjects[i];
+                console.log("Remove ",JSON.stringify(tmpO));
+                var tmpO = tmpAllObjects[i];
+                var tmpOID = tmpO.getAttribute('oid');
+                var tmpObj = this.workspaceControls[tmpOID];
+
+                if( tmpObj && typeof(tmpObj.clean) == 'function' ){
+                    console.log("cleaned");
+                    tmpObj.clean();
+                }
                 $(tmpO).remove();
             }
         }
@@ -347,22 +393,30 @@ Web controls Plugin:
         var tmpObjects = theObject.objects || [];
         var tmpLen = tmpObjects.length;
         if (tmpLen > 0) {
-            for (var i = 0; i < tmpLen; i++) {
-                var tmpO = tmpObjects[i];
-                var tmpOID = tmpO.oid;
-                var tmpCID = tmpO.cid;
-                this.addControl(tmpOID, tmpCID, tmpO)
-            }
+            var tmpThis = this;
+            this.preloadControlsForObjects(tmpObjects).then(
+                function(){
+                    for (var i = 0; i < tmpLen; i++) {
+                        var tmpO = tmpObjects[i];
+                        var tmpOID = tmpO.oid;
+                        var tmpCID = tmpO.cid;
+                        tmpThis.addControl(tmpOID, tmpCID, tmpO)
+                    }
+                }
+            )
         }
 
 
         return tmpRet;
     }
 
+    
     me.init = init;
     function init(theOptions) {
         this.workspaceControls = {};
         this.mom = null;
+
+        this.initPubSub();
 
         this.activeControl = null;
         me._webctl = me._webctl || ActionAppCore.app.getComponent("plugin:WebControls");
@@ -438,7 +492,7 @@ Web controls Plugin:
        ThisApp.showPopup({
             el: this.mom,
             variation: 'basic',
-            html: '<div class="ui container fluid"> <div class="ui four column divided center aligned grid"> <div class="column">1</div> <div class="column">2</div> <div class="column">3</div> <div class="column">4</div> </div></div>'
+            html: '<div class="ui middle aligned divided list"><div class="item">Test</div></div>'
         })  
     }
 

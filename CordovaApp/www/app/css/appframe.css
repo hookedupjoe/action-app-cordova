@@ -14,7 +14,25 @@
     border-top:solid 1px #dddddd;
     padding:4px;
   }
-  
+  .aa-ws {
+    min-height:300px;    
+  }
+  .one-liner {
+    white-space: nowrap;
+    overflow:hidden;
+  }
+  .ui.menu {
+    border:none !important;
+  }
+  .aa-footer {
+    padding:3px;
+    border: solid 1px;
+  }
+
+  .aa-outside {
+    margin:0px;
+    padding:0px;
+  }
 
   /* Context Menu Tweaks */
   .context-menu-icon.context-menu-hover:before {

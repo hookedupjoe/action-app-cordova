@@ -111,6 +111,8 @@ Source Handlers:  ("name" = function or name of other handler.)
         return dfd.promise();
     }
     
+    me.addObject = dataMgr.addDocument;
+    me.updateObject = dataMgr.putDocument;
     me.putObject = dataMgr.putDocument;
     me.deleteObject = dataMgr.deleteDocument;
 

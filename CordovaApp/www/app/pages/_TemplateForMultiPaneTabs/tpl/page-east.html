@@ -1,0 +1,19 @@
+<div class="ui basic segment">
+    <div appuse="card-container" group="ws:tabs">
+        <div appuse="cards" group="ws:tabs" item="home" class="med-boxed">
+            <div facet="ws:home-controls" class="ui segment basic">
+                <h3>New Workspace ..</h3>
+                    <div class="ui compact icon menu">
+                            <input appuse="ws:new-ws-name" class="ui field" placeholder="Enter a WS name" style="min-width:250px;margin-left:10px;padding:5px;" />
+                        <a action="ws:addWorkspace" class="item">
+                          <i class="icon ui circle plus blue"></i>       
+                        </a>
+                    
+                      </div>
+            </div>
+        </div>
+        <div appuse="cards" group="ws:tabs" item="open-ws" class="hidden med-boxed">
+            <div class="ui message blue">Now Showing ...</div>
+        </div>
+    </div>
+</div>

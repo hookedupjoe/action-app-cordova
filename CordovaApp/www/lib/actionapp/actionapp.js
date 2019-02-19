@@ -1008,6 +1008,14 @@ var ActionAppCore = {};
         }
     }
 
+    /**
+     * hideCommonDialog
+     *    - Hidex the common dialog box if open
+    */
+    me.hideCommonDialog = hideCommonDialog;
+    function hideCommonDialog() {
+        getCommonDialog().modal('hide');
+    }
 
     /**
      * showCommonDialog
@@ -1053,6 +1061,9 @@ var ActionAppCore = {};
         var tmpOnBeforeClose = theOptions.onBeforeClose || '';
         var tmpOnOpen = theOptions.onOpen || '';
 
+        var tmpCloseText = theOptions.closeText || 'Close';
+        ThisApp.getFacet$('site:dialog-close-text').html(tmpCloseText);
+
         var tmpDialog = getCommonDialog();
 
         if( typeof(tmpOnBeforeClose) == 'function'){
@@ -1079,6 +1090,7 @@ var ActionAppCore = {};
         }
         if( tmpFooter === ''){
             //ThisApp.getFacet$('site:dialog-footer').css('display','none')
+            
             ThisApp.getFacet$('site:dialog-footer').removeClass('actions');
         } else if (typeof (tmpFooter) == 'object') {
             tmpFooter = me.getTemplatedContent(tmpFooter);
@@ -1174,8 +1186,19 @@ var ActionAppCore = {};
           this.innerHTML = '';
         });
     }
-
-    //me.htmlHandlebars = {};
+ /**
+     * addTemplate
+     *    - Adds / compiles Handlebars template
+     *
+     * @param  {String} theKey  The unique name for this template
+     * @param  {Object} theHTML  The HTML to include
+     * @return void
+     */
+    me.addTemplate = function(theKey, theHTML){
+        me._templates[theKey] = Handlebars.compile(theHTML);
+    }
+    
+        //me.htmlHandlebars = {};
     me._templates = {};
     me.renderTemplate = function(theName, theContext){
         try {
@@ -1184,9 +1207,6 @@ var ActionAppCore = {};
         } catch (theError) {
             console.error("Error rendering template " + theError,"Name was " + theName);
         }
-    }
-    me.addTemplate = function(theName, theHTML){
-        me._templates[theName] = Handlebars.compile(theHTML); 
     }
 
 
@@ -1349,12 +1369,12 @@ var ActionAppCore = {};
         //--- Dynamically create the common dialog facet
         var tmpNewDiv = $('<div facet="site:global-dialog" class="hidden"></div>').appendTo('body');
         //--- Populate with common dialog (ToDo: Allow override?)
-        var tmpHTML = '<div appuse="global-dialog" class="ui modal longer inverted"><button style="float:right;margin-top:5px;margin-right:5px;" class="icon ui basic blue button circle" action="_app:closeCommonDialog" ><i class="close icon"></i> Close</button><div facet="site:dialog-header" class="header"></div>  <div facet="site:dialog-content" class="content common-dialog-content"> </div> <div facet="site:dialog-footer" class="common-dialog-footer"></div> </div> ';
+        var tmpHTML = '<div appuse="global-dialog" class="ui modal longer inverted"><button style="float:right;margin-top:5px;margin-right:5px;" class="icon ui basic blue button circle" action="_app:closeCommonDialog" ><i class="close icon"></i> <span facet="site:dialog-close-text">Close</span></button><div facet="site:dialog-header" class="header"></div>  <div facet="site:dialog-content" class="content common-dialog-content"> </div> <div facet="site:dialog-footer" class="common-dialog-footer"></div> </div> ';
         me.loadFacet(commonDialogFacet, tmpHTML )        
     }
 
     function initAppActions() {
-        $('[appuse="appbody"]').on("click", itemClicked)
+        $('body').on("click", itemClicked)
     }
     function instClicked(theEvent) {
         theEvent.preventDefault();
@@ -1599,7 +1619,7 @@ License: MIT
     var SiteMod = ActionAppCore.module("site");
     SiteMod.SitePage = SitePage;
 
-    var defaultLayoutOptions = {
+    var defaultLayoutOptions = {        
         spacing_closed: 8,
         spacing_open: 6,
         resizable: true,
@@ -1638,6 +1658,7 @@ License: MIT
         this._activatedFlag = false;
         //this.pageTemplate = this.options.pageTemplate || '';
         this.layoutOptions = this.options.layoutOptions || false;
+        
 
 //!this.pageTemplate || 
         if (this.layoutOptions) {
@@ -1681,28 +1702,81 @@ License: MIT
         ThisApp.initTemplates(this.pageTemplates).then(
             function(){
                 //--- No async calls, just run it
-                tmpThis.initLayoutTemplates();
+                tmpThis.initLayout();
                 dfd.resolve(true);
             }
         );
         return dfd.promise();
     }
-    me.initLayoutTemplates = function(){
-        if(!this.layoutOptions && this.layoutOptions.templates){
-            return;
-        }
-        var tmpLTs = this.layoutOptions.templates;
-        var tmpContext = {}
-        for( var aName in tmpLTs ){
-            var tmpLT = tmpLTs[aName];
-            var tmpLTName = '';
-            if( typeof(tmpLT) == 'string'){
-                tmpLTName = tmpLT;
-            } else {
-                tmpLTName = tmpLT.name;
+
+    
+    //--- Usage: <div appuse="template" name="yourns:yourname">Template for {{titie}}</div>
+    me.loadTemplatesFromMarkup = function(){
+        var tmpEls = this.getByAttr$({page: this.pageName, appuse:"template"})
+        if( tmpEls && tmpEls.length > 0){
+            for( var i = 0 ; i < tmpEls.length; i++){
+                var tmpEl = $(tmpEls[i]);
+                var tmpName = tmpEl.attr('name') || '';
+                var tmpHTML = tmpEl.html();
+                ThisApp.addTemplate(tmpName,tmpHTML);
+                //console.log("tmpEl tmpName",tmpName);
             }
-            this.loadRegion(aName, ThisApp.renderTemplate(tmpLTName, tmpContext));
         }
+    }
+
+    //--- Usage: <div appuse="content" region="north">North Content</div>
+    me.loadLayoutFromMarkup = function(){
+        var tmpEls = this.getByAttr$({page: this.pageName, region:"center", appuse:"content"})
+        if( tmpEls && tmpEls.length > 0){
+            //console.log("Loading Region: center");
+            this.loadRegion('center', tmpEls.html());
+        }
+        var tmpRegions = ['north','south','east','west'];
+        for( var i = 0 ; i < tmpRegions.length; i++){
+            var tmpRegion = tmpRegions[i];
+            //--- Is this region turned on?
+            if( this.layoutOptions[tmpRegion]){
+                //--- Find related element and use it
+                var tmpEls = this.getByAttr$({page: this.pageName, region:tmpRegion, appuse:"content"})
+                if( tmpEls && tmpEls.length > 0){
+                    this.loadRegion(tmpRegion, tmpEls.html());
+                }
+                tmpEls.remove();
+            }
+        }
+    }
+
+    me.initLayout = function(){
+       
+        if(this.layoutOptions && this.layoutOptions.content){
+            var tmpContentItems = this.layoutOptions.content;           
+            for( var aName in tmpContentItems ){
+                var tmpContent = tmpContentItems[aName];
+                this.loadRegion(aName, tmpContent);
+            }
+        }
+        if(this.layoutOptions && this.layoutOptions.markedupLayout === true){
+            this.loadLayoutFromMarkup();
+        }
+        if(this.layoutOptions && this.layoutOptions.markedupTemplates === true){
+            this.loadTemplatesFromMarkup();
+        }
+
+        if(this.layoutOptions && this.layoutOptions.templates){
+            var tmpLTs = this.layoutOptions.templates;
+            var tmpContext = {}
+            for( var aName in tmpLTs ){
+                var tmpLT = tmpLTs[aName];
+                var tmpLTName = '';
+                if( typeof(tmpLT) == 'string'){
+                    tmpLTName = tmpLT;
+                } else {
+                    tmpLTName = tmpLT.name;
+                }
+                this.loadRegion(aName, ThisApp.renderTemplate(tmpLTName, tmpContext));
+            }
+        }
+        
         //--- This resizes the layouts with the new content loaded from templates
         if( typeof(ThisApp.refreshLayouts) == 'function' ){
             ThisApp.refreshLayouts();

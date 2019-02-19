@@ -5,218 +5,71 @@
 
     var thisControlName = 'sui-icon';
     var thisControlTitle = "Semantic UI Icon";
-    var thisControlClass = 'SuiIcon';
     var me = ThisControl.prototype;
-    me.className = thisControlClass;
-
-    var colorList = {
-        "red": "Red",
-        "orange": "Orange",
-        "yellow": "Yellow",
-        "olive": "Olive",
-        "green": "Green",
-        "teal": "Teal",
-        "blue": "Blue",
-        "violet": "Violet",
-        "purple": "Purple",
-        "pink": "Pink",
-        "brown": "Brown",
-        "grey": "Grey",
-        "black": "Black"
-    };
-
-    var sizeList = {
-        "mini": "Mini",
-        "tiny": "Tiny",
-        "small": "Small",
-        " ": "Default",
-        "large": "Large",
-        "big": "Big",
-        "huge": "Huge",
-        "massive": "Massive"
-    };
-
-    me.getMenuDefault = function(theType, theKey, theMenuItem, theOptionalDefault){
-        var tmpRet = '';
-        //--- Move up from this item, to the control then to the App in that order to look for defaults
-        if( theMenuItem && theMenuItem.hasOwnProperty(theType) ){
-            var tmpArea = theMenuItem[theType];
-            if( typeof(tmpArea) == 'object' && tmpArea.hasOwnProperty(theKey)){
-                var tmpVal = tmpArea[theKey];
-                return tmpVal;
+    
+    me.specs = {
+        name: thisControlName
+        ,title: thisControlTitle
+        ,states: {
+            icon: {
+                title: "Icon"
+                ,control: "text"
+                ,type: "string"
+                ,default: 'user'
+            },
+            bordered: {
+                title: "Bordered"
+                ,control: "checkbox"
+                ,type: "boolean"
+                ,default: true
+            },
+            inverted: {
+                title: "Inverted"
+                ,control: "checkbox"
+                ,type: "boolean"
+                ,default: false
+            },
+            size: {
+                title: "Size"
+                ,control: "select"
+                ,values: {
+                    "mini": "Mini",
+                    "tiny": "Tiny",
+                    "small": "Small",
+                    " ": "Default",
+                    "large": "Large",
+                    "big": "Big",
+                    "huge": "Huge",
+                    "massive": "Massive"
+                }
+            },
+            color: {
+                title: 'Color'
+                ,control: 'select'
+                ,values: {
+                    "red": "Red",
+                    "orange": "Orange",
+                    "yellow": "Yellow",
+                    "olive": "Olive",
+                    "green": "Green",
+                    "teal": "Teal",
+                    "blue": "Blue",
+                    "violet": "Violet",
+                    "purple": "Purple",
+                    "pink": "Pink",
+                    "brown": "Brown",
+                    "grey": "Grey",
+                    "black": "Black"
+                }
             }
         }
-        if( this.hasOwnProperty('_menuDefaults') && this._menuDefaults.hasOwnProperty(theType) ){
-            var tmpArea = this._menuDefaults[theType];
-            if( typeof(tmpArea) == 'object' && tmpArea.hasOwnProperty(theKey)){
-                var tmpVal = tmpArea[theKey];
-                return tmpVal;
-            }
-        }
-        if( ThisApp.hasOwnProperty('_menuDefaults') && ThisApp._menuDefaults.hasOwnProperty(theType) ){
-            var tmpArea = ThisApp._menuDefaults[theType];
-            if( typeof(tmpArea) == 'object' && tmpArea.hasOwnProperty(theKey)){
-                var tmpVal = tmpArea[theKey];
-                return tmpVal;
-            }
-        }
-        return theOptionalDefault || '';
     }
 
     //--- Base class for application pages
     function ThisControl(theOptions) {
-        this._menuDefaults = {
-            button: {
-                color:'blue',                
-                size: 'large'
-            },
-            icon: {
-                name: 'square outline',
-                color:'purple',
-                size: 'big'
-            }
-        }
-        this._menu = {
-            "color":{
-                caption:'Set Color',
-                icon: {
-                    color:'purple',
-                    name:'circle'
-                },
-                button: {
-                    color:'purple'
-                },
-                callback: mnuSetColor
-            },            
-            "inverted":{
-                caption:'Toggle Inverted',
-                callback: mnuToggleInverted
-            },            
-            "size":{
-                caption:'Set size',
-                callback: mnuSetSize
-            },            
-            "extra":{
-                caption:'Extra Item',
-                disabled: true,
-                callback: mnuSetSize
-            }
-        }
+       
     }
     
-    function dlgSetColor(theAction, theTargetEl){
-        var tmpVal = $(theTargetEl).attr('color');
-        this.setState('color',tmpVal);
-        this.refreshUI();        
-        ThisApp.closeCommonDialog();
-    }
-
-    function mnuSetColor(){
-        //--- Register custom dialog actions to call back to this component
-        //-     then unregister them again on close
-        var tmpIOD = this.el.attr('oid')
-        ThisApp.registerAction("_wc" + tmpIOD + ":dlgSetColor", dlgSetColor.bind(this));
-        var tmpHTML = '';
-        tmpHTML += '<div>';
-        for( var aColor in colorList){
-            tmpHTML += '<i oid="' + tmpIOD + '" action="' + "_wc" + tmpIOD + ':' + 'dlgSetColor" color="' + aColor + '" class="icon ' + aColor + ' huge square" />';
-        }
-        tmpHTML += '</div>';
-        ThisApp.showCommonDialog({ onClose: onSetColorClose.bind(this), header: "Select a color", content: tmpHTML });
-    }
-
-    function mnuToggleInverted(){
-        this.setState('inverted',!this.getState('inverted'));
-        this.refreshUI();
-    }
-
-    function onSetColorClose(){
-        var tmpIOD = this.el.attr('oid');
-        ThisApp.unRegisterAction("_wc" + tmpIOD + ":dlgSetColor");
-    }
-
-    function onSetSizeClose(){
-        var tmpIOD = this.el.attr('oid');
-        ThisApp.unRegisterAction("_wc" + tmpIOD + ":dlgSetSize");
-    }
-    
-    function dlgSetSize(theAction, theTargetEl){
-        var tmpVal = $(theTargetEl).attr('size');
-        this.setState('size',tmpVal);
-        this.refreshUI();        
-        ThisApp.closeCommonDialog();
-    }
-
-    function mnuSetSize(){
-       //--- Register custom dialog actions to call back to this component
-        //-     then unregister them again on close
-        var tmpIOD = this.el.attr('oid')
-        ThisApp.registerAction("_wc" + tmpIOD + ":dlgSetSize", dlgSetSize.bind(this));
-        var tmpHTML = '';
-        tmpHTML += '<div>';
-        for( var aName in sizeList){
-            tmpHTML += '<i oid="' + tmpIOD + '" action="' + "_wc" + tmpIOD + ':' + 'dlgSetSize" size="' + aName + '" class="icon ' + aName + ' square" />';
-        }
-        tmpHTML += '</div>';
-        ThisApp.showCommonDialog({ onClose: onSetSizeClose.bind(this), header: "Select a size", content: tmpHTML });
-    }
-
-    me.getMenuItemSpecs = function(theMenuKey, theMenuItem){
-        var tmpThisControl = this;
-        var tmpIconHTML = '';
-        //--- If icon not specifically excluded, look for it here and then up the chain
-        if( theMenuItem.icon !== false){
-            var tmpIcon = theMenuItem.icon || '';
-            var tmpIconColor = this.getMenuDefault('icon','color', theMenuItem);
-            var tmpIconSize = this.getMenuDefault('icon','size', theMenuItem);
-            var tmpIconName = theMenuItem.icon || '';
-            if(typeof(theMenuItem.icon) == 'object'){
-                tmpIconName = theMenuItem.icon.name || '';                
-            }
-            if( tmpIconName == ''){
-                tmpIconName = this.getMenuDefault('icon','name', theMenuItem);
-            }
-            tmpIconHTML = '<i class="icon ' + tmpIconColor + ' ' + tmpIconSize + ' ' + tmpIconName + ' ' + '"></i> ';
-        }
-        var tmpButtonColor = '';
-        var tmpButtonSize = '';
-
-        if( theMenuItem.button !== false){
-            tmpButtonColor = this.getMenuDefault('button','color', theMenuItem);
-            tmpButtonSize = this.getMenuDefault('button','size', theMenuItem);
-        }
-        var tmpNewItem = {};
-        var tmpCaption = theMenuItem.caption || '';
-        var tmpAux = '';
-        if( theMenuItem.disabled === true){
-            tmpAux += ' disabled ';
-            tmpNewItem.disabled = true;
-        }
-        var tmpContentHTML = '<button class="ui icon button ' + tmpAux + ' ' + tmpButtonColor + ' ' + tmpButtonSize + ' basic context">' + tmpIconHTML + ' ' + tmpCaption + '</button>';
-        tmpNewItem.icon = function(opt, $itemElement, itemKey, item){
-            $itemElement.html(tmpContentHTML);
-            return '';
-        };
-        tmpNewItem.name = theMenuKey;
-        if( theMenuItem.callback ){
-            tmpNewItem.callback = theMenuItem.callback.bind(this);
-        }
-        return tmpNewItem;
-    }
-
-    me.getMenuItems = function(){
-        var tmpThisControl = this;
-        var tmpItems = {};
-        for( aMenuKey in this._menu ){
-            var tmpMenuItem = this._menu[aMenuKey];
-            var tmpNewItem = this.getMenuItemSpecs(aMenuKey, tmpMenuItem);
-            if( tmpNewItem ){
-                tmpItems[aMenuKey] = tmpNewItem
-            }
-        }
-        return tmpItems;
-    }
-
     $.extend(me, WebCtlExtendMod.WebControl);
     
     me.refreshUI = refreshUI;
@@ -239,7 +92,9 @@
         }
 
         tmpHTML = '<i class="' + tmpHTML + '"></i>';
+        console.log("render",tmpHTML)
         this.el.html(tmpHTML);
+        console.log("this.el",this.el)
     }
 
 
@@ -260,7 +115,7 @@
 
     me.onClick = function (e) {
         if (e && e.detail && e.ctrlKey !== true && e.altKey !== true) {
-            this.publish('onClick',[this]);
+            //this.publish('onClick',[this]);
 
 //--- To trigger context menu ...
             //this.onContextMenu({trigger:'left'});
@@ -279,24 +134,7 @@
     function onContextMenu(theOptions) {
         var tmpParentEl = this.el;
         var tmpOID = tmpParentEl.attr('oid');
-        ThisApp.clearActivePopup();
-        this.publish('onContextMenu',[this]);
-        var tmpItems = this.getMenuItems();
-
-
-        $.contextMenu({
-            selector: '[oid="' + tmpOID + '"]', 
-            build: function($trigger, e) {
-                // this callback is executed every time the menu is to be shown
-                // its results are destroyed every time the menu is hidden
-                // e is the original contextmenu event, containing e.pageX and e.pageY (amongst other data)
-                return {
-                    items: tmpItems
-                };
-            }
-        });
-
-
+        this.publish('onContextMenu',[this,tmpOID]);
     }
 
     function init(theParentContainer, theOptions) {

@@ -1,0 +1,35 @@
+<div>
+    <div class="ui compact menu">
+        <a class="item" appuse="tablinks" group="ws:tabs" item="ws" action="showSubPage">
+            Workspace
+        </a>
+        <a class="item" appuse="tablinks" group="ws:tabs" item="controls" action="showSubPage">
+            Controls
+        </a>
+        <a class="item" appuse="tablinks" group="ws:tabs" item="states" action="showSubPage">
+            States
+        </a>
+    </div>
+</div>
+<div class="">
+    <div appuse="card-container" group="ws:tabs">
+        <div appuse="cards" group="ws:tabs" item="ws" class="med-boxed">
+                <div class="ui message gray fluid">Workspace Options</div>
+            <div facet="ws:open-ws-options" class="ui segment basic">
+                
+            </div>
+        </div>
+        <div appuse="cards" group="ws:tabs" item="controls" class="hidden med-boxed">
+            <div class="ui message gray fluid">Available controls</div>
+            <div facet="ws:open-ws-controls" style="padding:4px;">
+
+            </div>
+        </div>
+        <div appuse="cards" group="ws:tabs" item="states" class="hidden med-boxed">
+            <div class="ui message gray fluid" style="font-weight:bolder;padding:5px;margin-bottom:0;" facet="ws:control-selected-title">(selected control)</div>
+            <div facet="ws:control-selected-states" style="padding:4px;">
+States here
+            </div>
+        </div>
+    </div>
+</div>
