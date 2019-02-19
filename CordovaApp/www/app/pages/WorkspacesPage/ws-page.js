@@ -100,7 +100,12 @@ License: MIT
         ThisPage.openWS.clear();
     }
 
-    
+    ThisPage.turnDesignModeOn = function(){
+        ThisPage.openWS.setDesignMode(true);
+    }
+    ThisPage.turnDesignModeOff = function(){
+        ThisPage.openWS.setDesignMode(false);
+    }
     function openWorkspaceByID(theID){
         var tmpID = theID;
         resetWorkspaceUI();
@@ -113,7 +118,13 @@ License: MIT
                     ThisPage.currentWS.id = tmpID;
                     ThisPage.currentWS.title = theDoc.title;
                     ThisPage.loadFacet('ws:open-title', '[' + tmpID + '] - ' + theDoc.title);
-                    ThisPage.openWS.loadFromObject(theDoc.data);
+                    ThisPage.openWS.loadFromObject(theDoc.data).then(
+                        function(){
+                            ThisPage.openWS.refreshUI();
+
+                        }
+                    );
+                    
                 } catch(ex){
                     console.error("Error ",ex);
                 }
@@ -192,8 +203,8 @@ License: MIT
             }
 
         }
-        ThisPage.selectedControl.setState(tmpState, tmpVal);
-        ThisPage.selectedControl.refreshUI();
+        ThisPage.selectedControl.setState(tmpState, tmpVal, true);
+
     }
 
     
@@ -270,7 +281,7 @@ License: MIT
             return;
         }
         var tmpSpecs = theObj.specs;
-        console.log("tmpSpecs",tmpSpecs);
+        //console.log("tmpSpecs",tmpSpecs);
         var tmpShowTitle = '[' + tmpSpecs.title + "] - " + theObj.oid;
         ThisPage.loadFacet('ws:control-selected-title', tmpShowTitle);
 
@@ -296,7 +307,7 @@ tmpHTML.push('</td></tr>')
 
         var tmpStates = tmpSpecs.states || {};
         for( var aStateName in tmpStates ){
-            console.log("aStateName",aStateName);
+        //    console.log("aStateName",aStateName);
             var tmpState = tmpStates[aStateName];
 
             
@@ -390,6 +401,7 @@ tmpHTML.push('</table>')
                 ThisPage.openWS.subscribe('controlClick', ThisPage.openWSControlClick)
                 initOpenWSControls();
                 resetWorkspaceUI();
+                ThisPage.openWS.setDesignMode(true);
 
                 
                 ThisPage._om.getObject(ThisPage.localDataSource, 'setup').then(function (theDoc) {

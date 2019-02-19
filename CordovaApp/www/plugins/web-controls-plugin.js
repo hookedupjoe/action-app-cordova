@@ -133,6 +133,10 @@ Web controls Plugin:
 
     me.createdCount = 0;
 
+    me.setDesignMode = function(theMode){
+        this.designMode = theMode;
+    }
+
     me.getAsObject = getAsObject;
     function getAsObject() {
         var tmpRet = {};
@@ -189,13 +193,13 @@ Web controls Plugin:
     function initControl(theParentContainer, theOptions) {
         this.initPubSub();
         var dfd = jQuery.Deferred();
-        this.colorOffset = 0;
         var tmpThisControl = this;
 
         var tmpOptions = theOptions || {};
         //-- Every control name and title is the same, add to prototype
         this.controlName = tmpOptions.controlName;
         this.controlTitle = tmpOptions.controlTitle;
+        
 
         //-- Each object has shorthand cid that has the id of the control this object is based on
         tmpThisControl.cid = this.controlName;
@@ -209,10 +213,6 @@ Web controls Plugin:
 
         var tmpFacetName = $(theParentContainer).attr("facet");
         tmpThisControl.mom = $('[facet="' + tmpFacetName + '"]').get(0);
-
-        if (typeof (tmpOptions.colorOffset) == 'number') {
-            tmpThisControl.colorOffset = tmpOptions.colorOffset;
-        }
 
         var tmpOID = theOptions.oid || (tmpThisControl.cid + "-" + me.createdCount++);
 
@@ -300,6 +300,10 @@ Web controls Plugin:
     function objectClicked(theEvent, theObj) {
         //console.log("objectClicked (theEvent,theObj)",theEvent,theObj);
         this.publish('controlClick',[theObj,this,theEvent]);
+        if( this.designMode ){
+            this.selectedObject = theObj;
+            this.refreshUI();
+        }
     }
 
     //--- Do this to assure all controls are ready for addControl
@@ -378,13 +382,18 @@ Web controls Plugin:
         this.activeControl = null;
         this.workspaceControls = {};
         this.controlsAddedAt = {};
+        this.selectedObject = false;
     }
 
     me.loadFromObject = loadFromObject;
     function loadFromObject(theObject) {
+        var dfd = jQuery.Deferred();
+
         if (typeof (theObject) != 'object') {
-            console.error("loadFromObject - Error: No object passed to load.")
-            return false;
+            var tmpError = "loadFromObject - Error: No object passed to load.";
+            console.error(tmpError)
+            dfd.reject(tmpError)
+            return dfd.promise();
         }
         var tmpRet = {};
 
@@ -402,12 +411,13 @@ Web controls Plugin:
                         var tmpCID = tmpO.cid;
                         tmpThis.addControl(tmpOID, tmpCID, tmpO)
                     }
+
+                    dfd.resolve(true)
                 }
             )
         }
-
-
-        return tmpRet;
+        
+        return dfd.promise();
     }
 
     
@@ -415,6 +425,7 @@ Web controls Plugin:
     function init(theOptions) {
         this.workspaceControls = {};
         this.mom = null;
+        this.designMode = 0;
 
         this.initPubSub();
 
@@ -428,6 +439,33 @@ Web controls Plugin:
 
         this.AttachListeners();
 
+    }
+
+    me.setDesignMode = function(theDesignMode){
+        this.designMode = theDesignMode;
+        this.refreshUI();
+    }
+    me.refreshUI = function(){
+        var tmpAllObjects = $(this.mom).find('[oid]');
+        var tmpLen = tmpAllObjects.length;
+        if (tmpLen > 0) {
+            for (var i = 0; i < tmpLen; i++) {
+                var tmpO = tmpAllObjects[i];
+                var tmpOID = tmpO.getAttribute('oid');
+                var tmpObj = this.workspaceControls[tmpOID];
+                if (tmpObj && typeof (tmpObj.refreshUI) == 'function') {
+                    tmpObj.setDesignMode(this.designMode);
+                    var tmpIsSel = false
+                    if( typeof(this.selectedObject) == 'object'){
+                        if( this.selectedObject.oid == tmpOID ){
+                            tmpIsSel = true;
+                        }
+                    }
+                    tmpObj.designSelected = tmpIsSel;
+                    tmpObj.refreshUI()
+                }
+            }
+        }
     }
 
     /**
@@ -471,6 +509,7 @@ Web controls Plugin:
                 tmpOptions.oid = tmpObjID;
                 theNewControl.init(tmpThis.mom, tmpOptions);
                 tmpThis.workspaceControls[tmpObjID] = theNewControl;
+                console.log("Set parent WS")
                 theNewControl.parentWS = tmpThis;
                 dfd.resolve(theNewControl);
             }

@@ -93,15 +93,30 @@
 
         tmpHTML = '<i class="' + tmpHTML + '"></i>';
         console.log("render",tmpHTML)
+        
+        
+        if( this.designMode ){
+            if( this.designSelected ){
+                tmpHTML = '<div style="border:solid 3px red;float:left;">' + tmpHTML + '</div>';
+            } else {
+                tmpHTML = '<div style="border:solid 3px darkgray;float:left;">' + tmpHTML + '</div>';
+            }
+        }
+
         this.el.html(tmpHTML);
-        console.log("this.el",this.el)
+
+        console.log("this.designMode",this.designMode)
+        //console.log("parentWS",this.parentWS,this);
+        
     }
 
 
     me.init = init;
 
+    
+
     me.setState = setState;
-    function setState(theState, theValue) {
+    function setState(theState, theValue, theOptionalAutoRefresh) {
         if (!theState) {
             return false;
         }
@@ -110,10 +125,15 @@
         // }
         //--- Always saves in states
         this.states[theState] = theValue;
+        if( theOptionalAutoRefresh === true){
+            this.refreshUI();
+        }
+        
         return true;
     }
 
     me.onClick = function (e) {
+        
         if (e && e.detail && e.ctrlKey !== true && e.altKey !== true) {
             //this.publish('onClick',[this]);
 
@@ -137,10 +157,10 @@
         this.publish('onContextMenu',[this,tmpOID]);
     }
 
-    function init(theParentContainer, theOptions) {
+    function init(theParentContainer, theOptions, theParentWS) {
         var dfd = jQuery.Deferred();
         var tmpOptions = theOptions || {};
-
+        this.parentWS = theParentWS;
         tmpOptions.controlName = thisControlName;
         tmpOptions.controlTitle = thisControlTitle;
 
