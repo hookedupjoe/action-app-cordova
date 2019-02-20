@@ -10,7 +10,7 @@ License: MIT
 
     var thisPageSpecs = {
         pageName: "WorkspacesPage",
-        pageTitle: "Workspaces",
+        pageTitle: "WS Designer",
         pageNamespace: 'ws',
         navOptions: {
             icon: 'table',
@@ -137,6 +137,7 @@ License: MIT
         tmpHTML.push('');
         if( loadedSpaces.keys.length < 1){
             alert("Nothing to load");
+            return;
         }
         tmpHTML.push('<div class="ui divided selection list">');
         for (let index = 0; index < loadedSpaces.keys.length; index++) {
@@ -355,6 +356,8 @@ tmpHTML.push('</table>')
             theObj.refreshUI();
              */
     }
+
+   
     ThisPage._onFirstActivate = function (theApp) {
         ThisPage._om = theApp.om;
         ThisPage.localDataSource = '_aad:ws';
@@ -368,9 +371,11 @@ tmpHTML.push('</table>')
         }
 
 
+
         ThisPage.initOnFirstLoad().then(
             function () {
 
+                             
                 ThisPage.processingDialog = ThisPage.getByAttr$({ appuse: "ws:processing-dialog" }).modal('setting', 'closable', false);
                 ThisPage.processingDialogShow = function () {
                     ThisPage.processingDialog.modal('show');
@@ -403,6 +408,45 @@ tmpHTML.push('</table>')
                 resetWorkspaceUI();
                 ThisPage.openWS.setDesignMode(true);
 
+                
+                //ThisPage.footerWS.subscribe('controlClick', ThisPage.openFooterControlClick)
+
+
+                
+                var tmpFooterAreaEl = ThisPage.getByAttr$({ facet: "ws:footer-status-bar" });
+                ThisPage.footerWS = ThisPage._webctl.getNewPanel();
+                ThisPage.footerWS.init({ mom: tmpFooterAreaEl[0]});
+                var tmpSpecsForWS = {
+                    "objects": [
+                      {
+                        "cid": "sui-button-select",
+                        "states": {
+                          "size": "large",
+                          "color": "green",
+                          "list": "Test1,Test2,Test3,Test4",
+                          "inverted": false,
+                          "appuse": "test",
+                          "floatDirection": "left"
+                        }
+                      },
+                      {
+                        "cid": "sui-button-select",
+                        "states": {
+                          "size": "large",
+                          "color": "blue",
+                          "list": "All,Q1,Q2,Q3,Q4",
+                          "floatDirection": "left"
+                        }
+                      }
+                    ]
+                  }
+            
+                ThisPage.footerWS.loadFromObject(tmpSpecsForWS).then(
+                    function(){
+                        console.log("Done Loading");
+                        ThisApp.refreshLayouts();
+                    }
+                )
                 
                 ThisPage._om.getObject(ThisPage.localDataSource, 'setup').then(function (theDoc) {
                     if (typeof (theDoc._error) === 'object') {
@@ -440,6 +484,7 @@ tmpHTML.push('</table>')
     function initOpenWSControls(){
         var tmpLoad = [];
         tmpLoad.push('<button class="ui button" action="ws:addIconControl">Icon</button>')
+        tmpLoad.push('<button class="ui button" action="ws:addButtonSelectControl">Button Select</button>')
         ThisPage.loadFacet('ws:open-ws-controls', tmpLoad.join(''))
     }
 
@@ -538,17 +583,7 @@ var tmpFooterHTML = '';
         console.log("tmpJson",tmpJson)
     }
     function showWorkspaces() {
-        var tmpOut = [];
-
-        tmpOut.push('<div style="margin-right:30px;">');
-
-        if (ThisPage.usingRemote) {
-            tmpOut.push('Show WS from remote source');
-        } else {
-            tmpOut.push('Show WS from local source');
-        }
-        tmpOut.push('</div>');
-        ThisPage.showOut(tmpOut.join(''));
+        ThisPage.showOut('');
     }
 
     function showWelcomeScreen() {
@@ -604,6 +639,11 @@ var tmpFooterHTML = '';
         });
 
     }
+
+    ThisPage.buttonSelectTest = function(theAction,theTarget){
+        console.log("buttonSelectTest",theTarget);
+        ThisApp.appMessage("buttonSelectTest Ran", "i", { show: true });        
+    }
     ThisPage.saveNoSQLSetup = function () {
         var tmpURL = getSetupFieldVal('url');
         var tmpUser = getSetupFieldVal('user');
@@ -629,19 +669,14 @@ var tmpFooterHTML = '';
                     showWelcomeScreen();
                 } else {
                     ThisApp.appMessage("Error saving setup document", "e", { show: true });
-                    showPreviewJson(theDoc);
                 }
             } else {
                 ThisPage._om.putSourceHandler(ThisPage.remoteDataSourceBase, tmpDS.setup);
                 ThisPage.hasBeenSetup = true;
                 ThisPage.usingRemote = true;
-                showWorkspaces();
-                showPreviewJson({ "message": "You Did it!" });
+                window.location = window.location;
             }
         });
-
-
-        alert("ok " + tmpUser + ' ' + tmpPassword);
     }
 
 
@@ -695,6 +730,15 @@ var tmpFooterHTML = '';
 
         });
     }
+
+    
+    ThisPage.addButtonSelectControl = function () {
+        tmpControlAt++;
+        ThisPage.openWS.addControl('', 'sui-button-select', {states:{size:'huge', color:'blue'} }).then(function(theControl){
+
+        });
+    }
+
     ThisPage.addIconControl = function () {
         tmpControlAt++;
         ThisPage.openWS.addControl('', 'sui-icon', {states:{bordered:true, size:'huge',icon:'user',color:'blue'} }).then(function(theControl){

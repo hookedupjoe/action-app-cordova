@@ -78,11 +78,13 @@ Web controls Plugin:
     */
     me.getControl = function (theControlName) {
         var dfd = jQuery.Deferred();
+        console.log("theControlName",theControlName);
         if (me.hasControl(theControlName)) {
             var tmpNew = me._getNewControl(theControlName);
             dfd.resolve(tmpNew);
         } else {
             var tmpBaseURL = me.controlsBaseURL + theControlName + "/";
+            console.log("tmpBaseURL",tmpBaseURL);
             //--- Get the control, when the control loads - it registers itself
             //    Once a control is registered in the WebCtlCatalogMod module, 
             //      it can be created using the me._getNewControl function
