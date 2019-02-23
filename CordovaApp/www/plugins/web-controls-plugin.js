@@ -64,10 +64,28 @@ Web controls Plugin:
         }
     }
 
-    me.getNewPanel = function (theOptions) {
+    me.getNewPanel = getNewPanel;
+    function getNewPanel(theOptions) {
         return new WebCtlExtendMod.WebCtlPanel(theOptions);
     }
 
+
+    me.newWorkspace = function (theOptions) {
+        var tmpOptions = theOptions || {};
+        var tmpEl = tmpOptions.el$;
+        if( !(tmpEl) ){
+            if( tmpOptions.facet ){
+                tmpEl = ThisApp.getByAttr$({'facet':tmpOptions.facet});
+            }
+        }
+        if( !(tmpEl) ){
+            throw "Nothing to load WS into";
+        }
+        var tmpNewWS = getNewPanel();
+        tmpNewWS.init({ mom: tmpEl[0]});
+        return tmpNewWS;
+    }
+    
     /*
     *
     * Function: getControl
@@ -78,13 +96,11 @@ Web controls Plugin:
     */
     me.getControl = function (theControlName) {
         var dfd = jQuery.Deferred();
-        console.log("theControlName",theControlName);
         if (me.hasControl(theControlName)) {
             var tmpNew = me._getNewControl(theControlName);
             dfd.resolve(tmpNew);
         } else {
             var tmpBaseURL = me.controlsBaseURL + theControlName + "/";
-            console.log("tmpBaseURL",tmpBaseURL);
             //--- Get the control, when the control loads - it registers itself
             //    Once a control is registered in the WebCtlCatalogMod module, 
             //      it can be created using the me._getNewControl function
@@ -300,7 +316,6 @@ Web controls Plugin:
     //--- Called by objects when they are clicked
     me.objectClicked = objectClicked;
     function objectClicked(theEvent, theObj) {
-        //console.log("objectClicked (theEvent,theObj)",theEvent,theObj);
         this.publish('controlClick',[theObj,this,theEvent]);
         if( this.designMode ){
             this.selectedObject = theObj;
@@ -369,13 +384,10 @@ Web controls Plugin:
         if (tmpLen > 0) {
             for (var i = 0; i < tmpLen; i++) {
                 var tmpO = tmpAllObjects[i];
-                console.log("Remove ",JSON.stringify(tmpO));
-                var tmpO = tmpAllObjects[i];
                 var tmpOID = tmpO.getAttribute('oid');
                 var tmpObj = this.workspaceControls[tmpOID];
 
                 if( tmpObj && typeof(tmpObj.clean) == 'function' ){
-                    console.log("cleaned");
                     tmpObj.clean();
                 }
                 $(tmpO).remove();
@@ -403,6 +415,7 @@ Web controls Plugin:
 
         var tmpObjects = theObject.objects || [];
         var tmpLen = tmpObjects.length;
+        var tmpDefs = [];
         if (tmpLen > 0) {
             var tmpThis = this;
             this.preloadControlsForObjects(tmpObjects).then(
@@ -411,12 +424,18 @@ Web controls Plugin:
                         var tmpO = tmpObjects[i];
                         var tmpOID = tmpO.oid;
                         var tmpCID = tmpO.cid;
-                        tmpThis.addControl(tmpOID, tmpCID, tmpO)
+                        tmpDefs.push(tmpThis.addControl(tmpOID, tmpCID, tmpO));
                     }
-
-                    dfd.resolve(true)
+                    $.whenAll(tmpDefs).then(
+                        function(){
+                            dfd.resolve(true)
+                        }
+                    )
                 }
             )
+        } else {
+            //--- Blank, nothing to load
+            dfd.resolve(true);
         }
         
         return dfd.promise();
@@ -511,7 +530,6 @@ Web controls Plugin:
                 tmpOptions.oid = tmpObjID;
                 theNewControl.init(tmpThis.mom, tmpOptions);
                 tmpThis.workspaceControls[tmpObjID] = theNewControl;
-                console.log("Set parent WS")
                 theNewControl.parentWS = tmpThis;
                 dfd.resolve(theNewControl);
             }

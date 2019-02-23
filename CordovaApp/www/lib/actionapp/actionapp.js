@@ -364,7 +364,6 @@ var ActionAppCore = {};
 
     me.initTemplates = function(theTemplateSpecs){
         var dfd = jQuery.Deferred();
-        
 
         //--- if no templates to process, no prob, return now
         if( !(theTemplateSpecs && theTemplateSpecs.templateMap)){
@@ -1726,6 +1725,7 @@ License: MIT
 
     //--- Usage: <div appuse="content" region="north">North Content</div>
     me.loadLayoutFromMarkup = function(){
+        console.log("loadLayoutFromMarkup")
         var tmpEls = this.getByAttr$({page: this.pageName, region:"center", appuse:"content"})
         if( tmpEls && tmpEls.length > 0){
             //console.log("Loading Region: center");
@@ -1739,15 +1739,16 @@ License: MIT
                 //--- Find related element and use it
                 var tmpEls = this.getByAttr$({page: this.pageName, region:tmpRegion, appuse:"content"})
                 if( tmpEls && tmpEls.length > 0){
-                    this.loadRegion(tmpRegion, tmpEls.html());
+                   this.loadRegion(tmpRegion, tmpEls.html());
                 }
                 tmpEls.remove();
             }
         }
     }
 
+
     me.initLayout = function(){
-       
+        
         if(this.layoutOptions && this.layoutOptions.content){
             var tmpContentItems = this.layoutOptions.content;           
             for( var aName in tmpContentItems ){

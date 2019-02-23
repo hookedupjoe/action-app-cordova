@@ -72,8 +72,8 @@ License: MIT
     }
     ThisPage.showEastSidebar = function () {
         ThisPage.layout.toggle('east');
-    }    
-    ThisPage.openThisWorkspace = function(theAction,theTarget){
+    }
+    ThisPage.openThisWorkspace = function (theAction, theTarget) {
         //alert("theTarget was " + typeof(theTarget))
         var tmpEl = $(theTarget);
         //console.log("tmpEl",tmpEl);
@@ -81,32 +81,32 @@ License: MIT
         //console.log("tmpID",tmpID);
         openWorkspaceByID(tmpID);
         ThisApp.hideCommonDialog();
-        
-        
+
+
 
     }
 
-    ThisPage.newWorkspace = function(){
+    ThisPage.newWorkspace = function () {
         resetWorkspaceUI();
     }
-    function resetWorkspaceUI(){
+    function resetWorkspaceUI() {
         ThisPage.currentWS = {
             id: '',
             title: "(Untitled)"
         }
-        ThisPage.loadFacet('ws:open-title','(Untitled)');
-        ThisPage.loadFacet('ws:control-selected-title','');
-        ThisPage.loadFacet('ws:control-selected-states','');
+        ThisPage.loadFacet('ws:open-title', '(Untitled)');
+        ThisPage.loadFacet('ws:control-selected-title', '');
+        ThisPage.loadFacet('ws:control-selected-states', '');
         ThisPage.openWS.clear();
     }
 
-    ThisPage.turnDesignModeOn = function(){
+    ThisPage.turnDesignModeOn = function () {
         ThisPage.openWS.setDesignMode(true);
     }
-    ThisPage.turnDesignModeOff = function(){
+    ThisPage.turnDesignModeOff = function () {
         ThisPage.openWS.setDesignMode(false);
     }
-    function openWorkspaceByID(theID){
+    function openWorkspaceByID(theID) {
         var tmpID = theID;
         resetWorkspaceUI();
 
@@ -119,23 +119,23 @@ License: MIT
                     ThisPage.currentWS.title = theDoc.title;
                     ThisPage.loadFacet('ws:open-title', '[' + tmpID + '] - ' + theDoc.title);
                     ThisPage.openWS.loadFromObject(theDoc.data).then(
-                        function(){
+                        function () {
                             ThisPage.openWS.refreshUI();
 
                         }
                     );
-                    
-                } catch(ex){
-                    console.error("Error ",ex);
+
+                } catch (ex) {
+                    console.error("Error ", ex);
                 }
             }
         });
     }
 
-    ThisPage.openWorkspace = function(){
+    ThisPage.openWorkspace = function () {
         var tmpHTML = [];
         tmpHTML.push('');
-        if( loadedSpaces.keys.length < 1){
+        if (loadedSpaces.keys.length < 1) {
             alert("Nothing to load");
             return;
         }
@@ -147,73 +147,75 @@ License: MIT
             tmpHTML.push('    <div class="ui blue horizontal label">' + tmpID + '</div>');
             tmpHTML.push(tmpTitle);
             tmpHTML.push('  </a>');
-            }
+        }
 
         tmpHTML.push('</div>');
 
 
-                       ThisApp.showCommonDialog({ 
-                           header: "Select workspace to open",
-                           closeText: "Cancel Open",
-                           content: tmpHTML.join('')         
-                        });
-    }    
-    
-    ThisPage.showOptions = function(){
+        ThisApp.showCommonDialog({
+            header: "Select workspace to open",
+            closeText: "Cancel Open",
+            content: tmpHTML.join('')
+        });
+    }
+
+    ThisPage.showOptions = function () {
 
     }
-    
+
 
     ThisPage.hasBeenSetup = false;
     ThisPage.usingRemote = false;
 
 
-    var loadedSpaces = {index:{},keys:[]};
-    function addSpace(theID, theWS, theNoSaveFlag){
-        if( !(loadedSpaces[theID])){
+    var loadedSpaces = { index: {}, keys: [] };
+    function addSpace(theID, theWS, theNoSaveFlag) {
+        if (!(loadedSpaces[theID])) {
             loadedSpaces.keys.push(theID);
         }
         //--- Load stuff we want in this index
-        loadedSpaces[theID] = {title: theWS.title};
+        loadedSpaces[theID] = { title: theWS.title };
 
         //--- Auto save usually (?when not?)
-        if( theNoSaveFlag !== true ){
+        if (theNoSaveFlag !== true) {
             return saveLoadedSpaces();
         }
         return true;
-        
+
     }
-    
 
 
-    ThisPage.removeControl = function(){
+
+    ThisPage.removeControl = function () {
         var tmpID = ThisPage.selectedControl.oid;
         ThisPage.openWS.removeControl(tmpID);
     }
-    ThisPage.setControlState = function(theAction,theTarget){
-        
+    ThisPage.setControlState = function (theAction, theTarget) {
+
         var tmpEl = $(theTarget)
         var tmpState = tmpEl.attr('state');
-        var tmpVal = ThisPage.getByAttr$({state:tmpState, appuse:"ws:state-control"}).val();
+        var tmpVal = ThisPage.getByAttr$({ state: tmpState, appuse: "ws:state-control" }).val();
         var tmpStateSpec = ThisPage.selectedControl.specs.states[tmpState];
-        if( tmpStateSpec.type === 'boolean'){
-            if( tmpVal === '' ){
+        if (tmpStateSpec.type === 'boolean') {
+            if (tmpVal === '') {
                 tmpVal = tmpStateSpec.default || false;
             } else {
                 tmpVal = (tmpVal === 'true');
             }
-
+        } else if (tmpVal && tmpStateSpec.type === 'json') {
+            tmpVal = JSON.parse(tmpVal);
         }
+
         ThisPage.selectedControl.setState(tmpState, tmpVal, true);
 
     }
 
-    
-    function saveLoadedSpaces(){
+
+    function saveLoadedSpaces() {
         return ThisPage._om.putObject(getDS(), 'wsIndex', loadedSpaces);
     }
 
-    function initLoadedSpaces(){
+    function initLoadedSpaces() {
         //ToDo: Return promise and load before showing full UI    
         ThisPage._om.getObject(getDS(), 'wsIndex').then(function (theDoc) {
             if (typeof (theDoc._error) === 'object') {
@@ -224,19 +226,19 @@ License: MIT
                     showPreviewJson(theDoc);
                 }
             } else {
-                if (theDoc){
+                if (theDoc) {
                     loadedSpaces = theDoc;
-                    if( loadedSpaces && loadedSpaces.keys ){
+                    if (loadedSpaces && loadedSpaces.keys) {
                         ThisApp.appMessage("Loaded " + loadedSpaces.keys.length + " entries", "i", { show: true });
                     }
-                    
+
                 }
             }
         });
-        
+
     }
-    function getDS(){
-        if( ThisPage.usingRemote ){
+    function getDS() {
+        if (ThisPage.usingRemote) {
             return ThisPage.remoteDataSource;
         }
         return ThisPage.localDataSource;
@@ -273,11 +275,11 @@ License: MIT
 
         ThisPage.dt = theApp.getComponent("plugin:DataTables");
     }
-    
-    function loadSelctedControl(theObj){
+
+    function loadSelctedControl(theObj) {
         ThisPage.selectedControl = theObj;
 
-        if( !(theObj.specs) ){
+        if (!(theObj.specs)) {
             console.error("No specs for object, not valid for ui");
             return;
         }
@@ -287,16 +289,16 @@ License: MIT
         ThisPage.loadFacet('ws:control-selected-title', tmpShowTitle);
 
         var tmpHTML = [];
-//        tmpHTML.push('<div class="ui middle aligned divided list">')
+        //        tmpHTML.push('<div class="ui middle aligned divided list">')
 
-tmpHTML.push('<table class="ui compact table">')
-tmpHTML.push('  <tbody>')
+        tmpHTML.push('<table class="ui compact table">')
+        tmpHTML.push('  <tbody>')
 
 
-tmpHTML.push('<tr><td colspan="3">')
-tmpHTML.push('<div class="ui button compact" action="ws:moveControl">Move</div>')
-tmpHTML.push('<div class="ui button compact" action="ws:removeControl">Delete</div>')
-tmpHTML.push('</td></tr>')
+        tmpHTML.push('<tr><td colspan="3">')
+        tmpHTML.push('<div class="ui button compact" action="ws:moveControl">Move</div>')
+        tmpHTML.push('<div class="ui button compact" action="ws:removeControl">Delete</div>')
+        tmpHTML.push('</td></tr>')
 
 
 
@@ -307,39 +309,50 @@ tmpHTML.push('</td></tr>')
 
 
         var tmpStates = tmpSpecs.states || {};
-        for( var aStateName in tmpStates ){
-        //    console.log("aStateName",aStateName);
+        for (var aStateName in tmpStates) {
+            //    console.log("aStateName",aStateName);
             var tmpState = tmpStates[aStateName];
 
-            
-tmpHTML.push('    <tr>')
+
+            tmpHTML.push('    <tr>')
 
 
-        var tmpStateVal = theObj.getState(aStateName) || '';
+            var tmpStateVal = theObj.getState(aStateName) || '';
 
+            if (aStateName == 'controls') {
+                console.log("tmpState", tmpState)
+            }
 
-        tmpHTML.push('<td>')
-        tmpHTML.push('<label>' + tmpState.title + '</label>&#160;')
-        tmpHTML.push('</td>')
+            if (typeof (tmpStateVal) == 'object' && tmpState.type == 'json') {
+                tmpStateVal = JSON.stringify(tmpStateVal);
+            }
 
-        tmpHTML.push('<td><div class="ui input">')
-        tmpHTML.push('<input state="' + aStateName + '" appuse="ws:state-control" type="text" value="' + tmpStateVal + '"></input>')
-        tmpHTML.push('</div></td>')
+            tmpHTML.push('<td>')
+            tmpHTML.push('<label>' + tmpState.title + '</label>&#160;')
+            tmpHTML.push('</td>')
 
-        tmpHTML.push('<td>')
-        tmpHTML.push('<div action="ws:setControlState" state="' + aStateName + '" class="ui button">Set</div>')
-        tmpHTML.push('</td>')
+            tmpHTML.push('<td><div class="ui input">')
+            if (tmpState.type == 'json') {
+                tmpHTML.push('<textarea style="width:170px" rows=4 state="' + aStateName + '" appuse="ws:state-control" type="text">' + tmpStateVal + '</textarea>')
+            } else {
+                tmpHTML.push('<input  style="width:150px" state="' + aStateName + '" appuse="ws:state-control" type="text" value="' + tmpStateVal + '"></input>')
+            }
+            tmpHTML.push('</div></td>')
 
-tmpHTML.push('    </tr>')
+            tmpHTML.push('<td>')
+            tmpHTML.push('<div action="ws:setControlState" state="' + aStateName + '" class="ui button">Set</div>')
+            tmpHTML.push('</td>')
+
+            tmpHTML.push('    </tr>')
 
 
         }
 
         tmpHTML.push('  </tbody>')
-tmpHTML.push('</table>')
+        tmpHTML.push('</table>')
 
 
-//        tmpHTML.push('</div>')
+        //        tmpHTML.push('</div>')
 
 
 
@@ -357,16 +370,16 @@ tmpHTML.push('</table>')
              */
     }
 
-   
+
     ThisPage._onFirstActivate = function (theApp) {
         ThisPage._om = theApp.om;
         ThisPage.localDataSource = '_aad:ws';
         ThisPage.remoteDataSourceBase = 'data-store';
         ThisPage.remoteDataSource = ThisPage.remoteDataSourceBase + ':action-app-ws';
 
-        ThisPage.openWSControlClick = function(thePubEvent, theObj, theWS, theClickEvent){
-            console.log("wsc theWS,theClickEvent,theObj",theWS,theClickEvent,theObj);
-            
+        ThisPage.openWSControlClick = function (thePubEvent, theObj, theWS, theClickEvent) {
+            console.log("wsc theWS,theClickEvent,theObj", theWS, theClickEvent, theObj);
+
             loadSelctedControl(theObj);
         }
 
@@ -375,7 +388,7 @@ tmpHTML.push('</table>')
         ThisPage.initOnFirstLoad().then(
             function () {
 
-                             
+
                 ThisPage.processingDialog = ThisPage.getByAttr$({ appuse: "ws:processing-dialog" }).modal('setting', 'closable', false);
                 ThisPage.processingDialogShow = function () {
                     ThisPage.processingDialog.modal('show');
@@ -402,52 +415,67 @@ tmpHTML.push('</table>')
 
                 var tmpTestAreaEl = ThisPage.getByAttr$({ facet: "ws:open-ws" });
                 ThisPage.openWS = ThisPage._webctl.getNewPanel();
-                ThisPage.openWS.init({ mom: tmpTestAreaEl[0]});
+                ThisPage.openWS.init({ mom: tmpTestAreaEl[0] });
                 ThisPage.openWS.subscribe('controlClick', ThisPage.openWSControlClick)
                 initOpenWSControls();
                 resetWorkspaceUI();
                 ThisPage.openWS.setDesignMode(true);
 
-                
+
                 //ThisPage.footerWS.subscribe('controlClick', ThisPage.openFooterControlClick)
 
 
+
                 
-                var tmpFooterAreaEl = ThisPage.getByAttr$({ facet: "ws:footer-status-bar" });
-                ThisPage.footerWS = ThisPage._webctl.getNewPanel();
-                ThisPage.footerWS.init({ mom: tmpFooterAreaEl[0]});
-                var tmpSpecsForWS = {
+
+                var tmpWSMenu = {
                     "objects": [
-                      {
-                        "cid": "sui-button-select",
-                        "states": {
-                          "size": "large",
-                          "color": "green",
-                          "list": "Test1,Test2,Test3,Test4",
-                          "inverted": false,
-                          "appuse": "test",
-                          "floatDirection": "left"
+                        {
+                            "cid": "sui-buttons",
+                            "states": {
+                                "color": "blue",
+                                "controls": [
+                                    {
+                                        "label": "Open",
+                                        "action": "ws:openWorkspace"
+                                    },
+                                    {
+                                        "label": "Save",
+                                        "action": "ws:saveWorkspace"
+                                    },
+                                    {
+                                        "label": "New",
+                                        "action": "ws:newWorkspace"
+                                    },
+                                    {
+                                        "label": "Design Mode",
+                                        "action": "ws:turnDesignModeOn",
+                                        "color": "green"
+                                    },
+                                    {
+                                        "label": "Preview Mode",
+                                        "action": "ws:turnDesignModeOff",
+                                        "color": "orange"
+                                    }
+                                ],
+                                "orientation": "vertical",
+                                "fluid": true
+                            }
                         }
-                      },
-                      {
-                        "cid": "sui-button-select",
-                        "states": {
-                          "size": "large",
-                          "color": "blue",
-                          "list": "All,Q1,Q2,Q3,Q4",
-                          "floatDirection": "left"
-                        }
-                      }
                     ]
-                  }
-            
-                ThisPage.footerWS.loadFromObject(tmpSpecsForWS).then(
-                    function(){
-                        console.log("Done Loading");
-                        ThisApp.refreshLayouts();
-                    }
-                )
-                
+                }
+
+                ThisPage.workspaceMenuWS = ThisPage._webctl.newWorkspace({ facet: "ws:ws-menu" });
+ 
+                $.when(
+                    ThisPage.workspaceMenuWS.loadFromObject(tmpWSMenu)
+                ).then(function () {
+                    ThisApp.refreshLayouts();
+                })
+
+
+
+
                 ThisPage._om.getObject(ThisPage.localDataSource, 'setup').then(function (theDoc) {
                     if (typeof (theDoc._error) === 'object') {
                         if (theDoc._error.status == 404) {
@@ -470,7 +498,7 @@ tmpHTML.push('</table>')
                             ThisApp.appMessage("Error - invalid setup document", "e", { show: true });
                             showPreviewJson(theDoc);
                         }
-                        if( ThisPage.hasBeenSetup ){
+                        if (ThisPage.hasBeenSetup) {
                             initLoadedSpaces();
                         }
                     }
@@ -481,18 +509,19 @@ tmpHTML.push('</table>')
     }
 
 
-    function initOpenWSControls(){
+    function initOpenWSControls() {
         var tmpLoad = [];
         tmpLoad.push('<button class="ui button" action="ws:addIconControl">Icon</button>')
+        tmpLoad.push('<button class="ui button" action="ws:addButtonsControl">Button List</button>')
         tmpLoad.push('<button class="ui button" action="ws:addButtonSelectControl">Button Select</button>')
         ThisPage.loadFacet('ws:open-ws-controls', tmpLoad.join(''))
     }
 
-    function getDialogFieldValues(theAppUse){
-        var tmpFields = ThisApp.getByAttr$({appuse:theAppUse});
+    function getDialogFieldValues(theAppUse) {
+        var tmpFields = ThisApp.getByAttr$({ appuse: theAppUse });
         var tmpFieldValues = {};
         var tmpFieldCount = tmpFields.length;
-        if( tmpFieldCount > 0 ){
+        if (tmpFieldCount > 0) {
             for (let index = 0; index < tmpFields.length; index++) {
                 var tmpFieldEl = $(tmpFields[index]);
                 var tmpVal = tmpFieldEl.val();
@@ -503,27 +532,27 @@ tmpHTML.push('</table>')
         return tmpFieldValues
     }
 
-    ThisPage.saveWorkspaceSaveDetails = function(){
+    ThisPage.saveWorkspaceSaveDetails = function () {
         var tmpFieldValues = getDialogFieldValues("ws:dialog-field");
-        console.log("tmpFieldValues",tmpFieldValues);
-        
-        if( !(tmpFieldValues.ws_id && tmpFieldValues.ws_title) ){
+        console.log("tmpFieldValues", tmpFieldValues);
+
+        if (!(tmpFieldValues.ws_id && tmpFieldValues.ws_title)) {
             alert("Need both fields, use cancel to close without adding");
             return;
         }
         var tmpToSave = {
             id: tmpFieldValues.ws_id,
-            title:tmpFieldValues.ws_title || tmpFieldValues.ws_id,
+            title: tmpFieldValues.ws_title || tmpFieldValues.ws_id,
             data: ThisPage.openWS.getAsObject(),
-            "!type":"ws"
+            "!type": "ws"
         }
         ThisPage._om.putObject(getDS(), tmpToSave.id, tmpToSave).then(function (theDoc) {
             if (typeof (theDoc._error) === 'object') {
-                console.error("Error saving ",theDoc);
+                console.error("Error saving ", theDoc);
                 ThisApp.appMessage("Error saving setup document", "e", { show: true });
             } else {
                 ThisApp.hideCommonDialog();
-                addSpace(tmpToSave.id,tmpToSave);
+                addSpace(tmpToSave.id, tmpToSave);
                 ThisApp.appMessage("Saved " + tmpToSave.id, "i", { show: true });
                 openWorkspaceByID(tmpToSave.id);
             }
@@ -532,10 +561,10 @@ tmpHTML.push('</table>')
 
     }
 
-    ThisPage.saveWorkspace = function(){
+    ThisPage.saveWorkspace = function () {
         var tmpJson = ThisPage.openWS.getAsObject();
         //console.log("tmpJson",tmpJson);
-        if( !(tmpJson && tmpJson.objects && tmpJson.objects.length > 0) ) {
+        if (!(tmpJson && tmpJson.objects && tmpJson.objects.length > 0)) {
             alert("Nothing to save, add controls before saving.");
             return;
         }
@@ -553,34 +582,34 @@ tmpHTML.push('</table>')
         tmpHTML.push('<div style="margin-right:20px">');
 
         tmpHTML.push('<form class="ui form">');
-tmpHTML.push('  <div class="field">');
-tmpHTML.push('    <label>Workspace ID</label>');
-tmpHTML.push('    <input type="text" appuse="ws:dialog-field" name="ws_id" value="' + ThisPage.currentWS.id + '" placeholder="Unique ID">');
-tmpHTML.push('  </div>');
-tmpHTML.push('  <div class="field">');
-tmpHTML.push('    <label>Workspace Title</label>');
-tmpHTML.push('    <input type="text" appuse="ws:dialog-field" name="ws_title"  value="' + ThisPage.currentWS.title + '" placeholder="Short Title">');
-tmpHTML.push('  </div>');
-//tmpHTML.push('  <button class="ui button" type="submit">Submit</button>');
-tmpHTML.push('</form>');
+        tmpHTML.push('  <div class="field">');
+        tmpHTML.push('    <label>Workspace ID</label>');
+        tmpHTML.push('    <input type="text" appuse="ws:dialog-field" name="ws_id" value="' + ThisPage.currentWS.id + '" placeholder="Unique ID">');
+        tmpHTML.push('  </div>');
+        tmpHTML.push('  <div class="field">');
+        tmpHTML.push('    <label>Workspace Title</label>');
+        tmpHTML.push('    <input type="text" appuse="ws:dialog-field" name="ws_title"  value="' + ThisPage.currentWS.title + '" placeholder="Short Title">');
+        tmpHTML.push('  </div>');
+        //tmpHTML.push('  <button class="ui button" type="submit">Submit</button>');
+        tmpHTML.push('</form>');
 
-tmpHTML.push('</div>');
+        tmpHTML.push('</div>');
 
-var tmpFooterHTML = '';
-                       tmpFooterHTML += '<button action="ws:saveWorkspaceSaveDetails" class="ui button blue">Save Workspace</button>';
-                       //Right Align if desired?
-                       //tmpFooterHTML += '<div style="float:right;padding-right:5px;margin-bottom:5px;"><button class="ui button basic green">Testing</button></div>';
+        var tmpFooterHTML = '';
+        tmpFooterHTML += '<button action="ws:saveWorkspaceSaveDetails" class="ui button blue">Save Workspace</button>';
+        //Right Align if desired?
+        //tmpFooterHTML += '<div style="float:right;padding-right:5px;margin-bottom:5px;"><button class="ui button basic green">Testing</button></div>';
 
-                       ThisApp.showCommonDialog({ 
-                           header: "Save Workspace",
-                           closeText: "Cancel Save",
-                           content: tmpHTML.join('')         
-                           //,onBeforeClose: function(){alert('WAIT!');return false}
-                           //,onClose: function(){alert('See the results');}
-                           ,footer: tmpFooterHTML
-                        });
+        ThisApp.showCommonDialog({
+            header: "Save Workspace",
+            closeText: "Cancel Save",
+            content: tmpHTML.join('')
+            //,onBeforeClose: function(){alert('WAIT!');return false}
+            //,onClose: function(){alert('See the results');}
+            , footer: tmpFooterHTML
+        });
 
-        console.log("tmpJson",tmpJson)
+        console.log("tmpJson", tmpJson)
     }
     function showWorkspaces() {
         ThisPage.showOut('');
@@ -640,9 +669,9 @@ var tmpFooterHTML = '';
 
     }
 
-    ThisPage.buttonSelectTest = function(theAction,theTarget){
-        console.log("buttonSelectTest",theTarget);
-        ThisApp.appMessage("buttonSelectTest Ran", "i", { show: true });        
+    ThisPage.buttonSelectTest = function (theAction, theTarget) {
+        console.log("buttonSelectTest", theTarget);
+        ThisApp.appMessage("buttonSelectTest Ran", "i", { show: true });
     }
     ThisPage.saveNoSQLSetup = function () {
         var tmpURL = getSetupFieldVal('url');
@@ -685,8 +714,8 @@ var tmpFooterHTML = '';
         var tmpObj = { "running": "a test", "more": 12, "arr": ["one", "two"], "child": { "name": "Jane" } };
 
 
-        
-        
+
+
         ThisPage._om.putObject(getDS(), 'testdoc1', tmpObj).then(function (theDoc) {
             console.log('saved ', theDoc);
             ThisApp.appMessage("Saved doc - " + typeof (theDoc));
@@ -726,26 +755,32 @@ var tmpFooterHTML = '';
     var tmpControlAt = 0;
     ThisPage.runTest5 = function () {
         tmpControlAt++;
-        ThisPage.openWS.addControl('', 'sui-icon', {states:{bordered:true, size:'huge',icon:'user',color:'blue'} }).then(function(theControl){
+        ThisPage.openWS.addControl('', 'sui-icon', { states: { bordered: true, size: 'huge', icon: 'user', color: 'blue' } }).then(function (theControl) {
 
         });
     }
 
-    
+
     ThisPage.addButtonSelectControl = function () {
         tmpControlAt++;
-        ThisPage.openWS.addControl('', 'sui-button-select', {states:{size:'huge', color:'blue'} }).then(function(theControl){
+        ThisPage.openWS.addControl('', 'sui-button-select', { states: { size: 'huge', color: 'blue' } }).then(function (theControl) {
 
         });
     }
 
     ThisPage.addIconControl = function () {
         tmpControlAt++;
-        ThisPage.openWS.addControl('', 'sui-icon', {states:{bordered:true, size:'huge',icon:'user',color:'blue'} }).then(function(theControl){
+        ThisPage.openWS.addControl('', 'sui-icon', { states: { bordered: true, size: 'huge', icon: 'user', color: 'blue' } }).then(function (theControl) {
 
         });
     }
-    
+    ThisPage.addButtonsControl = function () {
+        tmpControlAt++;
+        ThisPage.openWS.addControl('', 'sui-buttons', { states: { float: true, size: 'huge', color: 'blue' } }).then(function (theControl) {
+            //theControl.doClick(); ??
+        });
+    }
+
 
 
     ThisPage.demoAddObjectYouKnowIsNew = function () {
