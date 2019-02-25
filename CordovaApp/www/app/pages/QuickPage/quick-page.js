@@ -69,6 +69,7 @@ License: MIT
     *     that are needed even if the page was not activated yet
     */
     ThisPage._onFirstActivate = function () {
+        
         //--- Do the layout initiaze stuff
         ThisPage.initOnFirstLoad().then(
             function () {

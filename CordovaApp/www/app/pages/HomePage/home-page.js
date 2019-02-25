@@ -78,7 +78,7 @@ License: MIT
         //console.log("Home Page: _onFirstActivate");
 
         ThisPage._svg = theApp.getComponent("plugin:SvgControls");
-        ThisPage._webctl = theApp.getComponent("plugin:WebControls");
+       // ThisPage._webctl = theApp.getComponent("plugin:WebControls");
         
         ThisPage._om = theApp.om;
         ThisPage.inBuffer = 40;
@@ -180,136 +180,149 @@ License: MIT
                 .sidebar('attach events', '[appuse="home:home-sidebar"] .menu .item')
                 ;
                 
-                var tmpTestAreaEl = me.getByAttr$({ facet: "home:testarea" });
-                me.testAreaWS = me._webctl.getNewPanel();
-                me.testAreaWS.init({ mom: tmpTestAreaEl[0]});
+                var tmpTestAreaEl = ThisPage.getByAttr$({ facet: "home:testarea" });
+
+
+                ThisPage._webctl = theApp.getComponent("plugin:WebControls");
+               // ThisPage.loadFacet('home:testarea', "ThisPage._webctl is " + typeof(ThisPage._webctl))
+             
+                try {
+                    ThisPage.testAreaWS =ThisPage._webctl.getNewPanel();
+                    ThisPage.testAreaWS.init({ mom: tmpTestAreaEl[0]});
+        
+                    //ToDo: ThisPage.testAreaWS.getControls(['sui-icon']);                 
+                    //to preload them all so we can add and know the order is good
+                    ThisPage.testAreaWS.addControl('icon-control-1', 'sui-icon', {states:{bordered:true, size:'huge',icon:'user',color:'blue'} }).then(function(theControl){
+                        theControl.subscribe('onClick', function(){
+                            console.log("click")
+                           // ThisApp.aboutThisApp();
+                           var tmpHTML = '';
+                           tmpHTML += "Testing<br />Testing<br />Testing<br />Testing<br />Testing<br />Testing<br />Testing<br />Testing<br />Testing<br />Testing<br />Testing<br />Testing<br />Testing<br />Testing<br />Testing<br />Testing<br />Testing<br />Testing<br />Testing<br />Testing<br />Testing<br />Testing<br />Testing<br />Testing<br />Testing<br />Testing<br />Testing<br />Testing<br />Testing<br />Testing<br />Testing<br />Testing<br />"
+                           var tmpFooterHTML = '';
+                           tmpFooterHTML += '<button class="ui button basic green">Testing</button>';
+                           //Right Align if desired?
+                           //tmpFooterHTML += '<div style="float:right;padding-right:5px;margin-bottom:5px;"><button class="ui button basic green">Testing</button></div>';
     
-                //ToDo: me.testAreaWS.getControls(['sui-icon']);                 
-                //to preload them all so we can add and know the order is good
-                me.testAreaWS.addControl('icon-control-1', 'sui-icon', {states:{bordered:true, size:'huge',icon:'user',color:'blue'} }).then(function(theControl){
-                    theControl.subscribe('onClick', function(){
-                        console.log("click")
-                       // ThisApp.aboutThisApp();
-                       var tmpHTML = '';
-                       tmpHTML += "Testing<br />Testing<br />Testing<br />Testing<br />Testing<br />Testing<br />Testing<br />Testing<br />Testing<br />Testing<br />Testing<br />Testing<br />Testing<br />Testing<br />Testing<br />Testing<br />Testing<br />Testing<br />Testing<br />Testing<br />Testing<br />Testing<br />Testing<br />Testing<br />Testing<br />Testing<br />Testing<br />Testing<br />Testing<br />Testing<br />Testing<br />Testing<br />"
-                       var tmpFooterHTML = '';
-                       tmpFooterHTML += '<button class="ui button basic green">Testing</button>';
-                       //Right Align if desired?
-                       //tmpFooterHTML += '<div style="float:right;padding-right:5px;margin-bottom:5px;"><button class="ui button basic green">Testing</button></div>';
-
-                       ThisApp.showCommonDialog({ 
-                           header: "This is a test, only a test",
-                           content: tmpHTML,         
-                           //onBeforeClose: function(){alert('WAIT!');return false},
-                           onClose: function(){alert('See the results');},
-                           footer: tmpFooterHTML
-                        });
-                        //ThisApp.showCommonDialog({ header: "About this page", content: 'Hello World' });
-                    })    
-                    //me.testAreaIcon1 = theControl;
-                    // --- Have to load all the controls in use in advance
-                    // --   or control load order, this is NOT the way, this is a test
-                    // --  Also note, you couild load the first, then the rest do load in order, no async involved                    
-                    me.testAreaWS.addControl('icon-control-2', 'sui-icon', {states:{bordered:true, size:'huge',icon:'group',color:'green'} }).then(function(theControl){
-                        theControl.subscribe('onClick', function(){
-
-                            var tmpIOD = 'test';
-                            var tmpHTMLForLargeOptionSet = '<h3>Select One</h3><div><i oid="' + tmpIOD + '" action="dlgSetColor" color="red" class="icon red huge square" /><i oid="' + tmpIOD + '" color="blue" action="dlgSetColor" class="icon huge blue square" /><i oid="' + tmpIOD + '" color="blue" action="dlgSetColor" class="icon huge blue square" /><i oid="' + tmpIOD + '" color="blue" action="dlgSetColor" class="icon huge blue square" /><i oid="' + tmpIOD + '" color="blue" action="dlgSetColor" class="icon huge blue square" /><i oid="' + tmpIOD + '" color="blue" action="dlgSetColor" class="icon huge blue square" /><i oid="' + tmpIOD + '" color="blue" action="dlgSetColor" class="icon huge blue square" /><i oid="' + tmpIOD + '" color="blue" action="dlgSetColor" class="icon huge blue square" /><i oid="' + tmpIOD + '" color="blue" action="dlgSetColor" class="icon huge blue square" /><i oid="' + tmpIOD + '" action="dlgSetColor" color="red" class="icon red huge square" /><i oid="' + tmpIOD + '" color="blue" action="dlgSetColor" class="icon huge blue square" /><i oid="' + tmpIOD + '" color="blue" action="dlgSetColor" class="icon huge blue square" /><i oid="' + tmpIOD + '" color="blue" action="dlgSetColor" class="icon huge blue square" /><i oid="' + tmpIOD + '" color="blue" action="dlgSetColor" class="icon huge blue square" /><i oid="' + tmpIOD + '" color="blue" action="dlgSetColor" class="icon huge blue square" /><i oid="' + tmpIOD + '" color="blue" action="dlgSetColor" class="icon huge blue square" /><i oid="' + tmpIOD + '" color="blue" action="dlgSetColor" class="icon huge blue square" /><i oid="' + tmpIOD + '" color="blue" action="dlgSetColor" class="icon huge blue square" /></div>';
-                            ThisApp.showCommonDialog({ header: "Some options", content: tmpHTMLForLargeOptionSet });
-
+                           ThisApp.showCommonDialog({ 
+                               header: "This is a test, only a test",
+                               content: tmpHTML,         
+                               //onBeforeClose: function(){alert('WAIT!');return false},
+                               onClose: function(){alert('See the results');},
+                               footer: tmpFooterHTML
+                            });
+                            //ThisApp.showCommonDialog({ header: "About this page", content: 'Hello World' });
                         })    
-                    });
-                    me.testAreaWS.addControl('icon-control-3', 'sui-icon', {states:{bordered:true, size:'huge',icon:'group',color:'purple'} }).then(function(theControl){
-                        theControl.subscribe('onClick', function(){
-                            ThisApp.showPopup({
-                                el: theControl.el,
-                                title: 'This object',
-                                content: 'This is the object itself.'
-                            })      
-                        })                            
-                    });
-                    me.testAreaWS.addControl('icon-control-4', 'sui-icon', {states:{bordered:true, size:'huge',icon:'group',color:'orange'} }).then(function(theControl){
-                        theControl.subscribe('onClick', function(){
-                           
-                            ThisApp.showPopup({
-                                el: theControl.el,
-                                title: 'This object',
-                                content: 'When closed, I shall say so in the console',
-                                onClose: function(){
-                                    console.log('The popup is now closed, refresh anyone?')
-                                }
+                        //ThisPage.testAreaIcon1 = theControl;
+                        // --- Have to load all the controls in use in advance
+                        // --   or control load order, this is NOT the way, this is a test
+                        // --  Also note, you couild load the first, then the rest do load in order, no async involved                    
+                        ThisPage.testAreaWS.addControl('icon-control-2', 'sui-icon', {states:{bordered:true, size:'huge',icon:'group',color:'green'} }).then(function(theControl){
+                            theControl.subscribe('onClick', function(){
+    
+                                var tmpIOD = 'test';
+                                var tmpHTMLForLargeOptionSet = '<h3>Select One</h3><div><i oid="' + tmpIOD + '" action="dlgSetColor" color="red" class="icon red huge square" /><i oid="' + tmpIOD + '" color="blue" action="dlgSetColor" class="icon huge blue square" /><i oid="' + tmpIOD + '" color="blue" action="dlgSetColor" class="icon huge blue square" /><i oid="' + tmpIOD + '" color="blue" action="dlgSetColor" class="icon huge blue square" /><i oid="' + tmpIOD + '" color="blue" action="dlgSetColor" class="icon huge blue square" /><i oid="' + tmpIOD + '" color="blue" action="dlgSetColor" class="icon huge blue square" /><i oid="' + tmpIOD + '" color="blue" action="dlgSetColor" class="icon huge blue square" /><i oid="' + tmpIOD + '" color="blue" action="dlgSetColor" class="icon huge blue square" /><i oid="' + tmpIOD + '" color="blue" action="dlgSetColor" class="icon huge blue square" /><i oid="' + tmpIOD + '" action="dlgSetColor" color="red" class="icon red huge square" /><i oid="' + tmpIOD + '" color="blue" action="dlgSetColor" class="icon huge blue square" /><i oid="' + tmpIOD + '" color="blue" action="dlgSetColor" class="icon huge blue square" /><i oid="' + tmpIOD + '" color="blue" action="dlgSetColor" class="icon huge blue square" /><i oid="' + tmpIOD + '" color="blue" action="dlgSetColor" class="icon huge blue square" /><i oid="' + tmpIOD + '" color="blue" action="dlgSetColor" class="icon huge blue square" /><i oid="' + tmpIOD + '" color="blue" action="dlgSetColor" class="icon huge blue square" /><i oid="' + tmpIOD + '" color="blue" action="dlgSetColor" class="icon huge blue square" /><i oid="' + tmpIOD + '" color="blue" action="dlgSetColor" class="icon huge blue square" /></div>';
+                                ThisApp.showCommonDialog({ header: "Some options", content: tmpHTMLForLargeOptionSet });
+    
+                            })    
+                        });
+                        ThisPage.testAreaWS.addControl('icon-control-3', 'sui-icon', {states:{bordered:true, size:'huge',icon:'group',color:'purple'} }).then(function(theControl){
+                            theControl.subscribe('onClick', function(){
+                                ThisApp.showPopup({
+                                    el: theControl.el,
+                                    title: 'This object',
+                                    content: 'This is the object itself.'
+                                })      
                             })                            
-                        })           
+                        });
+                        ThisPage.testAreaWS.addControl('icon-control-4', 'sui-icon', {states:{bordered:true, size:'huge',icon:'group',color:'orange'} }).then(function(theControl){
+                            theControl.subscribe('onClick', function(){
+                               
+                                ThisApp.showPopup({
+                                    el: theControl.el,
+                                    title: 'This object',
+                                    content: 'When closed, I shall say so in the console',
+                                    onClose: function(){
+                                        console.log('The popup is now closed, refresh anyone?')
+                                    }
+                                })                            
+                            })           
+                        });
                     });
-                });
+                } catch (error) {
+                    alert("error " + error.toString())
+                }
+               
+                
+              /*   */
+
                 
 
-                var tmpWorkAreaEl = me.getByAttr$({ facet: "home:workarea" });
-                me.workAreaWS = me._svg.getNewPanel();
-                me.workAreaWS.init({ svg: tmpWorkAreaEl[0], viewBox: {x: 0, y: 0, w: 150, h: 150} });
+                var tmpWorkAreaEl = ThisPage.getByAttr$({ facet: "home:workarea" });
+                ThisPage.workAreaWS = ThisPage._svg.getNewPanel();
+                ThisPage.workAreaWS.init({ svg: tmpWorkAreaEl[0], viewBox: {x: 0, y: 0, w: 150, h: 150} });
 
-                me.workAreaWS.addControl('work-button-1', 'btn-round-glossy', {translateX: 5, translateY: 5, scale: .1,states:{switchColor:'#ffff00',switchStatus:true} }).then(function(theControl){
-                    me.workAreaButton1 = theControl;
-                });
-
-                me.workAreaWS.addControl('work-button-2', 'btn-round-glossy', {translateX: 5, translateY: 50, scale: .1,states:{switchColor:'#ff0000',switchStatus:true} }).then(function(theControl){
-                    me.workAreaButton2 = theControl;
+                ThisPage.workAreaWS.addControl('work-button-1', 'btn-round-glossy', {translateX: 5, translateY: 5, scale: .1,states:{switchColor:'#ffff00',switchStatus:true} }).then(function(theControl){
+                    ThisPage.workAreaButton1 = theControl;
                 });
 
-                me.workAreaWS.addControl('work-button-3', 'icon-database', {translateX: 50, translateY: 5, scale: .4,states:{iconToShow:'cloud'} }).then(function(theControl){
-                    me.workAreaButton3 = theControl;
+                ThisPage.workAreaWS.addControl('work-button-2', 'btn-round-glossy', {translateX: 5, translateY: 50, scale: .1,states:{switchColor:'#ff0000',switchStatus:true} }).then(function(theControl){
+                    ThisPage.workAreaButton2 = theControl;
                 });
 
-                me.workAreaWS.addControl('work-button-4', 'icon-database', {translateX: 50, translateY: 55, scale: .4,states:{iconToShow:'cloud'} }).then(function(theControl){
-                    me.workAreaButton4 = theControl;
+                ThisPage.workAreaWS.addControl('work-button-3', 'icon-database', {translateX: 50, translateY: 5, scale: .4,states:{iconToShow:'cloud'} }).then(function(theControl){
+                    ThisPage.workAreaButton3 = theControl;
                 });
 
-                var tmpFunAreaEl = me.getByAttr$({ facet: "home:funarea" });
-                me.funAreaWS = me._svg.getNewPanel();
-                me.funAreaWS.init({ svg: tmpFunAreaEl[0], viewBox: {x: 0, y: 0, w: 150, h: 150} });
-
-                me.funAreaWS.addControl('fun-button-1', 'btn-round-glossy', {translateX: 5, translateY: 5, scale: .1,states:{switchColor:'#00ffff',switchStatus:true} }).then(function(theControl){
-                    me.funAreaButton1 = theControl;
-                });
-                me.funAreaWS.addControl('fun-button-2', 'btn-round-glossy', {translateX: 5, translateY: 65,scale: .2,states:{switchColor:'#ff00ff',switchStatus:true} }).then(function(theControl){
-                    me.funAreaButton2 = theControl;
-                });
-                me.funAreaWS.addControl('fun-button-3', 'on-off-g-r', {translateX: 65, translateY: 5, scale: .7,states:{switchStatus:true} }).then(function(theControl){
-                    me.funAreaButton3 = theControl;
-                });
-                me.funAreaWS.addControl('fun-button-4', 'on-off-g-r', {translateX: 75, translateY: 85, scale: 1,states:{switchStatus:true} }).then(function(theControl){
-                    me.funAreaButton4 = theControl;
+                ThisPage.workAreaWS.addControl('work-button-4', 'icon-database', {translateX: 50, translateY: 55, scale: .4,states:{iconToShow:'cloud'} }).then(function(theControl){
+                    ThisPage.workAreaButton4 = theControl;
                 });
 
-                var tmpZoomBarEl = me.getByAttr$({ facet: "home:zoom-control" });
-                me.wsZoomControlWS = me._svg.getNewPanel();
-                me.wsZoomControlWS.init({ svg: tmpZoomBarEl[0], viewBox: {x: 0, y: 0, w: 200, h: 20} });
-                me.wsZoomControlWS.addControl('zoom-slider', 'horiz-slider', { sliderStart:0, sliderEnd: 100, sliderIncr: 10, sliderValue: 50, scale: .5 }).then(function(theControl){
-                    me.wsZoomControl = theControl;
-//                    me.wsZoomControl.subscribe("valueChanged", me.zoomValueChanged.bind(me));
+                var tmpFunAreaEl = ThisPage.getByAttr$({ facet: "home:funarea" });
+                ThisPage.funAreaWS = ThisPage._svg.getNewPanel();
+                ThisPage.funAreaWS.init({ svg: tmpFunAreaEl[0], viewBox: {x: 0, y: 0, w: 150, h: 150} });
+
+                ThisPage.funAreaWS.addControl('fun-button-1', 'btn-round-glossy', {translateX: 5, translateY: 5, scale: .1,states:{switchColor:'#00ffff',switchStatus:true} }).then(function(theControl){
+                    ThisPage.funAreaButton1 = theControl;
+                });
+                ThisPage.funAreaWS.addControl('fun-button-2', 'btn-round-glossy', {translateX: 5, translateY: 65,scale: .2,states:{switchColor:'#ff00ff',switchStatus:true} }).then(function(theControl){
+                    ThisPage.funAreaButton2 = theControl;
+                });
+                ThisPage.funAreaWS.addControl('fun-button-3', 'on-off-g-r', {translateX: 65, translateY: 5, scale: .7,states:{switchStatus:true} }).then(function(theControl){
+                    ThisPage.funAreaButton3 = theControl;
+                });
+                ThisPage.funAreaWS.addControl('fun-button-4', 'on-off-g-r', {translateX: 75, translateY: 85, scale: 1,states:{switchStatus:true} }).then(function(theControl){
+                    ThisPage.funAreaButton4 = theControl;
                 });
 
-                var tmpHomeWsEl = me.getByAttr$({ facet: "home:home-ws" });
-                me.wsHome = me._svg.getNewPanel();
-                me.wsHome.init({ svg: tmpHomeWsEl[0], viewBox: {x: 0, y: 0, w: 400, h: 400} });
+                var tmpZoomBarEl = ThisPage.getByAttr$({ facet: "home:zoom-control" });
+                ThisPage.wsZoomControlWS = ThisPage._svg.getNewPanel();
+                ThisPage.wsZoomControlWS.init({ svg: tmpZoomBarEl[0], viewBox: {x: 0, y: 0, w: 200, h: 20} });
+                ThisPage.wsZoomControlWS.addControl('zoom-slider', 'horiz-slider', { sliderStart:0, sliderEnd: 100, sliderIncr: 10, sliderValue: 50, scale: .5 }).then(function(theControl){
+                    ThisPage.wsZoomControl = theControl;
+//                    ThisPage.wsZoomControl.subscribe("valueChanged", ThisPage.zoomValueChanged.bind(me));
+                });
 
-                me.wsHome.addControl('icon-database1', 'icon-database', {scale: 1 }).then(function(theControl){
-                    me.wsDatabaseIcon = theControl;
+                var tmpHomeWsEl = ThisPage.getByAttr$({ facet: "home:home-ws" });
+                ThisPage.wsHome = ThisPage._svg.getNewPanel();
+                ThisPage.wsHome.init({ svg: tmpHomeWsEl[0], viewBox: {x: 0, y: 0, w: 400, h: 400} });
+
+                ThisPage.wsHome.addControl('icon-database1', 'icon-database', {scale: 1 }).then(function(theControl){
+                    ThisPage.wsDatabaseIcon = theControl;
                 });
-                me.wsHome.addControl('on-off-g-r1', 'on-off-g-r', {scale: 2, translateY:210, translateX:120 }).then(function(theControl){
-                    me.onOffButton1 = theControl;
+                ThisPage.wsHome.addControl('on-off-g-r1', 'on-off-g-r', {scale: 2, translateY:210, translateX:120 }).then(function(theControl){
+                    ThisPage.onOffButton1 = theControl;
                 });
-                me.wsHome.addControl('btn-round-glossy1', 'btn-round-glossy', {scale: .25, translateY:280, translateX:60, states:{switchColor:'#ff00ff',switchStatus:true} }).then(function(theControl){
-                    me.roundGlossyButton = theControl;
+                ThisPage.wsHome.addControl('btn-round-glossy1', 'btn-round-glossy', {scale: .25, translateY:280, translateX:60, states:{switchColor:'#ff00ff',switchStatus:true} }).then(function(theControl){
+                    ThisPage.roundGlossyButton = theControl;
                 });
-                me.wsHome.addControl('btn-round-glossy2', 'btn-round-glossy', {scale: .25, translateY:280, translateX:160, states:{switchColor:'#ffff00',switchStatus:true} }).then(function(theControl){
-                    me.roundGlossyButton2 = theControl;
+                ThisPage.wsHome.addControl('btn-round-glossy2', 'btn-round-glossy', {scale: .25, translateY:280, translateX:160, states:{switchColor:'#ffff00',switchStatus:true} }).then(function(theControl){
+                    ThisPage.roundGlossyButton2 = theControl;
                 });
-                me.wsHome.addControl('btn-round-glossy3', 'btn-round-glossy', {scale: .25, translateY:280, translateX:260, states:{switchColor:'#00ffff',switchStatus:true} }).then(function(theControl){
-                    me.roundGlossyButton3 = theControl;
+                ThisPage.wsHome.addControl('btn-round-glossy3', 'btn-round-glossy', {scale: .25, translateY:280, translateX:260, states:{switchColor:'#00ffff',switchStatus:true} }).then(function(theControl){
+                    ThisPage.roundGlossyButton3 = theControl;
                 });
-                me.wsHome.addControl('color-bar-main', 'color-bar', {scale: .4, translateY:160, translateX:20, states:{switchColor:'#00ffff',switchStatus:true} }).then(function(theControl){
-                    me.roundGlossyButton3 = theControl;
+                ThisPage.wsHome.addControl('color-bar-main', 'color-bar', {scale: .4, translateY:160, translateX:20, states:{switchColor:'#00ffff',switchStatus:true} }).then(function(theControl){
+                    ThisPage.roundGlossyButton3 = theControl;
                 });
 
                 //==========================

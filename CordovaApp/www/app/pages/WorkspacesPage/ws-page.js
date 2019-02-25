@@ -140,7 +140,7 @@ License: MIT
             return;
         }
         tmpHTML.push('<div class="ui divided selection list">');
-        for (let index = 0; index < loadedSpaces.keys.length; index++) {
+        for (var index = 0; index < loadedSpaces.keys.length; index++) {
             var tmpID = loadedSpaces.keys[index];
             var tmpTitle = loadedSpaces[tmpID].title;
             tmpHTML.push('  <a action="ws:openThisWorkspace" ws_id="' + tmpID + '" class="item">');
@@ -522,7 +522,7 @@ License: MIT
         var tmpFieldValues = {};
         var tmpFieldCount = tmpFields.length;
         if (tmpFieldCount > 0) {
-            for (let index = 0; index < tmpFields.length; index++) {
+            for (var index = 0; index < tmpFields.length; index++) {
                 var tmpFieldEl = $(tmpFields[index]);
                 var tmpVal = tmpFieldEl.val();
                 var tmpName = tmpFieldEl.attr('name');

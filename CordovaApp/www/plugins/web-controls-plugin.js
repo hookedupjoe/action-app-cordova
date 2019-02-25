@@ -329,14 +329,14 @@ Web controls Plugin:
         var dfd = jQuery.Deferred();
         var tmpDefs = [];
         var tmpCIDs = {index:{},vals:[]};
-        for (let index = 0; index < theObjectsArray.length; index++) {
+        for (var index = 0; index < theObjectsArray.length; index++) {
             var tmpObj = theObjectsArray[index];
             if( !tmpCIDs.index.hasOwnProperty(tmpObj.cid) ){
                 tmpCIDs.index[tmpObj.cid] = true;
                 tmpCIDs.vals.push(tmpObj.cid);
             }
         }
-        for (let index = 0; index < tmpCIDs.vals.length; index++) {
+        for (var index = 0; index < tmpCIDs.vals.length; index++) {
             var tmpCID = tmpCIDs.vals[index];
             if( tmpCID ){
                 tmpDefs.push(

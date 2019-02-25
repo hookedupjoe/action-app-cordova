@@ -153,7 +153,7 @@
             tmpRet += '<div ' + tmpStyle + ' class="ui menu ' + tmpOrient + tmpSize + tmpGroupAttr + tmpFluid + ' buttons">';
             
             if( typeof(tmpStates.controls) == 'object'){
-                for (let index = 0; index < tmpStates.controls.length; index++) {
+                for (var index = 0; index < tmpStates.controls.length; index++) {
                     var tmpControlDetails = tmpStates.controls[index];
                     
                     if( tmpControlDetails ){
