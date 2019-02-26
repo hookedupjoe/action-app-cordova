@@ -87,9 +87,8 @@ License: MIT
     }
 
     function refreshUI() {
-        //--- Automatically refresh messsage on page load
-        refreshMessageCenter();
-        showInFooter("Messages Refreshed!")
+        //--- Automatically refresh as needed when page re-activated or loaded initially
+        
     }
 
     function showInFooter(theText){
@@ -124,21 +123,16 @@ License: MIT
                 {
                     "cid": "sui-buttons",
                     "states": {
-                        "color": "green",
+                        "color": "blue",
                         "controls": [
                             {
-                                "label": "Send Test Messages",
-                                "action": "quick:sendTestMessages"
+                                "label": "Show JSON Editor",
+                                "action": "quick:showJSONEditor"
                             },
                             {
                                 "color": "blue",
-                                "label": "Show Messages",
-                                "action": "quick:refreshMessageCenter"
-                            },
-                            {
-                                "color": "orange",
-                                "label": "Open Designer",
-                                "action": "quick:openDesigner"
+                                "label": "Show JS Editor",
+                                "action": "quick:showJSEditor"
                             }
                         ],
                         "orientation": "vertical",
@@ -156,25 +150,41 @@ License: MIT
         })
 
     }
+
     ThisPage.openDesigner = function () {
         ThisApp.gotoPage('WorkspacesPage');
     }
 
-    
-    ThisPage.refreshMessageCenter = refreshMessageCenter;
-    function refreshMessageCenter() {
-        var tmpContext = { messages: ThisApp.getMessages() }
-        $('[facet="quick:center"]').html(ThisApp.renderTemplate('quick:msg-ctr-item', tmpContext));
+    ThisPage.showJSONEditor = showJSONEditor;
+    function showJSONEditor(){
+
+        var tmpDemoObject = {
+            "test":true,
+            "testval": 123, 
+            "test-string": "Hello World",
+            "test-obj": {"test":true}
+        }
+
+        var tmpHTML = [];
+        tmpHTML.push('<div class="ace-editor" id="quick-editor">');
+        tmpHTML.push(JSON.stringify(tmpDemoObject));
+        tmpHTML.push('</div>');
+
+        ThisPage.loadFacet('quick:center', tmpHTML.join(''))
+        ThisPage.editor = ace.edit("quick-editor");
+        ThisPage.editor.setTheme("ace/theme/vibrant_ink");
+        ThisPage.editor.session.setMode("ace/mode/json");
+       
+
     }
 
-    ThisPage.sendTestMessages = sendTestMessages;
-    function sendTestMessages() {
-        ThisApp.appMessage("Just some info");
-        ThisApp.appMessage("Successful message here.", true, { title: "It was updated", data: { what: "nothing" } });
-        ThisApp.appMessage("Warning, Warning, Warning!", "w", { title: "This is just a warning", data: { reason: "It is important" } });
-        ThisApp.appMessage("There was an error, in case you want to take action, see the data.", "e", { data: { reason: "It is important" } });
-        ThisApp.appMessage("Just some info to log in messages, but now show in the UI", "i", { noshow: true });
-        refreshMessageCenter();
+    ThisPage.showJSEditor = showJSEditor;
+    function showJSEditor(){
+        ThisPage.loadFacet('quick:center', '<div class="ace-editor" id="quick-editor">function foo(items) {\n    var x = "All this is syntax highlighted";\n    return x;\n}</div>')
+        ThisPage.editor = ace.edit("quick-editor");
+        ThisPage.editor.setTheme("ace/theme/vibrant_ink");
+        ThisPage.editor.session.setMode("ace/mode/javascript");
+
     }
 
 

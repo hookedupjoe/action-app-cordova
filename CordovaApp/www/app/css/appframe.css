@@ -10,6 +10,13 @@
     cursor: not-allowed !important;
   }
 
+  .ace-editor { 
+    position: absolute;
+    top: 0px;
+    right: 0;
+    bottom: 0;
+    left: 0;
+  }
   .common-dialog-footer {
     border-top:solid 1px #dddddd;
     padding:4px;
