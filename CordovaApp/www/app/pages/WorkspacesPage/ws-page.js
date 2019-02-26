@@ -514,6 +514,7 @@ License: MIT
         tmpLoad.push('<button class="ui button" action="ws:addIconControl">Icon</button>')
         tmpLoad.push('<button class="ui button" action="ws:addButtonsControl">Button List</button>')
         tmpLoad.push('<button class="ui button" action="ws:addButtonSelectControl">Button Select</button>')
+        tmpLoad.push('<button class="ui button" control="sui-menu" action="ws:addControlToDesigner">Menu</button>')
         ThisPage.loadFacet('ws:open-ws-controls', tmpLoad.join(''))
     }
 
@@ -667,6 +668,15 @@ License: MIT
             }
         });
 
+    }
+
+    ThisPage.addControlToDesigner = function (theAction, theTarget) {
+        var tmpCID = $(theTarget).attr('control');
+        //ToDo: Get Default States for design mode? Or built into the control to show in design mode states?
+        ThisPage.openWS.addControl('', tmpCID, {}).then(function (theControl) {
+            //Do anything with the control when done in design mode?
+            // Maybe Click it to select?
+        });
     }
 
     ThisPage.buttonSelectTest = function (theAction, theTarget) {

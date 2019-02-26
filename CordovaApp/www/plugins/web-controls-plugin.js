@@ -539,6 +539,9 @@ Web controls Plugin:
 
     me.AttachListeners = AttachListeners;
     function AttachListeners() {
+
+        //--- Undo to enable context menus
+        /*
         var tmpFN = onContextMenu.bind(this);
         $(this.mom).contextmenu(function(e){
             if( !e.isDefaultPrevented() ){
@@ -546,6 +549,7 @@ Web controls Plugin:
                 tmpFN(e);    
             }
         })
+         */
     }
     function onContextMenu(){
        ThisApp.showPopup({

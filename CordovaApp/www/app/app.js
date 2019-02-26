@@ -82,7 +82,7 @@
             var appModule = ActionAppCore.module('app');
            
             var tmpPluginComponents = ['SvgControls','WebControls', 'DataTables'];
-            var tmpAppCompsToInit = ['HomePage', 'QuickPage', 'WorkspacesPage',  'DataTablesPage', 'DashboardPage', 'LogsPage','DebugPage']; 
+            var tmpAppCompsToInit = ['WorkspacesPage', 'HomePage', 'QuickPage', 'DataTablesPage', 'DashboardPage', 'LogsPage','DebugPage']; 
             var tmpAppComponents = [ ];
   
             ThisApp.useModuleComponents('plugin', tmpPluginComponents)
