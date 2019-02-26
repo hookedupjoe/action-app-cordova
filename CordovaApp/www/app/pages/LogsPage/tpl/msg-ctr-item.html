@@ -4,5 +4,10 @@
             {{title}}
         </div>
         {{text}}
+        {{#if more}}
+        <hr />
+        <div class="app-msg-object">{{more}}</div>
+        {{/if}}
+        
     </div>
 {{/each}}

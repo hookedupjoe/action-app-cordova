@@ -224,7 +224,20 @@ License: MIT
 
     ThisPage.refreshMessageCenter = refreshMessageCenter;
     function refreshMessageCenter() {
-        var tmpContext = {messages:ThisApp.getMessages()}
+        var tmpMessages = ThisApp.getMessages();
+        
+        $.each(tmpMessages, function(thePos){
+            var tmpObj = tmpMessages[thePos]
+            var tmpMore = '';
+            if( tmpObj && tmpObj.data ){
+                tmpMore = tmpObj.data
+                if(typeof(tmpMore) == 'object'){
+                    tmpMore = JSON.stringify(tmpMore);
+                }
+            }
+            tmpObj.more = tmpMore
+        })
+        var tmpContext = {messages:tmpMessages}
         $('[facet="logs-messages"]').html(ThisApp.renderTemplate('logs:msg-ctr-item', tmpContext));
     }
 
