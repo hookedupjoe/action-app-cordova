@@ -9,7 +9,9 @@
   .disabled {
     cursor: not-allowed !important;
   }
-
+  .ui.icon.message {
+    width:auto !important;
+  }
   .ace-editor { 
     position: absolute;
     top: 0px;
