@@ -36,7 +36,7 @@ License: MIT
             "center": thisPageSpecs.pageNamespace + ":" + "page-body",
             "south": thisPageSpecs.pageNamespace + ":" + "page-footer"
         },  
-        facetPrefix: thisPageSpecs.pageNamespace,
+        spotPrefix: thisPageSpecs.pageNamespace,
         north: false,
         west: false,
         east: false
@@ -107,7 +107,7 @@ License: MIT
                 .sidebar('attach events', '[appuse="dash:home-sidebar-menu-trigger"]')
                 ;
 
-                var tmpZoomBarEl = me.getByAttr$({ facet: "dash:zoom-control" });
+                var tmpZoomBarEl = me.getByAttr$({ spot: "dash:zoom-control" });
                 me.wsZoomControlWS = me._svg.getNewPanel();
                 me.wsZoomControlWS.init({ svg: tmpZoomBarEl[0], viewBox: {x: 0, y: 0, w: 200, h: 20} });
                 me.wsZoomControlWS.addControl('zoom-slider', 'horiz-slider', { sliderStart:0, sliderEnd: 100, sliderIncr: 10, sliderValue: 50, scale: .5 }).then(function(theControl){
@@ -115,7 +115,7 @@ License: MIT
                     me.wsZoomControl.subscribe("valueChanged", me.zoomValueChanged.bind(me));
                 });
 
-                var tmpHomeWsEl = me.getByAttr$({ facet: "dash:home-ws" });
+                var tmpHomeWsEl = me.getByAttr$({ spot: "dash:home-ws" });
                 me.wsHome = me._svg.getNewPanel();
                 me.wsHome.init({ svg: tmpHomeWsEl[0], viewBox: {x: 0, y: 0, w: 400, h: 400} });
 
@@ -185,7 +185,7 @@ License: MIT
     
     ThisPage.pageTest = function () {
         var tmpMarkup = '<hr/>Added to Out';
-        ThisApp.addToFacet('dash:dashboard-out', tmpMarkup);
+        ThisApp.addToSpot('dash:dashboard-out', tmpMarkup);
     }
     
 })(ActionAppCore, $);

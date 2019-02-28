@@ -39,7 +39,7 @@ License: MIT
             "center": thisPageSpecs.pageNamespace + ":" + "page-body",
             "south": thisPageSpecs.pageNamespace + ":" + "page-footer"
         },  
-        facetPrefix: thisPageSpecs.pageNamespace,
+        spotPrefix: thisPageSpecs.pageNamespace,
         north: true,
         west:false,
         east: false
@@ -180,11 +180,11 @@ License: MIT
                 .sidebar('attach events', '[appuse="home:home-sidebar"] .menu .item')
                 ;
                 
-                var tmpTestAreaEl = ThisPage.getByAttr$({ facet: "home:testarea" });
+                var tmpTestAreaEl = ThisPage.getByAttr$({ spot: "home:testarea" });
 
 
                 ThisPage._webctl = theApp.getComponent("plugin:WebControls");
-               // ThisPage.loadFacet('home:testarea', "ThisPage._webctl is " + typeof(ThisPage._webctl))
+               // ThisPage.loadSpot('home:testarea', "ThisPage._webctl is " + typeof(ThisPage._webctl))
              
                 try {
                     ThisPage.testAreaWS =ThisPage._webctl.getNewPanel();
@@ -257,7 +257,7 @@ License: MIT
 
                 
 
-                var tmpWorkAreaEl = ThisPage.getByAttr$({ facet: "home:workarea" });
+                var tmpWorkAreaEl = ThisPage.getByAttr$({ spot: "home:workarea" });
                 ThisPage.workAreaWS = ThisPage._svg.getNewPanel();
                 ThisPage.workAreaWS.init({ svg: tmpWorkAreaEl[0], viewBox: {x: 0, y: 0, w: 150, h: 150} });
 
@@ -277,7 +277,7 @@ License: MIT
                     ThisPage.workAreaButton4 = theControl;
                 });
 
-                var tmpFunAreaEl = ThisPage.getByAttr$({ facet: "home:funarea" });
+                var tmpFunAreaEl = ThisPage.getByAttr$({ spot: "home:funarea" });
                 ThisPage.funAreaWS = ThisPage._svg.getNewPanel();
                 ThisPage.funAreaWS.init({ svg: tmpFunAreaEl[0], viewBox: {x: 0, y: 0, w: 150, h: 150} });
 
@@ -294,7 +294,7 @@ License: MIT
                     ThisPage.funAreaButton4 = theControl;
                 });
 
-                var tmpZoomBarEl = ThisPage.getByAttr$({ facet: "home:zoom-control" });
+                var tmpZoomBarEl = ThisPage.getByAttr$({ spot: "home:zoom-control" });
                 ThisPage.wsZoomControlWS = ThisPage._svg.getNewPanel();
                 ThisPage.wsZoomControlWS.init({ svg: tmpZoomBarEl[0], viewBox: {x: 0, y: 0, w: 200, h: 20} });
                 ThisPage.wsZoomControlWS.addControl('zoom-slider', 'horiz-slider', { sliderStart:0, sliderEnd: 100, sliderIncr: 10, sliderValue: 50, scale: .5 }).then(function(theControl){
@@ -302,7 +302,7 @@ License: MIT
 //                    ThisPage.wsZoomControl.subscribe("valueChanged", ThisPage.zoomValueChanged.bind(me));
                 });
 
-                var tmpHomeWsEl = ThisPage.getByAttr$({ facet: "home:home-ws" });
+                var tmpHomeWsEl = ThisPage.getByAttr$({ spot: "home:home-ws" });
                 ThisPage.wsHome = ThisPage._svg.getNewPanel();
                 ThisPage.wsHome.init({ svg: tmpHomeWsEl[0], viewBox: {x: 0, y: 0, w: 400, h: 400} });
 

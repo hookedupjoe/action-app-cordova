@@ -6,7 +6,7 @@ License: MIT
 //---  Quick Page module --- --- --- --- --- --- --- --- --- --- --- --- 
 //--- Example of page that does not use templates for layout
 //---  the system auto creates a layout, can be used directly
-//--- facets are prefix:region  (i.e. quick:center)
+//--- spots are prefix:region  (i.e. quick:center)
 (function (ActionAppCore, $) {
 
     var SiteMod = ActionAppCore.module("site");
@@ -33,7 +33,7 @@ License: MIT
     }
 
     thisPageSpecs.layoutOptions = {
-        facetPrefix: thisPageSpecs.pageNamespace
+        spotPrefix: thisPageSpecs.pageNamespace
         , north: true
         , south: true
         , east: false
@@ -92,7 +92,7 @@ License: MIT
     }
 
     function showInFooter(theText){
-        ThisPage.loadFacet('quick:footer-text', theText)
+        ThisPage.loadSpot('quick:footer-text', theText)
     }
 
     function initUI() {
@@ -105,19 +105,19 @@ License: MIT
         tmpHTML.push('Plug and play pages')
         tmpHTML.push('  </div>')
         tmpHTML.push('</h2>')
-        ThisPage.loadFacet('quick:north',tmpHTML.join(''))
+        ThisPage.loadSpot('quick:north',tmpHTML.join(''))
 
         tmpHTML = [];
         tmpHTML.push('<div class="ui label large fluid basic black">')
         tmpHTML.push('  <i class="info icon"></i>')
-        tmpHTML.push('<span facet="quick:footer-text"></span>')
+        tmpHTML.push('<span spot="quick:footer-text"></span>')
         tmpHTML.push('  <a class="detail" style="float:right;margin-right:10px;">View Messages</a>')
         tmpHTML.push('</div>')
-        ThisPage.loadFacet('quick:south',tmpHTML.join(''))
+        ThisPage.loadSpot('quick:south',tmpHTML.join(''))
 
         
         //--- Can load a Workspace using code / data
-        ThisPage.westWS = ThisPage._webctl.newWorkspace({ facet: "quick:west" });
+        ThisPage.westWS = ThisPage._webctl.newWorkspace({ spot: "quick:west" });
         var tmpWSMenu = {
             "objects": [
                 {
@@ -170,7 +170,7 @@ License: MIT
         tmpHTML.push(JSON.stringify(tmpDemoObject));
         tmpHTML.push('</div>');
 
-        ThisPage.loadFacet('quick:center', tmpHTML.join(''))
+        ThisPage.loadSpot('quick:center', tmpHTML.join(''))
         ThisPage.editor = ace.edit("quick-editor");
         ThisPage.editor.setTheme("ace/theme/vibrant_ink");
         ThisPage.editor.session.setMode("ace/mode/json");
@@ -180,7 +180,7 @@ License: MIT
 
     ThisPage.showJSEditor = showJSEditor;
     function showJSEditor(){
-        ThisPage.loadFacet('quick:center', '<div class="ace-editor" id="quick-editor">function foo(items) {\n    var x = "All this is syntax highlighted";\n    return x;\n}</div>')
+        ThisPage.loadSpot('quick:center', '<div class="ace-editor" id="quick-editor">function foo(items) {\n    var x = "All this is syntax highlighted";\n    return x;\n}</div>')
         ThisPage.editor = ace.edit("quick-editor");
         ThisPage.editor.setTheme("ace/theme/vibrant_ink");
         ThisPage.editor.session.setMode("ace/mode/javascript");

@@ -74,8 +74,8 @@ Web controls Plugin:
         var tmpOptions = theOptions || {};
         var tmpEl = tmpOptions.el$;
         if( !(tmpEl) ){
-            if( tmpOptions.facet ){
-                tmpEl = ThisApp.getByAttr$({'facet':tmpOptions.facet});
+            if( tmpOptions.spot ){
+                tmpEl = ThisApp.getByAttr$({'spot':tmpOptions.spot});
             }
         }
         if( !(tmpEl) ){
@@ -229,8 +229,8 @@ Web controls Plugin:
         me._webctl = ActionAppCore.app.getComponent("plugin:WebControls");
         me.baseURL = me._webctl.controlsBaseURL + tmpThisControl.controlName + "/";
 
-        var tmpFacetName = $(theParentContainer).attr("facet");
-        tmpThisControl.mom = $('[facet="' + tmpFacetName + '"]').get(0);
+        var tmpSpotName = $(theParentContainer).attr("spot");
+        tmpThisControl.mom = $('[spot="' + tmpSpotName + '"]').get(0);
 
         var tmpOID = theOptions.oid || (tmpThisControl.cid + "-" + me.createdCount++);
 

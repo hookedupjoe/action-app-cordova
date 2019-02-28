@@ -44,7 +44,7 @@ License: MIT
             "center": thisPageSpecs.pageNamespace + ":" + "page-body",
             "south": thisPageSpecs.pageNamespace + ":" + "page-footer"
         },
-        facetPrefix: thisPageSpecs.pageNamespace,
+        spotPrefix: thisPageSpecs.pageNamespace,
         north: true,
         west: true,
         east: true
@@ -94,9 +94,9 @@ License: MIT
             id: '',
             title: "(Untitled)"
         }
-        ThisPage.loadFacet('ws:open-title', '(Untitled)');
-        ThisPage.loadFacet('ws:control-selected-title', '');
-        ThisPage.loadFacet('ws:control-selected-states', '');
+        ThisPage.loadSpot('ws:open-title', '(Untitled)');
+        ThisPage.loadSpot('ws:control-selected-title', '');
+        ThisPage.loadSpot('ws:control-selected-states', '');
         ThisPage.openWS.clear();
     }
 
@@ -117,7 +117,7 @@ License: MIT
                 try {
                     ThisPage.currentWS.id = tmpID;
                     ThisPage.currentWS.title = theDoc.title;
-                    ThisPage.loadFacet('ws:open-title', '[' + tmpID + '] - ' + theDoc.title);
+                    ThisPage.loadSpot('ws:open-title', '[' + tmpID + '] - ' + theDoc.title);
                     ThisPage.openWS.loadFromObject(theDoc.data).then(
                         function () {
                             ThisPage.openWS.refreshUI();
@@ -246,12 +246,12 @@ License: MIT
     }
     ThisPage.showOutLoading = showOutLoading;
     function showOutLoading() {
-        ThisApp.loadFacet('ws:home-output', '', 'app:page-loading-spinner');
+        ThisApp.loadSpot('ws:home-output', '', 'app:page-loading-spinner');
     }
 
     ThisPage.showPreviewLoading = showPreviewLoading;
     function showPreviewLoading() {
-        ThisApp.loadFacet('ws:preview-area', '', 'app:page-loading-spinner');
+        ThisApp.loadSpot('ws:preview-area', '', 'app:page-loading-spinner');
     }
     ThisPage.showLoading = showLoading;
     function showLoading() {
@@ -261,12 +261,12 @@ License: MIT
 
     ThisPage.showPreview = showPreview;
     function showPreview(theContent, theOptionalTemplateName) {
-        ThisApp.loadFacet('ws:preview-area', theContent, theOptionalTemplateName);
+        ThisApp.loadSpot('ws:preview-area', theContent, theOptionalTemplateName);
     }
 
     ThisPage.showOut = showOut;
     function showOut(theContent, theOptionalTemplateName) {
-        ThisApp.loadFacet('ws:home-output', theContent, theOptionalTemplateName);
+        ThisApp.loadSpot('ws:home-output', theContent, theOptionalTemplateName);
     }
 
     ThisPage._onInit = function (theApp) {
@@ -286,7 +286,7 @@ License: MIT
         var tmpSpecs = theObj.specs;
         //console.log("tmpSpecs",tmpSpecs);
         var tmpShowTitle = '[' + tmpSpecs.title + "] - " + theObj.oid;
-        ThisPage.loadFacet('ws:control-selected-title', tmpShowTitle);
+        ThisPage.loadSpot('ws:control-selected-title', tmpShowTitle);
 
         var tmpHTML = [];
         //        tmpHTML.push('<div class="ui middle aligned divided list">')
@@ -356,7 +356,7 @@ License: MIT
 
 
 
-        ThisPage.loadFacet('ws:control-selected-states', tmpHTML.join(''))
+        ThisPage.loadSpot('ws:control-selected-states', tmpHTML.join(''))
 
         /*
         
@@ -413,7 +413,7 @@ License: MIT
 
                 ThisPage.btnSelectSearch = ThisPage.getByAttr$({ appuse: "ws:select-search" })
 
-                var tmpTestAreaEl = ThisPage.getByAttr$({ facet: "ws:open-ws" });
+                var tmpTestAreaEl = ThisPage.getByAttr$({ spot: "ws:open-ws" });
                 ThisPage.openWS = ThisPage._webctl.getNewPanel();
                 ThisPage.openWS.init({ mom: tmpTestAreaEl[0] });
                 ThisPage.openWS.subscribe('controlClick', ThisPage.openWSControlClick)
@@ -465,7 +465,7 @@ License: MIT
                     ]
                 }
 
-                ThisPage.workspaceMenuWS = ThisPage._webctl.newWorkspace({ facet: "ws:ws-menu" });
+                ThisPage.workspaceMenuWS = ThisPage._webctl.newWorkspace({ spot: "ws:ws-menu" });
  
                 $.when(
                     ThisPage.workspaceMenuWS.loadFromObject(tmpWSMenu)
@@ -515,7 +515,7 @@ License: MIT
         tmpLoad.push('<button class="ui button" action="ws:addButtonsControl">Button List</button>')
         tmpLoad.push('<button class="ui button" action="ws:addButtonSelectControl">Button Select</button>')
         tmpLoad.push('<button class="ui button" control="sui-menu" action="ws:addControlToDesigner">Menu</button>')
-        ThisPage.loadFacet('ws:open-ws-controls', tmpLoad.join(''))
+        ThisPage.loadSpot('ws:open-ws-controls', tmpLoad.join(''))
     }
 
     function getDialogFieldValues(theAppUse) {
@@ -824,12 +824,12 @@ License: MIT
         showJson(theObject, 'ws:preview-area')
     }
 
-    function showJson(theObject, theFacetName) {
+    function showJson(theObject, theSpotName) {
         var tmpOptions = {
             collapsed: false,
             withQuotes: true
         };
-        $('[facet="' + theFacetName + '"]').jsonViewer(theObject, tmpOptions);
+        $('[spot="' + theSpotName + '"]').jsonViewer(theObject, tmpOptions);
     }
 
 })(ActionAppCore, $);

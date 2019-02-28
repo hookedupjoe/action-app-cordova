@@ -54,7 +54,7 @@ Key concepts / features the application framework provides:
   - Common component repository allows for components and modules to register and hence be retrieved and communcated with directly
   - Common messages methodology with toaster option to pop them up and ways to clear / retrieve them easily
   - Common way to find and update DOM elements using attributes, used extensively for it's simplicity and power
-  - Common concept of a "facet", which simply any element with a facet="area:item", allowing for simple content targeting
+  - Common concept of a "spot", which simply any element with a spot="area:item", allowing for simple content targeting
   - Plugin modules provide extended common and custom functionatlity that can be used across other modules
 */
 
@@ -277,7 +277,7 @@ var ActionAppCore = {};
         * ThisApp.appMessage("There was an error, in case you want to take action.", false, false, { reason: "testing" });
         *    Also see: ThisApp.setMessagesOption(theOption,theValue)
         * 
-        * @param  {String} theMsg   [The name of the facet to load]
+        * @param  {String} theMsg   [The name of the spot to load]
         * @param  {String} theOptionalType   [info, warning, error, success] Default: info
         *  "info" or <blank> 
         *  "warning" or "w"
@@ -396,11 +396,11 @@ var ActionAppCore = {};
     me.components = {};
 
     /**
-       * loadFacet
-       *  - Load HTML content or renders a jsRender template into a known facet name
+       * loadSpot
+       *  - Load HTML content or renders a jsRender template into a known spot name
        * 
-       * Example: ThisApp.loadFacet('myarea:out', '', 'tpl-some-registered-template');
-       *   - This loads the facet <div facet="myarea:out" ... with a rendered template 'tpl-some-registered-template'
+       * Example: ThisApp.loadSpot('myarea:out', '', 'tpl-some-registered-template');
+       *   - This loads the spot <div spot="myarea:out" ... with a rendered template 'tpl-some-registered-template'
        *
        * 
        * Note:  theContent is usually HTML if no template name passed
@@ -409,7 +409,7 @@ var ActionAppCore = {};
        *         ... theOptionalTemplateName is used to render the content and theContent passed as the input
        * 
        * 
-       * @param  {String} theName   [The name of the facet to load]
+       * @param  {String} theName   [The name of the spot to load]
        * @param  {String} theContent   [The content to load or object to use when rendering the template]
        * @param  {String} theOptionalTemplateName   [The content to load or object to use when rendering the template]
        * @param  {String} theOptionalParent$   [The jQuery element to use instead of global]
@@ -418,26 +418,26 @@ var ActionAppCore = {};
        * 
        * 
        */
-    me.loadFacet = function (theName, theContent, theOptionalTemplateName, theOptionalParent$) {
-        var tmpSelector = '[facet="' + theName + '"]';
+    me.loadSpot = function (theName, theContent, theOptionalTemplateName, theOptionalParent$) {
+        var tmpSelector = '[spot="' + theName + '"]';
         var tmpContent = theContent || '';
         if (theOptionalTemplateName) {
             tmpContent = me.getTemplatedContent(theOptionalTemplateName,tmpContent);
         }
         var tmpParent = (theOptionalParent$ && (theOptionalParent$.find)=='function') ? theOptionalParent$.find : $;
-        var tmpFacet = tmpParent(tmpSelector);
-        tmpFacet.html(tmpContent);
-        return tmpFacet;
+        var tmpSpot = tmpParent(tmpSelector);
+        tmpSpot.html(tmpContent);
+        return tmpSpot;
     }
 
     /**
-       * addToFacet
-       *  - Appends or Prepends to existing facet content
+       * addToSpot
+       *  - Appends or Prepends to existing spot content
        * 
-       * Example: See loadFacet for more details
+       * Example: See loadSpot for more details
        * 
        * 
-       * @param  {String} theName   [The name of the facet to append/prepend to]
+       * @param  {String} theName   [The name of the spot to append/prepend to]
        * @param  {String} theContent   [The content to load or object to use when rendering the template]
        * @param  {String} theOptionalTemplateName   [The content to load or object to use when rendering the template]
        * @param  {String} thePrepend   [true to prepend, blank or false to append (default)]
@@ -445,37 +445,37 @@ var ActionAppCore = {};
        * 
        * 
        */
-    me.addToFacet = function (theName, theContent, theOptionalTemplateName, thePrepend) {
-        var tmpSelector = '[facet="' + theName + '"]';
+    me.addToSpot = function (theName, theContent, theOptionalTemplateName, thePrepend) {
+        var tmpSelector = '[spot="' + theName + '"]';
         var tmpContent = theContent || '';
         if (theOptionalTemplateName && theOptionalTemplateName != '' && theOptionalTemplateName != null) {
             tmpContent = me.getTemplatedContent(theOptionalTemplateName,tmpContent);
         }
-        var tmpFacet = $(tmpSelector);
+        var tmpSpot = $(tmpSelector);
         if (thePrepend === true) {
-            tmpFacet.prepend(tmpContent);
+            tmpSpot.prepend(tmpContent);
         } else {
-            tmpFacet.append(tmpContent);
+            tmpSpot.append(tmpContent);
         }
-        return tmpFacet;
+        return tmpSpot;
     }
 
     /**
-   * getFacet$
-   *  - Returns jQuery element for the facet name provided
+   * getSpot$
+   *  - Returns jQuery element for the spot name provided
    *  - Optionally pass a parent element as the scope to look in
    * 
    * Example: 
-   *   var tmpEl = ThisApp.getFacet('main:out')
-   *   var tmpEl = ThisApp.getFacet('main:out',parentEl)
+   *   var tmpEl = ThisApp.getSpot('main:out')
+   *   var tmpEl = ThisApp.getSpot('main:out',parentEl)
    * 
-   * @param  {String} theName   [The name of the facet to append/prepend to]
+   * @param  {String} theName   [The name of the spot to append/prepend to]
    * @param  {jQuery Element} theOptionalParent   [The parent to find in, uses global search if not provided]
-   * @return {jQuery Element} [The facet element]
+   * @return {jQuery Element} [The spot element]
    * 
    */
-    me.getFacet$ = function (theName, theOptionalParent) {
-        var tmpSelector = '[facet="' + theName + '"]';
+    me.getSpot$ = function (theName, theOptionalParent) {
+        var tmpSelector = '[spot="' + theName + '"]';
         var tmpParent = false;
         if (theOptionalParent && theOptionalParent != null) {
             tmpParent = theOptionalParent;
@@ -1061,7 +1061,7 @@ var ActionAppCore = {};
         var tmpOnOpen = theOptions.onOpen || '';
 
         var tmpCloseText = theOptions.closeText || 'Close';
-        ThisApp.getFacet$('site:dialog-close-text').html(tmpCloseText);
+        ThisApp.getSpot$('site:dialog-close-text').html(tmpCloseText);
 
         var tmpDialog = getCommonDialog();
 
@@ -1088,20 +1088,20 @@ var ActionAppCore = {};
             tmpHeader = me.getTemplatedContent(tmpHeader);
         }
         if( tmpFooter === ''){
-            //ThisApp.getFacet$('site:dialog-footer').css('display','none')
+            //ThisApp.getSpot$('site:dialog-footer').css('display','none')
             
-            ThisApp.getFacet$('site:dialog-footer').removeClass('actions');
+            ThisApp.getSpot$('site:dialog-footer').removeClass('actions');
         } else if (typeof (tmpFooter) == 'object') {
             tmpFooter = me.getTemplatedContent(tmpFooter);
-            ThisApp.getFacet$('site:dialog-footer').addClass('actions');
-            //ThisApp.getFacet$('site:dialog-footer').css('display','')
+            ThisApp.getSpot$('site:dialog-footer').addClass('actions');
+            //ThisApp.getSpot$('site:dialog-footer').css('display','')
         }
 
 
 
-        ThisApp.loadFacet('site:dialog-header', tmpHeader);
-        ThisApp.loadFacet('site:dialog-content', tmpContent);
-        ThisApp.loadFacet('site:dialog-footer', tmpFooter);
+        ThisApp.loadSpot('site:dialog-header', tmpHeader);
+        ThisApp.loadSpot('site:dialog-content', tmpContent);
+        ThisApp.loadSpot('site:dialog-footer', tmpFooter);
 
         tmpDialog.modal('show');
         
@@ -1111,9 +1111,9 @@ var ActionAppCore = {};
     }
 
     function resetDialogBodyArea(){
-        var tmpHeader = ThisApp.getFacet$('site:dialog-header');
-        var tmpBody = ThisApp.getFacet$('site:dialog-content');
-        var tmpFooter = ThisApp.getFacet$('site:dialog-footer');
+        var tmpHeader = ThisApp.getSpot$('site:dialog-header');
+        var tmpBody = ThisApp.getSpot$('site:dialog-content');
+        var tmpFooter = ThisApp.getSpot$('site:dialog-footer');
         
         var tmpOutHeight = tmpHeader.get(0).clientHeight + tmpFooter.get(0).clientHeight;
         tmpOutHeight = tmpOutHeight + 80; 
@@ -1274,7 +1274,7 @@ var ActionAppCore = {};
    */
     var commonDialog = null,
         commonDialogTemplate = 'tpl-common-global-dialog',
-        commonDialogFacet = 'site:global-dialog';
+        commonDialogSpot = 'site:global-dialog';
 
     me.commonDialogIsOpen = false;
     me.commonDialogWindowsBind = false;
@@ -1365,11 +1365,11 @@ var ActionAppCore = {};
     function initGlobalDialog() {
         //--- ToDo: Why not just add the HTML directly to body in this case?
 
-        //--- Dynamically create the common dialog facet
-        var tmpNewDiv = $('<div facet="site:global-dialog" class="hidden"></div>').appendTo('body');
+        //--- Dynamically create the common dialog spot
+        var tmpNewDiv = $('<div spot="site:global-dialog" class="hidden"></div>').appendTo('body');
         //--- Populate with common dialog (ToDo: Allow override?)
-        var tmpHTML = '<div appuse="global-dialog" class="ui modal longer inverted"><button style="float:right;margin-top:5px;margin-right:5px;" class="icon ui basic blue button circle" action="_app:closeCommonDialog" ><i class="close icon"></i> <span facet="site:dialog-close-text">Close</span></button><div facet="site:dialog-header" class="header"></div>  <div facet="site:dialog-content" class="content common-dialog-content"> </div> <div facet="site:dialog-footer" class="common-dialog-footer"></div> </div> ';
-        me.loadFacet(commonDialogFacet, tmpHTML )        
+        var tmpHTML = '<div appuse="global-dialog" class="ui modal longer inverted"><button style="float:right;margin-top:5px;margin-right:5px;" class="icon ui basic blue button circle" action="_app:closeCommonDialog" ><i class="close icon"></i> <span spot="site:dialog-close-text">Close</span></button><div spot="site:dialog-header" class="header"></div>  <div spot="site:dialog-content" class="content common-dialog-content"> </div> <div spot="site:dialog-footer" class="common-dialog-footer"></div> </div> ';
+        me.loadSpot(commonDialogSpot, tmpHTML )        
     }
 
     function initAppActions() {
@@ -1665,7 +1665,7 @@ License: MIT
             this.layoutConfig = $.extend({}, defaultLayoutOptions, (this.options.layoutConfig || {}));
 
             //--- Use standard border layout template if none provided
-            this.layoutOptions.facetPrefix = this.layoutOptions.facetPrefix || this.pageName;
+            this.layoutOptions.spotPrefix = this.layoutOptions.spotPrefix || this.pageName;
             //this.pageTemplate = this.pageTemplate || 'tpl-border-layout';
             this.layoutConfig.center__onresize = (
                 function(){
@@ -1675,14 +1675,14 @@ License: MIT
                 }
             ).bind(this);
 
-            //--- Extend with new layout related facet functions
+            //--- Extend with new layout related spot functions
             this.addToRegion = function (theRegion, theContent, theOptionalTemplateName, thePrepend) {
-                var tmpRegionFacetName = this.layoutOptions.facetPrefix + ":" + theRegion;
-                ThisApp.addToFacet(tmpRegionFacetName, theContent, theOptionalTemplateName, thePrepend)
+                var tmpRegionSpotName = this.layoutOptions.spotPrefix + ":" + theRegion;
+                ThisApp.addToSpot(tmpRegionSpotName, theContent, theOptionalTemplateName, thePrepend)
             }
             this.loadRegion = function (theRegion, theContent, theOptionalTemplateName) {
-                var tmpRegionFacetName = this.layoutOptions.facetPrefix + ":" + theRegion;
-                ThisApp.loadFacet(tmpRegionFacetName, theContent, theOptionalTemplateName)
+                var tmpRegionSpotName = this.layoutOptions.spotPrefix + ":" + theRegion;
+                ThisApp.loadSpot(tmpRegionSpotName, theContent, theOptionalTemplateName)
             }
 
         }
@@ -1789,8 +1789,8 @@ License: MIT
     }
     me.focus = me.open;
     
-    me.loadFacet = function (theName, theContent, theOptionalTemplateName) {
-        return ThisApp.loadFacet(theName, theContent, theOptionalTemplateName, this.getParent$());
+    me.loadSpot = function (theName, theContent, theOptionalTemplateName) {
+        return ThisApp.loadSpot(theName, theContent, theOptionalTemplateName, this.getParent$());
     }
     me.getByAttr$ = function (theItems, theExcludeBlanks) {
         return ThisApp.getByAttr$(theItems, this.getParent$(), theExcludeBlanks);
@@ -1837,11 +1837,11 @@ License: MIT
             this.getLayoutHTML = function(){
                 var tmpRet = "";
                 var tmpAll = ['north','south','center', 'east','west'];
-                var tmpPre = this.layoutOptions.facetPrefix;
+                var tmpPre = this.layoutOptions.spotPrefix;
                 for(var i = 0 ; i < tmpAll.length ; i++){
                     var tmpArea = tmpAll[i];
                     if( this.layoutOptions[tmpArea] !== false){
-                        tmpRet += '<div facet="' + tmpPre + ':' + tmpArea+ '" class="middle-' + tmpArea+ '"></div>';    
+                        tmpRet += '<div spot="' + tmpPre + ':' + tmpArea+ '" class="middle-' + tmpArea+ '"></div>';    
                     }
                 }
                 return tmpRet;

@@ -39,7 +39,7 @@ License: MIT
             "center": thisPageSpecs.pageNamespace + ":" + "page-body",
             "south": thisPageSpecs.pageNamespace + ":" + "page-footer"
         },  
-        facetPrefix: thisPageSpecs.pageNamespace,
+        spotPrefix: thisPageSpecs.pageNamespace,
         north: true,
         west:false,
         east: false
@@ -92,10 +92,10 @@ License: MIT
     ThisPage.jobLogsAt = 0;
 
     ThisPage.getJobLogBody = function () {
-        return ThisPage.$jobLogs || $('[facet="logs-jobs"]');
+        return ThisPage.$jobLogs || $('[spot="logs-jobs"]');
     }
     ThisPage.getJobLogTabs = function () {
-        return ThisPage.$jobLogs || $('[facet="logs:job-tabs"]');
+        return ThisPage.$jobLogs || $('[spot="logs:job-tabs"]');
     }
     //<div action="logs:clearJobLogs" class="ui primary basic button">Added</div>
 
@@ -113,10 +113,10 @@ License: MIT
         
 
         var tmpBodyHTML = '<div appuse="cards" group="logs:job-tabs" item="' + tmpNewJobID + '" style="border:solid 1px red;">' + tmpNew.title + '</div>';
-        ThisApp.addToFacet('logs-jobs', tmpBodyHTML);
+        ThisApp.addToSpot('logs-jobs', tmpBodyHTML);
         var tmpTabHTML = '<div group="logs:job-tabs" item="' + tmpNewJobID + '" class="ui item selected nopad noshadow" action="logs:selectTabLink" appuse="tablinks" group="logs:job-tabs" item="' + tmpNewJobID + '" ><a class="ui site-tab-link-body basic button">Tab long long long long long long long long' + ThisPage.jobLogsAt + '</a><a action="logs:closeSelectedTab" class="" style="padding-left:4px;"><i class="delete icon"></i></a></div>';
         //--- Prepend the tab so new is first (param 3 / true)
-        ThisApp.addToFacet('logs:job-tabs', tmpTabHTML, false, true);
+        ThisApp.addToSpot('logs:job-tabs', tmpTabHTML, false, true);
         ThisPage.openJobLink(tmpNewJobID);
        
     }
@@ -127,7 +127,7 @@ License: MIT
     ThisPage.closeSelectedTab = function (theAction, theTarget) {
         var tmpBtn = ($(theTarget).closest('[item]'));
         var tmpAs = ThisApp.getAttrs(tmpBtn, ['group', 'item']);
-        var tmpParent = $('[facet="logs:job-tabs"]');
+        var tmpParent = $('[spot="logs:job-tabs"]');
         var tmpSelectedItem = tmpParent.find('[appuse="tablinks"].primary');
         var tmpID = $(tmpSelectedItem.get(0)).attr('item');
         
@@ -238,7 +238,7 @@ License: MIT
             tmpObj.more = tmpMore
         })
         var tmpContext = {messages:tmpMessages}
-        $('[facet="logs-messages"]').html(ThisApp.renderTemplate('logs:msg-ctr-item', tmpContext));
+        $('[spot="logs-messages"]').html(ThisApp.renderTemplate('logs:msg-ctr-item', tmpContext));
     }
 
         

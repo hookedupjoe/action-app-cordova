@@ -274,8 +274,8 @@ SVG controls Plugin:
         me._svg = ActionAppCore.app.getComponent("plugin:SvgControls");
         me.baseURL = me._svg.controlsBaseURL + tmpThisControl.controlName + "/";
 
-        var tmpFacetName = $(theParentSVG).attr("facet");
-        tmpThisControl.svg = d3.select('[facet="' + tmpFacetName + '"]');
+        var tmpSpotName = $(theParentSVG).attr("spot");
+        tmpThisControl.svg = d3.select('[spot="' + tmpSpotName + '"]');
 
         if (typeof (tmpOptions.colorOffset) == 'number') {
             tmpThisControl.colorOffset = tmpOptions.colorOffset;
@@ -630,7 +630,7 @@ SVG controls Plugin:
     //     if (this.selectedControl) {
     //         tmpSelectedControlName = this.selectedControl.text;
     //     }
-    //     ThisApp.loadFacet('dash:selected-control', tmpSelectedControlName, '', me.getParent$())
+    //     ThisApp.loadSpot('dash:selected-control', tmpSelectedControlName, '', me.getParent$())
     // }
 
     // var this.drag = null;

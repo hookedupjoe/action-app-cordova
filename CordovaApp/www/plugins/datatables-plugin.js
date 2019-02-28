@@ -48,9 +48,9 @@ License: MIT
     //--- Impl ========== ========== ========== ========== ========== ========== ========== ========== ========== ========== 
     //--- Impl ========== ========== ========== ========== ========== ========== ========== ========== ========== ========== 
 
-    me.addTable = function (theFacetName) {
-        var tmpEl = ThisApp.getFacet$(theFacetName);
-        //--- Load facet with table htmo=l
+    me.addTable = function (theSpotName) {
+        var tmpEl = ThisApp.getSpot$(theSpotName);
+        //--- Load spot with table htmo=l
         //     ... then returns the table element
         return me.dth.addTable(tmpEl);
     }

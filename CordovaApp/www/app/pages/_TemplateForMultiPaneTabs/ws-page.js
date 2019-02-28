@@ -44,7 +44,7 @@ License: MIT
             "center": thisPageSpecs.pageNamespace + ":" + "page-body",
             "south": thisPageSpecs.pageNamespace + ":" + "page-footer"
         },
-        facetPrefix: thisPageSpecs.pageNamespace,
+        spotPrefix: thisPageSpecs.pageNamespace,
         north: true,
         west: true,
         east: true
@@ -96,7 +96,7 @@ License: MIT
     }
     
     function loadWorkspaceUI(theID){
-        return ThisPage.loadFacet('ws:open-ws','Testing ' + theID);
+        return ThisPage.loadSpot('ws:open-ws','Testing ' + theID);
     }
     function saveLoadedSpaces(){
         return ThisPage._om.putObject(getDS(), 'wsIndex', loadedSpaces);
@@ -129,12 +129,12 @@ License: MIT
     }
     ThisPage.showOutLoading = showOutLoading;
     function showOutLoading() {
-        ThisApp.loadFacet('ws:home-output', '', 'app:page-loading-spinner');
+        ThisApp.loadSpot('ws:home-output', '', 'app:page-loading-spinner');
     }
 
     ThisPage.showPreviewLoading = showPreviewLoading;
     function showPreviewLoading() {
-        ThisApp.loadFacet('ws:preview-area', '', 'app:page-loading-spinner');
+        ThisApp.loadSpot('ws:preview-area', '', 'app:page-loading-spinner');
     }
     ThisPage.showLoading = showLoading;
     function showLoading() {
@@ -144,12 +144,12 @@ License: MIT
 
     ThisPage.showPreview = showPreview;
     function showPreview(theContent, theOptionalTemplateName) {
-        ThisApp.loadFacet('ws:preview-area', theContent, theOptionalTemplateName);
+        ThisApp.loadSpot('ws:preview-area', theContent, theOptionalTemplateName);
     }
 
     ThisPage.showOut = showOut;
     function showOut(theContent, theOptionalTemplateName) {
-        ThisApp.loadFacet('ws:home-output', theContent, theOptionalTemplateName);
+        ThisApp.loadSpot('ws:home-output', theContent, theOptionalTemplateName);
     }
 
     ThisPage._onInit = function (theApp) {
@@ -191,7 +191,7 @@ License: MIT
 
                 ThisPage.btnSelectSearch = ThisPage.getByAttr$({ appuse: "ws:select-search" })
 
-                var tmpTestAreaEl = ThisPage.getByAttr$({ facet: "ws:open-ws" });
+                var tmpTestAreaEl = ThisPage.getByAttr$({ spot: "ws:open-ws" });
                 ThisPage.openWS = ThisPage._webctl.getNewPanel();
                 ThisPage.openWS.init({ mom: tmpTestAreaEl[0]});
                 initOpenWSControls();
@@ -229,7 +229,7 @@ License: MIT
     function initOpenWSControls(){
         var tmpLoad = [];
         tmpLoad.push('<button class="ui button" action="ws:addIconControl">Icon</button>')
-        ThisPage.loadFacet('ws:open-ws-controls', tmpLoad.join(''))
+        ThisPage.loadSpot('ws:open-ws-controls', tmpLoad.join(''))
     }
 
     function showWorkspaces() {
@@ -430,12 +430,12 @@ License: MIT
         showJson(theObject, 'ws:preview-area')
     }
 
-    function showJson(theObject, theFacetName) {
+    function showJson(theObject, theSpotName) {
         var tmpOptions = {
             collapsed: false,
             withQuotes: true
         };
-        $('[facet="' + theFacetName + '"]').jsonViewer(theObject, tmpOptions);
+        $('[spot="' + theSpotName + '"]').jsonViewer(theObject, tmpOptions);
     }
 
 })(ActionAppCore, $);

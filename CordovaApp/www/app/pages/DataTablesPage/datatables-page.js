@@ -35,7 +35,7 @@ License: MIT
             "center": thisPageSpecs.pageNamespace + ":" + "page-body",
             "south": thisPageSpecs.pageNamespace + ":" + "page-footer"
         },  
-        facetPrefix: thisPageSpecs.pageNamespace,
+        spotPrefix: thisPageSpecs.pageNamespace,
         north: false,
         west: false,
         east: false
@@ -46,12 +46,12 @@ License: MIT
 
     //--- Hook into the app lifecycle as needed    
     ThisPage.writeToOut = function(theHTML){
-        ThisApp.loadFacet('dts:home-output', theHTML);
+        ThisApp.loadSpot('dts:home-output', theHTML);
     }
 
     ThisPage.showOutLoading = showOutLoading;
     function showOutLoading() {
-        ThisApp.loadFacet('dts:home-output', '', 'app:page-loading-spinner');
+        ThisApp.loadSpot('dts:home-output', '', 'app:page-loading-spinner');
     }
 
     ThisPage.transformDocs = function (theDocs) {
@@ -78,7 +78,7 @@ License: MIT
                 console.log("theDoc",theDoc);
                 // var tmpEls = ThisPage.getByAttr$({group:'dts:session-card', item:tmpID});
                 // if( !(tmpEls) || tmpEls.length < 1){
-                //     ThisApp.addToFacet('dts:session-details-out', theDoc, 'dts:session-card-fluid',true);
+                //     ThisApp.addToSpot('dts:session-details-out', theDoc, 'dts:session-card-fluid',true);
                 // } else {
                 //     console.log("already there")
                 // }
@@ -94,7 +94,7 @@ License: MIT
             var tmpID = theData[tmpKeyField];
             console.log("Deselected",tmpID);
             if( tmpID ){
-                var tmpEls = ThisPage.getByAttr$({group:'dts:session-card', item:tmpID}, ThisApp.getFacet$('dts:session-details-out'))
+                var tmpEls = ThisPage.getByAttr$({group:'dts:session-card', item:tmpID}, ThisApp.getSpot$('dts:session-details-out'))
                 tmpEls.remove();
             }
         })    
@@ -102,7 +102,7 @@ License: MIT
     }
 
     ThisPage.clearSessionCards = function(){
-        // var tmpEls = ThisPage.getByAttr$({group:'dts:session-card'}, ThisApp.getFacet$('dts:session-details-out'))
+        // var tmpEls = ThisPage.getByAttr$({group:'dts:session-card'}, ThisApp.getSpot$('dts:session-details-out'))
         // tmpEls.remove();
         refreshSessionsOutHeader();
     }
@@ -110,7 +110,7 @@ License: MIT
     function refreshSessionsOutHeader(){
         console.log("Clear");
         // if( ThisPage.currentSessionTable == null){
-        //     ThisApp.loadFacet("dts:session-details-header", 'Click "Read All Documents" to load a table')
+        //     ThisApp.loadSpot("dts:session-details-header", 'Click "Read All Documents" to load a table')
         // } else {
         //     var tmpSelected = ThisPage.currentSessionTable.rows( { selected: true } );
 
@@ -121,10 +121,10 @@ License: MIT
         //     var tmpDeSelectAllBtn = ThisPage.getByAttr$({action:"dts:closeAllSessionCards"});
         //     if( tmpSelectedCount == 0){
         //         tmpDeSelectAllBtn.addClass('disabled');
-        //         ThisApp.loadFacet("dts:session-details-header", 'Select an item from the list, it will show here.')
+        //         ThisApp.loadSpot("dts:session-details-header", 'Select an item from the list, it will show here.')
         //     } else {
         //         tmpDeSelectAllBtn.removeClass('disabled');
-        //         ThisApp.loadFacet("dts:session-details-header", 'Now showing <b>' + tmpSelectedCount + ' session' + (tmpSelectedCount > 1 ? 's' : '') + '.')
+        //         ThisApp.loadSpot("dts:session-details-header", 'Now showing <b>' + tmpSelectedCount + ' session' + (tmpSelectedCount > 1 ? 's' : '') + '.')
         //     }
         //     //console.log("tmpSelectedCount",tmpSelectedCount,tmpSelected);
         // }
