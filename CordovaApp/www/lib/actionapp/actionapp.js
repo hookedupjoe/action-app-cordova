@@ -362,9 +362,9 @@ var ActionAppCore = {};
 
     $.extend(me, ExtendMod.SetDisplay);
 
-    me.initTemplates = function(theTemplateSpecs){
+    me.initTemplates = function(theTemplateSpecs, theOptions){
         var dfd = jQuery.Deferred();
-
+        var tmpOptions = theOptions || {};
         //--- if no templates to process, no prob, return now
         if( !(theTemplateSpecs && theTemplateSpecs.templateMap)){
             dfd.resolve(true);
@@ -384,7 +384,11 @@ var ActionAppCore = {};
             for( var aKey in theDocs ){
                 var tmpTplName = theTemplateSpecs.templateMap[aKey];
                 if( tmpTplName ){
-                    ThisApp.addTemplate(tmpTplName, theDocs[aKey]); 
+                    var tmpHTML = theDocs[aKey];
+                    if( tmpOptions && tmpOptions.pageNamespace ){
+                        tmpHTML = tmpHTML.replace(/_ns_:/g, tmpOptions.pageNamespace + ":")
+                    }
+                    ThisApp.addTemplate(tmpTplName,tmpHTML); 
                 }
             }
             dfd.resolve(true);
@@ -1698,7 +1702,9 @@ License: MIT
     me.initOnFirstLoad = function(){
         var dfd = jQuery.Deferred();
         var tmpThis = this;
-        ThisApp.initTemplates(this.pageTemplates).then(
+        var tmpNS = '';
+        this.options = this.options || {};
+        ThisApp.initTemplates(this.pageTemplates, this.options).then(
             function(){
                 //--- No async calls, just run it
                 tmpThis.initLayout();
@@ -1711,14 +1717,21 @@ License: MIT
     
     //--- Usage: <div appuse="template" name="yourns:yourname">Template for {{titie}}</div>
     me.loadTemplatesFromMarkup = function(){
+        var tmpNS = '';
+        if( tmpOptions && tmpOptions.pageNamespace ){
+            tmpNS = tmpOptions.pageNamespace + ":";
+        }
+      
         var tmpEls = this.getByAttr$({page: this.pageName, appuse:"template"})
         if( tmpEls && tmpEls.length > 0){
             for( var i = 0 ; i < tmpEls.length; i++){
                 var tmpEl = $(tmpEls[i]);
                 var tmpName = tmpEl.attr('name') || '';
                 var tmpHTML = tmpEl.html();
+                if( tmpNS ){
+                    tmpHTML = tmpHTML.replace(/_ns_:/g, tmpNS)
+                }        
                 ThisApp.addTemplate(tmpName,tmpHTML);
-                //console.log("tmpEl tmpName",tmpName);
             }
         }
     }
