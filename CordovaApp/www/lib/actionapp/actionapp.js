@@ -1718,6 +1718,7 @@ License: MIT
     //--- Usage: <div appuse="template" name="yourns:yourname">Template for {{titie}}</div>
     me.loadTemplatesFromMarkup = function(){
         var tmpNS = '';
+        var tmpOptions = this.options || {};
         if( tmpOptions && tmpOptions.pageNamespace ){
             tmpNS = tmpOptions.pageNamespace + ":";
         }
