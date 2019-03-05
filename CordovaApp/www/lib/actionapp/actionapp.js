@@ -203,8 +203,8 @@ var ActionAppCore = {};
         //--- set currently loaded application as globally available object from global entrypoint
         ActionAppCore.app = me;
 
-        me.isDom = function(element) {
-            return element instanceof Element;  
+        me.isDom = function (element) {
+            return element instanceof Element;
         }
 
         me.options = theOptions || {};
@@ -233,26 +233,26 @@ var ActionAppCore = {};
             var tmpName = theNavObject.name || '';
             me.navConfig[tmpName] = theNavObject;
             var tmpOpts = theNavObject.options || {};
-            theNavObject.isSideLink = ( tmpOpts.sideLink );
-            theNavObject.isTopLink = ( tmpOpts.topLink );            
+            theNavObject.isSideLink = (tmpOpts.sideLink);
+            theNavObject.isTopLink = (tmpOpts.topLink);
             theNavObject.iconHTML = tmpOpts.iconHTML || '';
-            if( tmpOpts.icon ){
+            if (tmpOpts.icon) {
                 theNavObject.iconHTML = '<i class="' + tmpOpts.icon + ' icon"></i>'
             }
-            
+
             //theNavObject.isNavLink = ( theNavObject.display == 'primary' );
             me.config.navlinks.push(theNavObject)
             return true;
         }
 
         me._messageOptions = {
-            show:true
+            show: true
         }
-        me.setMessagesOption = function(theOption, theValue){            
+        me.setMessagesOption = function (theOption, theValue) {
             ThisApp._messageOptions[theOption] = theValue
         }
-        me.setMessagesOptions = function(theOptions){            
-            $.extend(ThisApp._messageOptions,theOptions);
+        me.setMessagesOptions = function (theOptions) {
+            $.extend(ThisApp._messageOptions, theOptions);
         }
         me.getMessages = function () {
             return me.messages;
@@ -294,7 +294,7 @@ var ActionAppCore = {};
             var tmpType = "info";
             var tmpOptions = theOptions || {};
             var tmpOptionalData = tmpOptions.data || false;
-            
+
 
             if (typeof (theOptionalType) == 'string') {
                 theOptionalType = theOptionalType.toLowerCase();
@@ -323,17 +323,17 @@ var ActionAppCore = {};
 
             me.messages.push(tmpMsgObj)
             var tmpIsShow = me._messageOptions.show;
-            if(typeof(tmpOptions.show) == 'boolean'){
+            if (typeof (tmpOptions.show) == 'boolean') {
                 tmpIsShow = tmpOptions.show;
             }
-            if( tmpIsShow ){
+            if (tmpIsShow) {
                 if (typeof (tmpOptions.title) == 'string') {
                     toastr[tmpType](theMsg, tmpOptions.title);
                 } else {
                     toastr[tmpType](theMsg);
                 }
             }
-            
+
             me.publish("message:sent", tmpMsgObj);
         }
 
@@ -362,17 +362,17 @@ var ActionAppCore = {};
 
     $.extend(me, ExtendMod.SetDisplay);
 
-    me.initTemplates = function(theTemplateSpecs, theOptions){
+    me.initTemplates = function (theTemplateSpecs, theOptions) {
         var dfd = jQuery.Deferred();
         var tmpOptions = theOptions || {};
         //--- if no templates to process, no prob, return now
-        if( !(theTemplateSpecs && theTemplateSpecs.templateMap)){
+        if (!(theTemplateSpecs && theTemplateSpecs.templateMap)) {
             dfd.resolve(true);
             return dfd.promise();
         }
 
-        var tmpTpls = [];        
-        for( var aName in theTemplateSpecs.templateMap){
+        var tmpTpls = [];
+        for (var aName in theTemplateSpecs.templateMap) {
             tmpTpls.push(aName);
         }
         var tmpBaseURL = theTemplateSpecs.baseURL || 'app/app-tpl/';
@@ -381,14 +381,14 @@ var ActionAppCore = {};
         //    not .bind(this) in the function, the temp reference is quicker, same result
         var tmpThis = this;
         ThisApp.om.getObjects('[html]:' + tmpBaseURL, tmpTpls).then(function (theDocs) {
-            for( var aKey in theDocs ){
+            for (var aKey in theDocs) {
                 var tmpTplName = theTemplateSpecs.templateMap[aKey];
-                if( tmpTplName ){
+                if (tmpTplName) {
                     var tmpHTML = theDocs[aKey];
-                    if( tmpOptions && tmpOptions.pageNamespace ){
-                        tmpHTML = tmpHTML.replace(/_ns_:/g, tmpOptions.pageNamespace + ":")
+                    if (tmpOptions && tmpOptions.pageNamespace) {
+                        tmpHTML = tmpHTML.replace(/_page_:/g, tmpOptions.pageNamespace + ":")
                     }
-                    ThisApp.addTemplate(tmpTplName,tmpHTML); 
+                    ThisApp.addTemplate(tmpTplName, tmpHTML);
                 }
             }
             dfd.resolve(true);
@@ -426,9 +426,9 @@ var ActionAppCore = {};
         var tmpSelector = '[spot="' + theName + '"]';
         var tmpContent = theContent || '';
         if (theOptionalTemplateName) {
-            tmpContent = me.getTemplatedContent(theOptionalTemplateName,tmpContent);
+            tmpContent = me.getTemplatedContent(theOptionalTemplateName, tmpContent);
         }
-        var tmpParent = (theOptionalParent$ && (theOptionalParent$.find)=='function') ? theOptionalParent$.find : $;
+        var tmpParent = (theOptionalParent$ && (theOptionalParent$.find) == 'function') ? theOptionalParent$.find : $;
         var tmpSpot = tmpParent(tmpSelector);
         tmpSpot.html(tmpContent);
         return tmpSpot;
@@ -453,7 +453,7 @@ var ActionAppCore = {};
         var tmpSelector = '[spot="' + theName + '"]';
         var tmpContent = theContent || '';
         if (theOptionalTemplateName && theOptionalTemplateName != '' && theOptionalTemplateName != null) {
-            tmpContent = me.getTemplatedContent(theOptionalTemplateName,tmpContent);
+            tmpContent = me.getTemplatedContent(theOptionalTemplateName, tmpContent);
         }
         var tmpSpot = $(tmpSelector);
         if (thePrepend === true) {
@@ -580,6 +580,8 @@ var ActionAppCore = {};
                 console.error("Can not go to tab, group and item are required.")
             }
         }
+        ThisApp.publish('_app:gotoTab',{group:tmpOptions.group,item:tmpOptions.item})
+
         return me;
     }
 
@@ -663,14 +665,13 @@ var ActionAppCore = {};
         //          returns the elements being effected for chaining
         var tmpAll = me.getByAttr$(tmpSelector)
             .removeClass('active');
+            
 
         //--- Add the item selector to update the search to find just the one that is active
         tmpSelector.item = tmpItemId;
         //--- Add the 'active' class to the one item we have
         //--- Note: This calls me.getByAttr$ not ThisApp.getByAttr$, which by default only searches this tab page content
-        //--  Note: The reason tmpAll is passed is to keep the scope down to the active ones, since we 
-        //          have a handle to those already, that is optional, if not passed, just this page is passed
-        me.getByAttr$(tmpSelector, tmpAll).addClass('active');
+        me.getByAttr$(tmpSelector).addClass('active');
     }
 
 
@@ -684,9 +685,6 @@ var ActionAppCore = {};
      * To Use: var tmpAttribs = ThisApp.getAttrs(anyEl,['item','group']);
      *    - returns an object with {item:"val",group:"val"}
      *
-     * @param  {String} theAction   [name of the action (showSubPage)]
-     * @param  {Object} theTargetObj   [target object with details about the page to open]
-     * @return {Object} [node name = attribute, node value = attribute value]
      */
     me.getAttrs = function (theEl, theAttrList) {
         var tmpRet = {};
@@ -759,6 +757,8 @@ var ActionAppCore = {};
             //--- Convert if there is a parent and it is not a jQuery element already
             if (typeof (theParent) != 'string' && theParent.hasOwnProperty('nodeType')) {
                 tmpParent = $(theParent);
+            } else {
+                tmpParent = theParent;
             }
         }
         if (tmpParent) {
@@ -778,26 +778,10 @@ var ActionAppCore = {};
      * @param  {Object} theEl   [target object with details about the page to open]
      * @param  {Boolean} theIsVis   [true to show, false to hide]
      * @return void
+     * 
+     *   Moved to ExtendMod.SetDisplay   
      */
-    // me.setDisplay = function (theEl, theIsVis) {
-    //     var tmpEl = $(theEl);
-    //     if (theEl.node) {
-    //         tmpEl = $(theEl.node());
-    //     } else {
-    //         tmpEl = $(theEl);
-    //     }
-    //     if (theIsVis) {
-    //         tmpEl.removeClass('hidden');
-    //     } else {
-    //         tmpEl.addClass('hidden');
-    //     }
-    // }
-    // me.show = function (theEl) {
-    //     me.setDisplay(theEl, true);
-    // }
-    // me.hide = function (theEl) {
-    //     me.setDisplay(theEl, false);
-    // }
+    
     me.initModuleComponents = initModuleComponents;
     function initModuleComponents(theApp, theModuleName, theComponents) {
         var appModule = ActionAppCore.module(theModuleName);
@@ -940,7 +924,7 @@ var ActionAppCore = {};
 
     me.unRegisterAction = unRegisterAction;
     function unRegisterAction(theActionName) {
-        if(typeof(ThisCoreApp.actions[theActionName]) != 'undefined'){
+        if (typeof (ThisCoreApp.actions[theActionName]) != 'undefined') {
             delete ThisCoreApp.actions[theActionName];
         }
     }
@@ -1020,6 +1004,12 @@ var ActionAppCore = {};
         getCommonDialog().modal('hide');
     }
 
+    me.clearCommonDialog = clearCommonDialog
+    function clearCommonDialog(){
+        ThisApp.loadSpot('site:dialog-header', '');
+        ThisApp.loadSpot('site:dialog-content', '');
+        ThisApp.loadSpot('site:dialog-footer', '');
+    }
     /**
      * showCommonDialog
      *    - Shows the common dialog box with content provided
@@ -1050,11 +1040,11 @@ var ActionAppCore = {};
      * @return this
      */
     me.showCommonDialog = showCommonDialog;
-    
+
     var commonDialogCallbackOnShow = false;
     var commonDialogCallbackOnHide = false;
     var commonDialogCallbackOnHidden = false;
-    
+
     function showCommonDialog(theOptions) {
         var tmpHeader = theOptions.header || '';
         var tmpContent = theOptions.content || '';
@@ -1069,31 +1059,31 @@ var ActionAppCore = {};
 
         var tmpDialog = getCommonDialog();
 
-        if( typeof(tmpOnBeforeClose) == 'function'){
+        if (typeof (tmpOnBeforeClose) == 'function') {
             commonDialogCallbackOnHide = tmpOnBeforeClose;
             //--- If we are going to allow a stop of close, this is needed
-            tmpDialog.modal('setting', {  closable: false }); 
+            tmpDialog.modal('setting', { closable: false });
         } else {
             //--- This is a normal dialog, allow esc and off-click to close
-            tmpDialog.modal('setting', {  closable: true }); 
+            tmpDialog.modal('setting', { closable: true });
         }
-        if( typeof(tmpOnClose) == 'function'){
+        if (typeof (tmpOnClose) == 'function') {
             commonDialogCallbackOnHidden = tmpOnClose;
         }
-        if( typeof(tmpOnOpen) == 'function'){
+        if (typeof (tmpOnOpen) == 'function') {
             commonDialogCallbackOnShow = tmpOnOpen;
         }
         if (typeof (tmpContent) == 'object') {
             tmpContent = me.getTemplatedContent(tmpContent);
         }
-        if( tmpHeader === ''){
+        if (tmpHeader === '') {
             tmpHeader = '&nbsp;';
         } else if (typeof (tmpHeader) == 'object') {
             tmpHeader = me.getTemplatedContent(tmpHeader);
         }
-        if( tmpFooter === ''){
+        if (tmpFooter === '') {
             //ThisApp.getSpot$('site:dialog-footer').css('display','none')
-            
+
             ThisApp.getSpot$('site:dialog-footer').removeClass('actions');
         } else if (typeof (tmpFooter) == 'object') {
             tmpFooter = me.getTemplatedContent(tmpFooter);
@@ -1108,22 +1098,22 @@ var ActionAppCore = {};
         ThisApp.loadSpot('site:dialog-footer', tmpFooter);
 
         tmpDialog.modal('show');
-        
-        setTimeout(resetDialogBodyArea,10)
+
+        setTimeout(resetDialogBodyArea, 10)
 
         return me;
     }
 
-    function resetDialogBodyArea(){
+    function resetDialogBodyArea() {
         var tmpHeader = ThisApp.getSpot$('site:dialog-header');
         var tmpBody = ThisApp.getSpot$('site:dialog-content');
         var tmpFooter = ThisApp.getSpot$('site:dialog-footer');
-        
+
         var tmpOutHeight = tmpHeader.get(0).clientHeight + tmpFooter.get(0).clientHeight;
-        tmpOutHeight = tmpOutHeight + 80; 
-        var tmpWiHeight = $( window ).height(); //$( window ).height();
+        tmpOutHeight = tmpOutHeight + 80;
+        var tmpWiHeight = $(window).height(); //$( window ).height();
         var tmpBodyNewH = (tmpWiHeight - tmpOutHeight) + 'px';
-        tmpBody.css({"height":tmpBodyNewH,"overflow":"auto"});
+        tmpBody.css({ "height": tmpBodyNewH, "overflow": "auto" });
     }
 
     me.closeCommonDialog = closeCommonDialog;
@@ -1137,7 +1127,7 @@ var ActionAppCore = {};
      *    Common method of getting templated HTML
      *
      */
-        
+
     /**
      * getTemplatedContent
      * 
@@ -1164,8 +1154,8 @@ var ActionAppCore = {};
         return me.renderTemplate(tmpTemplateName, tmpData, theOptions);
     }
     me.tplIndex = {};
-    
-   
+
+
 
     /**
      * compileTemplates
@@ -1176,39 +1166,39 @@ var ActionAppCore = {};
      * @param  {Object} theOptionalAttrName  Pass in the parent jQuery element to start with, uses default for getByAttr if not provided
      * @return void
      */
-    me.compileTemplates = function(theOptionalAttrName, theOptionalTarget){
+    me.compileTemplates = function (theOptionalAttrName, theOptionalTarget) {
         var tmpAttrName = theOptionalAttrName || "data-htpl";
         var tmpSelector = {};
         //--- Init what to look for, anything with this attribute
         tmpSelector[tmpAttrName] = "";
         //--- Get all elements with this attribute
-        ThisApp.getByAttr$(tmpSelector, theOptionalTarget).each(function(theIndex) {
-          var tmpEl$ = $(this);
-          var tmpKey = "" + tmpEl$.attr(tmpAttrName);
-          me._templates[tmpKey] = Handlebars.compile(this.innerHTML);          
-          this.innerHTML = '';
+        ThisApp.getByAttr$(tmpSelector, theOptionalTarget).each(function (theIndex) {
+            var tmpEl$ = $(this);
+            var tmpKey = "" + tmpEl$.attr(tmpAttrName);
+            me._templates[tmpKey] = Handlebars.compile(this.innerHTML);
+            this.innerHTML = '';
         });
     }
- /**
-     * addTemplate
-     *    - Adds / compiles Handlebars template
-     *
-     * @param  {String} theKey  The unique name for this template
-     * @param  {Object} theHTML  The HTML to include
-     * @return void
-     */
-    me.addTemplate = function(theKey, theHTML){
+    /**
+        * addTemplate
+        *    - Adds / compiles Handlebars template
+        *
+        * @param  {String} theKey  The unique name for this template
+        * @param  {Object} theHTML  The HTML to include
+        * @return void
+        */
+    me.addTemplate = function (theKey, theHTML) {
         me._templates[theKey] = Handlebars.compile(theHTML);
     }
-    
-        //me.htmlHandlebars = {};
+
+    //me.htmlHandlebars = {};
     me._templates = {};
-    me.renderTemplate = function(theName, theContext){
+    me.renderTemplate = function (theName, theContext) {
         try {
             var tmpFn = (ThisApp._templates[theName]);
             return tmpFn(theContext);
         } catch (theError) {
-            console.error("Error rendering template " + theError,"Name was " + theName);
+            console.error("Error rendering template " + theError, "Name was " + theName);
         }
     }
 
@@ -1283,49 +1273,49 @@ var ActionAppCore = {};
     me.commonDialogIsOpen = false;
     me.commonDialogWindowsBind = false;
 
-    function commonDialogOnWindowResize(){
-        if(ThisApp.commonDialogIsOpen){
+    function commonDialogOnWindowResize() {
+        if (ThisApp.commonDialogIsOpen) {
             resetDialogBodyArea();
-        };        
+        };
     }
 
     var $window = $(window), previousScrollTop = 0, scrollLock = false;
-    $window.scroll(function(event) {     
-        if(scrollLock) {
-            $window.scrollTop(previousScrollTop); 
+    $window.scroll(function (event) {
+        if (scrollLock) {
+            $window.scrollTop(previousScrollTop);
         }
         previousScrollTop = $window.scrollTop();
     });
 
-    function onCommonDialogShow(){
-        if( !ThisApp.commonDialogWindowsBind ){
+    function onCommonDialogShow() {
+        if (!ThisApp.commonDialogWindowsBind) {
             //--- Lazy init one resize handler / move to even more common? Do this everytime and remove?  Reasons?
             ThisApp.commonDialogWindowsBind = true;
             window.onresize = commonDialogOnWindowResize.bind(ThisApp);
         }
         ThisApp.commonDialogIsOpen = true;
         scrollLock = true;
-        if( typeof(commonDialogCallbackOnShow) == 'function' ){
+        if (typeof (commonDialogCallbackOnShow) == 'function') {
             commonDialogCallbackOnShow();
         }
     }
 
-    function onCommonDialogHidden(theEl){
-        //console.log("onCommonDialogHidden")
+    function onCommonDialogHidden(theEl) {
         ThisApp.commonDialogIsOpen = true;
         scrollLock = false;
-        if( typeof(commonDialogCallbackOnHidden) == 'function' ){
+        if (typeof (commonDialogCallbackOnHidden) == 'function') {
             commonDialogCallbackOnHidden();
-        }        
+        }
         commonDialogCallbackOnShow = false;
         commonDialogCallbackOnHide = false;
-        commonDialogCallbackOnHidden = false;        
+        commonDialogCallbackOnHidden = false;
+        clearCommonDialog();
     }
 
-    function onCommonDialogHide(theEl){
-        if( typeof(commonDialogCallbackOnHide) == 'function' ){
+    function onCommonDialogHide(theEl) {
+        if (typeof (commonDialogCallbackOnHide) == 'function') {
             tmpResults = commonDialogCallbackOnHide(theEl);
-            if(tmpResults === false){
+            if (tmpResults === false) {
                 return false;
             }
         }
@@ -1345,8 +1335,8 @@ var ActionAppCore = {};
                 onShow: onCommonDialogShow,
                 onHide: onCommonDialogHide,
                 onHidden: onCommonDialogHidden
-            }); 
-            
+            });
+
             ThisApp.commonDialog = commonDialog;
         }
         return commonDialog;
@@ -1360,9 +1350,9 @@ var ActionAppCore = {};
         if ($(tmpSBSelector).length > 0) {
             me.hasSidebar = true;
             $('[appuse="side-menu"]')
-            .sidebar('setting', 'duration', 20)
-            .sidebar('setting', 'mobileTransition', 'fade')            
-            .sidebar('attach events', tmpSBSelector);
+                .sidebar('setting', 'duration', 20)
+                .sidebar('setting', 'mobileTransition', 'fade')
+                .sidebar('attach events', tmpSBSelector);
         }
     }
 
@@ -1373,7 +1363,7 @@ var ActionAppCore = {};
         var tmpNewDiv = $('<div spot="site:global-dialog" class="hidden"></div>').appendTo('body');
         //--- Populate with common dialog (ToDo: Allow override?)
         var tmpHTML = '<div appuse="global-dialog" class="ui modal longer inverted"><button style="float:right;margin-top:5px;margin-right:5px;" class="icon ui basic blue button circle" action="_app:closeCommonDialog" ><i class="close icon"></i> <span spot="site:dialog-close-text">Close</span></button><div spot="site:dialog-header" class="header"></div>  <div spot="site:dialog-content" class="content common-dialog-content"> </div> <div spot="site:dialog-footer" class="common-dialog-footer"></div> </div> ';
-        me.loadSpot(commonDialogSpot, tmpHTML )        
+        me.loadSpot(commonDialogSpot, tmpHTML)
     }
 
     function initAppActions() {
@@ -1453,9 +1443,9 @@ var ActionAppCore = {};
     }
 
     //=== CRAPPY ASS POPUP FUNCTIONALITY -- REMOVE IT???
-    me.clearActivePopup = clearActivePopup;    
-    function clearActivePopup(){
-        if( !ThisApp.activePopup ){
+    me.clearActivePopup = clearActivePopup;
+    function clearActivePopup() {
+        if (!ThisApp.activePopup) {
             return;
         }
         ThisApp.activePopup.popup('destroy');
@@ -1464,54 +1454,54 @@ var ActionAppCore = {};
     //=== Pass title and content, optionally an onClose event (not normal part of sui popup)
     //--- This creates the popup, then destroys when closed and does a callback if there
     me.showPopup = showPopup;
-    function showPopup(theDetails, theTargetEl){
+    function showPopup(theDetails, theTargetEl) {
         var tmpDetails = theDetails || '';
         var tmpTargetEl = false;
-        if( ThisApp.activePopup ){
+        if (ThisApp.activePopup) {
             ThisApp.activePopup.popup('destroy');
             ThisApp.activePopup = false;
         }
-        if( typeof(tmpDetails) == 'string'){
+        if (typeof (tmpDetails) == 'string') {
             //This is from an action, convert it
             tmpTargetEl = $(theTargetEl);
             tmpDetails = {};
             var tmpTitle = tmpTargetEl.attr('title') || tmpTargetEl.attr('popup-title' || '');
-            var tmpContent = tmpTargetEl.attr('content') || tmpTargetEl.attr('popup-content'|| '');
-            if( tmpTitle ){
+            var tmpContent = tmpTargetEl.attr('content') || tmpTargetEl.attr('popup-content' || '');
+            if (tmpTitle) {
                 tmpDetails.title = tmpTitle;
             }
-            if( tmpContent ){
+            if (tmpContent) {
                 tmpDetails.content = tmpContent;
             }
 
         } else {
             tmpTargetEl = theTargetEl || tmpDetails.el || false;
             //--- Make sure we are dealing with a jQuery element on the one passed
-            if( !tmpTargetEl ){
+            if (!tmpTargetEl) {
                 tmpTargetEl = document.body;
             }
-            if(tmpTargetEl && typeof(tmpTargetEl.get) !== 'function'){
+            if (tmpTargetEl && typeof (tmpTargetEl.get) !== 'function') {
                 tmpTargetEl = $(tmpTargetEl);
             }
         }
-        
+
         var tmpPopup;
         var tmpFn = false;
-        if( typeof(tmpDetails.onClose) == 'function' ){
+        if (typeof (tmpDetails.onClose) == 'function') {
             tmpFn = tmpDetails.onClose;
         }
-        
+
         var tmpPopSpecs = {
-            on:'click',
+            on: 'click',
             //hideOnScroll:true,
-            exclusive:true,
+            exclusive: true,
             lastResort: 'bottom left',
-            onHidden: function(){
-                if( tmpFn ){
+            onHidden: function () {
+                if (tmpFn) {
                     tmpFn();
                 }
                 tmpPopup.popup('destroy');
-                ThisApp.activePopup = false;                
+                ThisApp.activePopup = false;
             }
         }
 
@@ -1537,12 +1527,12 @@ var ActionAppCore = {};
     function init(theAppConfig) {
 
         ThisCoreApp = this;
-        
+
         //--- Init Required Plugins
         me.useModuleComponents('plugin', ['ObjectManager']);
         me.om = me.getComponent("plugin:ObjectManager");
         this.registerActionDelegate("_app", this.runAction.bind(this));
-        
+
         //--- ToDo: Support options in theAppConfig to control this        
         me.siteLayout = $('body').layout({
             center__paneSelector: ".site-layout-center"
@@ -1562,6 +1552,9 @@ var ActionAppCore = {};
         }
         me.config.navbuttons = me.config.navbuttons || [];
         me.config.navlinks = me.config.navlinks || [];
+
+        me.showPage = showPage;
+        me.showSubPage = showSubPage;
         me.registerAction("showPage", showPage);
         me.registerAction("showSubPage", showSubPage);
 
@@ -1577,10 +1570,10 @@ var ActionAppCore = {};
 
         var tmpNavHTML = '{{#each navlinks}} {{#if isTopLink}}<a appuse="tablinks" group="app:pages" item="{{name}}" appaction="showPage" class="item blue">{{title}}</a>{{/if}} {{/each}}';
         var tmpSideLinksHTML = '{{#each navlinks}} {{#if isSideLink}}<a appuse="tablinks" group="app:pages" item="{{name}}" appaction="showPage" class="item">{{{iconHTML}}}{{title}}</a>{{/if}} {{/each}}';
-        ThisApp.addTemplate('tpl-side-menu-item',tmpSideLinksHTML)
-        ThisApp.addTemplate('tpl-nav-menu-item',tmpNavHTML)
-        $('[appuse="side-menu"]').html(ThisApp.renderTemplate('tpl-side-menu-item',me.config));
-        $('[appuse="nav-menu"]').html(ThisApp.renderTemplate('tpl-nav-menu-item',me.config));
+        ThisApp.addTemplate('tpl-side-menu-item', tmpSideLinksHTML)
+        ThisApp.addTemplate('tpl-nav-menu-item', tmpNavHTML)
+        $('[appuse="side-menu"]').html(ThisApp.renderTemplate('tpl-side-menu-item', me.config));
+        $('[appuse="nav-menu"]').html(ThisApp.renderTemplate('tpl-nav-menu-item', me.config));
 
         initMenus();
         initAppActions();
@@ -1622,7 +1615,7 @@ License: MIT
     var SiteMod = ActionAppCore.module("site");
     SiteMod.SitePage = SitePage;
 
-    var defaultLayoutOptions = {        
+    var defaultLayoutOptions = {
         spacing_closed: 8,
         spacing_open: 6,
         resizable: true,
@@ -1661,9 +1654,9 @@ License: MIT
         this._activatedFlag = false;
         //this.pageTemplate = this.options.pageTemplate || '';
         this.layoutOptions = this.options.layoutOptions || false;
-        
 
-//!this.pageTemplate || 
+
+        //!this.pageTemplate || 
         if (this.layoutOptions) {
             this.layoutOptions = this.layoutOptions || {};
             this.layoutConfig = $.extend({}, defaultLayoutOptions, (this.options.layoutConfig || {}));
@@ -1672,8 +1665,8 @@ License: MIT
             this.layoutOptions.spotPrefix = this.layoutOptions.spotPrefix || this.pageName;
             //this.pageTemplate = this.pageTemplate || 'tpl-border-layout';
             this.layoutConfig.center__onresize = (
-                function(){
-                    if( typeof(this._onResizeLayout) == 'function'){
+                function () {
+                    if (typeof (this._onResizeLayout) == 'function') {
                         this._onResizeLayout();
                     }
                 }
@@ -1699,13 +1692,13 @@ License: MIT
     var me = SitePage.prototype;
     //var that = this;
 
-    me.initOnFirstLoad = function(){
+    me.initOnFirstLoad = function () {
         var dfd = jQuery.Deferred();
         var tmpThis = this;
         var tmpNS = '';
         this.options = this.options || {};
         ThisApp.initTemplates(this.pageTemplates, this.options).then(
-            function(){
+            function () {
                 //--- No async calls, just run it
                 tmpThis.initLayout();
                 dfd.resolve(true);
@@ -1714,46 +1707,53 @@ License: MIT
         return dfd.promise();
     }
 
-    
+
     //--- Usage: <div appuse="template" name="yourns:yourname">Template for {{titie}}</div>
-    me.loadTemplatesFromMarkup = function(){
+    me.loadTemplatesFromMarkup = function () {
+        
+        
         var tmpNS = '';
         var tmpOptions = this.options || {};
-        if( tmpOptions && tmpOptions.pageNamespace ){
+        if (tmpOptions && tmpOptions.pageNamespace) {
             tmpNS = tmpOptions.pageNamespace + ":";
         }
-      
-        var tmpEls = this.getByAttr$({page: this.pageName, appuse:"template"})
-        if( tmpEls && tmpEls.length > 0){
-            for( var i = 0 ; i < tmpEls.length; i++){
+
+        var tmpEls = ThisApp.getByAttr$({ page: this.pageName, appuse: "template" })
+        
+        if (tmpEls && tmpEls.length > 0) {
+            for (var i = 0; i < tmpEls.length; i++) {
                 var tmpEl = $(tmpEls[i]);
                 var tmpName = tmpEl.attr('name') || '';
                 var tmpHTML = tmpEl.html();
-                if( tmpNS ){
-                    tmpHTML = tmpHTML.replace(/_ns_:/g, tmpNS)
-                }        
-                ThisApp.addTemplate(tmpName,tmpHTML);
+                if (tmpNS) {
+                    tmpHTML = tmpHTML.replace(/_page_:/g, tmpNS)
+                }
+                ThisApp.addTemplate(tmpName, tmpHTML);
             }
         }
     }
 
     //--- Usage: <div appuse="content" region="north">North Content</div>
-    me.loadLayoutFromMarkup = function(){
-        console.log("loadLayoutFromMarkup")
-        var tmpEls = this.getByAttr$({page: this.pageName, region:"center", appuse:"content"})
-        if( tmpEls && tmpEls.length > 0){
-            //console.log("Loading Region: center");
+    me.loadLayoutFromMarkup = function () {
+        var tmpEls = ThisApp.getByAttr$({ page: this.pageName, region: "center", appuse: "content" })
+        
+        if (tmpEls && tmpEls.length > 0) {
             this.loadRegion('center', tmpEls.html());
         }
-        var tmpRegions = ['north','south','east','west'];
-        for( var i = 0 ; i < tmpRegions.length; i++){
+        var tmpRegions = ['north', 'south', 'east', 'west'];
+        var tmpOptions = this.options || {};
+        for (var i = 0; i < tmpRegions.length; i++) {
             var tmpRegion = tmpRegions[i];
             //--- Is this region turned on?
-            if( this.layoutOptions[tmpRegion]){
+            if (this.layoutOptions[tmpRegion]) {
                 //--- Find related element and use it
-                var tmpEls = this.getByAttr$({page: this.pageName, region:tmpRegion, appuse:"content"})
-                if( tmpEls && tmpEls.length > 0){
-                   this.loadRegion(tmpRegion, tmpEls.html());
+                var tmpEls = ThisApp.getByAttr$({ page: this.pageName, region: tmpRegion, appuse: "content" })
+                if (tmpEls && tmpEls.length > 0) {
+                    var tmpHTML = tmpEls.html();
+                    if (tmpOptions && tmpOptions.pageNamespace) {
+                        tmpHTML = tmpHTML.replace(/_page_:/g, tmpOptions.pageNamespace + ":")
+                    }
+                    this.loadRegion(tmpRegion, tmpHTML);
                 }
                 tmpEls.remove();
             }
@@ -1761,29 +1761,29 @@ License: MIT
     }
 
 
-    me.initLayout = function(){
-        
-        if(this.layoutOptions && this.layoutOptions.content){
-            var tmpContentItems = this.layoutOptions.content;           
-            for( var aName in tmpContentItems ){
+    me.initLayout = function () {
+
+        if (this.layoutOptions && this.layoutOptions.content) {
+            var tmpContentItems = this.layoutOptions.content;
+            for (var aName in tmpContentItems) {
                 var tmpContent = tmpContentItems[aName];
                 this.loadRegion(aName, tmpContent);
             }
         }
-        if(this.layoutOptions && this.layoutOptions.markedupLayout === true){
+        if (this.layoutOptions && this.layoutOptions.markedupLayout === true) {
             this.loadLayoutFromMarkup();
         }
-        if(this.layoutOptions && this.layoutOptions.markedupTemplates === true){
+        if (this.layoutOptions && this.layoutOptions.markedupTemplates === true) {
             this.loadTemplatesFromMarkup();
         }
 
-        if(this.layoutOptions && this.layoutOptions.templates){
+        if (this.layoutOptions && this.layoutOptions.templates) {
             var tmpLTs = this.layoutOptions.templates;
             var tmpContext = {}
-            for( var aName in tmpLTs ){
+            for (var aName in tmpLTs) {
                 var tmpLT = tmpLTs[aName];
                 var tmpLTName = '';
-                if( typeof(tmpLT) == 'string'){
+                if (typeof (tmpLT) == 'string') {
                     tmpLTName = tmpLT;
                 } else {
                     tmpLTName = tmpLT.name;
@@ -1791,18 +1791,30 @@ License: MIT
                 this.loadRegion(aName, ThisApp.renderTemplate(tmpLTName, tmpContext));
             }
         }
-        
+
         //--- This resizes the layouts with the new content loaded from templates
-        if( typeof(ThisApp.refreshLayouts) == 'function' ){
+        if (typeof (ThisApp.refreshLayouts) == 'function') {
             ThisApp.refreshLayouts();
         }
     }
-   
+
+    //--- Used to add this pages namespace to a string
+    // return pageNamespace:theString
+    me.prefixString = function (theString) {
+        return this.pageNamespace + ":" + theString;
+    }
+
     me.open = function (theOptions) {
         return ThisApp.gotoPage(this.pageName);
     }
     me.focus = me.open;
-    
+
+    //--- Will prefix with this.pageNamespace as needed
+    me.loadPageSpot = function (theName, theContent, theOptionalTemplateName) {
+        var tmpName = theName || '';
+        tmpName = this.pageNamespace + ":" + tmpName;
+        return this.loadSpot(tmpName, theContent, theOptionalTemplateName);
+    }
     me.loadSpot = function (theName, theContent, theOptionalTemplateName) {
         return ThisApp.loadSpot(theName, theContent, theOptionalTemplateName, this.getParent$());
     }
@@ -1814,10 +1826,9 @@ License: MIT
             group: "app:pages",
             item: this.pageName
         }
-        this.parent$ = this.parent$ || this.app.getByAttr$(tmpAttribs);
+        this.parent$ = this.parent$ || $(this._el)
         return this.parent$;
     }
-
 
     //======================================
     //======================================
@@ -1842,20 +1853,22 @@ License: MIT
         //--- Add dynamic link on init from plugin module
         if (this.app && this.app.$appPageContainer) {
             this.app.$appPageContainer.append('<div appuse="cards" group="app:pages" item="' + this.pageName + '" class="hidden">' + this.pageTitle + '</div>');
+            this._el = this.app.$appPageContainer.find('[group="app:pages"][item="' + this.pageName + '"]')
+
             this.app.registerNavLink({
                 "name": this.pageName,
                 "title": this.pageTitle,
                 "options": this.navOptions || {},
                 "onActivate": onActivateThisPage.bind(this)
             });
-            this.getLayoutHTML = function(){
+            this.getLayoutHTML = function () {
                 var tmpRet = "";
-                var tmpAll = ['north','south','center', 'east','west'];
+                var tmpAll = ['north', 'south', 'center', 'east', 'west'];
                 var tmpPre = this.layoutOptions.spotPrefix;
-                for(var i = 0 ; i < tmpAll.length ; i++){
+                for (var i = 0; i < tmpAll.length; i++) {
                     var tmpArea = tmpAll[i];
-                    if( this.layoutOptions[tmpArea] !== false){
-                        tmpRet += '<div spot="' + tmpPre + ':' + tmpArea+ '" class="middle-' + tmpArea+ '"></div>';    
+                    if (this.layoutOptions[tmpArea] !== false) {
+                        tmpRet += '<div spot="' + tmpPre + ':' + tmpArea + '" class="middle-' + tmpArea + '"></div>';
                     }
                 }
                 return tmpRet;
@@ -1883,7 +1896,12 @@ License: MIT
 
         To subscribe to application level messages ...
            theApp.subscribe("message:sent", refreshMessageCenter)
+
+           theApp.subscribe("_app:gotoTab", getAppTabChanged)
+
         */
+
+       
 
 
     }
@@ -1919,14 +1937,14 @@ License: MIT
         //   ... call manually if needed from _onFirstActivate
         if (!this._activatedFlag) {
             this._activatedFlag = true;
-            if(typeof(this._onFirstActivate) == 'function'){
+            if (typeof (this._onFirstActivate) == 'function') {
                 this._onFirstActivate(this.app);
             }
-        } else if(typeof(this._onActivate) == 'function'){
+        } else if (typeof (this._onActivate) == 'function') {
             this._onActivate(this.app);
         }
     }
-    
+
     return me;
 
 })(ActionAppCore, $);

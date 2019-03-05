@@ -1,35 +1,35 @@
 <div>
-    <div appuse="cards" group="_ns_:tabs" item="activity">
+    <div appuse="cards" group="_page_:tabs" item="activity">
         <div class="ui" style="padding-top:5px;margin-top:0px;min-height:300px">
             <div class="ui menu" style="padding-top:0;margin-top:0;overflow:auto;">
                 <div class="item">
-                    <div action="_ns_:refreshMessageCenter" class="ui primary basic button">&#160;
+                    <div action="_page_:refreshMessageCenter" class="ui primary basic button">&#160;
                         <i class="icon refresh"></i>
                     </div> &#160;
-                    <div action="_ns_:sendTestMessages" class="ui primary basic button">Send Messages</div> &#160;
-                    <div action="_ns_:clearMessageCenter" class="ui primary basic button">Clear Messages</div> &#160;
-                    <div action="_ns_:runTest" class="ui primary basic button">Open Debug Page (hidden)</div>&#160;
-                    <div action="_ns_:runTest2" class="ui primary basic button">Run Test 2</div>&#160;
-                    <div action="_ns_:runTest3" class="ui primary basic button">Run Test 3</div>&#160;
-                    <div action="_ns_:runTest4" class="ui primary basic button">Run Test 4</div>
+                    <div action="_page_:sendTestMessages" class="ui primary basic button">Send Messages</div> &#160;
+                    <div action="_page_:clearMessageCenter" class="ui primary basic button">Clear Messages</div> &#160;
+                    <div action="_page_:runTest" class="ui primary basic button">Open Debug Page (hidden)</div>&#160;
+                    <div action="_page_:runTest2" class="ui primary basic button">Run Test 2</div>&#160;
+                    <div action="_page_:runTest3" class="ui primary basic button">Run Test 3</div>&#160;
+                    <div action="_page_:runTest4" class="ui primary basic button">Run Test 4</div>
                 </div>
             </div>
             <div spot="logs-messages"> No Messages. </div>
         </div>
     </div>
-    <div appuse="cards" group="_ns_:tabs" item="jobs" class="hidden">
+    <div appuse="cards" group="_page_:tabs" item="jobs" class="hidden">
         <div class="ui" style="padding-top:5px;margin-top:0px;min-height:300px">
             <div class="ui menu segment nopad noshadow" style="overflow:auto;scroll-y:auto;padding-top:0;margin-top:0;">
                 <div class="item">
-                    <div action="_ns_:addJobLog" class="ui green basic button site-tab-link">&#160;
+                    <div action="_page_:addJobLog" class="ui green basic button site-tab-link">&#160;
                         <i class="icon add"></i>
                     </div>
-                    <div action="_ns_:clearJobLogs" group="_ns_:job-tabs" class="ui green basic button site-tab-link">Close All</div>
+                    <div action="_page_:clearJobLogs" group="_page_:job-tabs" class="ui green basic button site-tab-link">Close All</div>
                 </div>
-                <div appuse="tablinks-body" group="_ns_:job-tabs" spot="_ns_:job-tabs" class="item plain"> </div>
+                <div appuse="tablinks-body" group="_page_:job-tabs" spot="_page_:job-tabs" class="item plain"> </div>
             </div>
-            <div spot="logs-jobs" appuse="cards-body" group="_ns_:job-tabs"> </div>
+            <div spot="logs-jobs" appuse="cards-body" group="_page_:job-tabs"> </div>
         </div>
     </div>
-    <div appuse="cards" group="_ns_:tabs" item="archives" class="hidden"> Log Archives Content </div>
+    <div appuse="cards" group="_page_:tabs" item="archives" class="hidden"> Log Archives Content </div>
 </div>
